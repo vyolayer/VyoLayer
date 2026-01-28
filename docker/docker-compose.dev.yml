@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: worklayer_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-worklayer_db}
+      POSTGRES_USER: ${DB_USER:-worklayer_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-worklayer_password}
+    ports:
+      - "${DB_PORT:-4444}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-worklayer_user} -d ${DB_NAME:-worklayer_db}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - worklayer_network
+
+networks:
+  worklayer_network:
+
+
+volumes:
+  pgdata:

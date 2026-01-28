@@ -12,11 +12,13 @@ import (
 	"worklayer/internal/app/middleware"
 	"worklayer/internal/app/routes/v1"
 	"worklayer/internal/config"
+	"worklayer/internal/platform/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"gorm.io/gorm"
 )
 
 var (
@@ -29,6 +31,7 @@ var (
 type App struct {
 	app *fiber.App
 	cfg *config.Config
+	db  *gorm.DB
 }
 
 func New() *App {
@@ -105,11 +108,18 @@ func (a *App) LoadConfig() {
 	log.Println("Loading config...")
 }
 
-func (a *App) ConnectToDatabase() {
+func (app *App) ConnectToDatabase() {
+	db, err := database.Init(&app.cfg.Database)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	app.db = db
+
 	if !isDatabaseConnected {
 		isDatabaseConnected = true
 	}
-	log.Println("Connecting to database...")
+	log.Println("Database connected...")
 }
 
 func (a *App) Shutdown() {

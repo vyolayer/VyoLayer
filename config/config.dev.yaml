@@ -1,0 +1,21 @@
+app:
+  name: worklayer
+  environment: dev
+
+server:
+  host: 0.0.0.0
+  port: 6999
+  read_timeout: 5s
+  write_timeout: 5s
+
+database:
+  driver: postgres
+  dsn: postgres://worklayer_user:pass@localhost:4444/worklayer?sslmode=disable
+  max_open_conns: 25
+  max_idle_conns: 5
+  conn_max_lifetime: 30m
+
+auth:
+  jwt_secret: dev-secret
+  access_token_ttl: 15m
+  refresh_token_ttl: 720h

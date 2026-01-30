@@ -26,6 +26,11 @@ func main() {
 	err = db.AutoMigrate(
 		models.User{},
 		models.UserSession{},
+		models.Organization{},
+		models.OrganizationRole{},
+		models.OrganizationPermission{},
+		models.OrganizationRolePermission{},
+		models.UserOrganizationRole{},
 	)
 	if err != nil {
 		panic(err)

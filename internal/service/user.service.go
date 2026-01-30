@@ -3,12 +3,13 @@ package service
 import (
 	"time"
 	"worklayer/internal/app/dto"
+	"worklayer/internal/domain"
 	"worklayer/internal/repository"
 	"worklayer/internal/utils/response"
 )
 
 type UserService interface {
-	GetUser(userId uint) (*dto.UserDTO, ServiceError)
+	GetUser(userId domain.UserID) (*dto.UserDTO, ServiceError)
 }
 
 type userService struct {
@@ -19,7 +20,7 @@ func NewUserService(user repository.UserRepository) UserService {
 	return &userService{user: user}
 }
 
-func (us *userService) GetUser(userId uint) (*dto.UserDTO, ServiceError) {
+func (us *userService) GetUser(userId domain.UserID) (*dto.UserDTO, ServiceError) {
 	user, err := us.user.FindById(userId)
 	if err != nil {
 		return nil, NewServiceError(response.InternalServerError("Failed to get user"))

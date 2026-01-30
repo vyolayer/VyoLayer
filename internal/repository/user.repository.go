@@ -3,6 +3,7 @@ package repository
 import (
 	"log"
 	"time"
+	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/models"
 
 	"gorm.io/gorm"
@@ -35,7 +36,7 @@ func (ur *userRepository) FindByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
-func (ur *userRepository) FindById(id uint) (*models.User, error) {
+func (ur *userRepository) FindById(id domain.UserID) (*models.User, error) {
 	var user models.User
 	err := ur.db.Where("id = ?", id).First(&user).Error
 	if err != nil {

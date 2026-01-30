@@ -6,6 +6,7 @@ import (
 	"worklayer/internal/utils/response"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type UserController interface {
@@ -21,7 +22,7 @@ func NewUserController(userService service.UserService) UserController {
 }
 
 func (uc *userController) GetMe(ctx *fiber.Ctx) error {
-	userId := ctx.Locals("user_id").(uint)
+	userId := ctx.Locals("user_id").(uuid.UUID)
 	user, err := uc.userService.GetUser(userId)
 
 	if err != nil {

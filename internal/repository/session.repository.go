@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/models"
 
 	"gorm.io/gorm"
@@ -41,7 +42,7 @@ func (sr *sessionRepository) DeleteByTokenHash(hashedToken string) error {
 	return nil
 }
 
-func (sr *sessionRepository) FindByUserId(userId uint) (*models.UserSession, error) {
+func (sr *sessionRepository) FindByUserId(userId domain.UserID) (*models.UserSession, error) {
 	var session models.UserSession
 	err := sr.db.Where("user_id = ?", userId).First(&session).Error
 	if err != nil {

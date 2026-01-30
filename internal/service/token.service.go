@@ -4,15 +4,18 @@ import (
 	"time"
 	"worklayer/internal/app/dto"
 	"worklayer/internal/config"
+	"worklayer/internal/domain"
 	"worklayer/internal/utils/response"
 	"worklayer/internal/utils/token"
+
+	"github.com/google/uuid"
 )
 
 type TokenService interface {
 	GenerateAccessToken(user *dto.UserDTO) (string, ServiceError)
 	GenerateRefreshToken(user *dto.UserDTO) (string, ServiceError)
 	ValidateAccessToken(accessToken string) (*token.UserJwtDTO, ServiceError)
-	ValidateRefreshToken(refreshToken string) (uint, ServiceError)
+	ValidateRefreshToken(refreshToken string) (domain.UserID, ServiceError)
 	GetAccessTokenExpiry() time.Duration
 	GetRefreshTokenExpiry() time.Duration
 }
@@ -62,10 +65,10 @@ func (ts *tokenService) ValidateAccessToken(accessToken string) (*token.UserJwtD
 	}, nil
 }
 
-func (ts *tokenService) ValidateRefreshToken(refreshToken string) (uint, ServiceError) {
+func (ts *tokenService) ValidateRefreshToken(refreshToken string) (domain.UserID, ServiceError) {
 	user, err := ts.tokenManager.ValidateRefreshToken(refreshToken)
 	if err != nil {
-		return 0, NewServiceError(response.UnauthorizedError("Invalid refresh token"))
+		return uuid.Nil, NewServiceError(response.UnauthorizedError("Invalid refresh token"))
 	}
 	return user.UserID, nil
 }

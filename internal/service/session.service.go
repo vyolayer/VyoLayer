@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 	"time"
+	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/models"
 	"worklayer/internal/repository"
 	"worklayer/internal/utils/hash"
@@ -12,9 +13,9 @@ import (
 )
 
 type SessionService interface {
-	SaveSession(ctx *fiber.Ctx, userId uint, token string, expiry time.Duration) ServiceError
+	SaveSession(ctx *fiber.Ctx, userId domain.UserID, token string, expiry time.Duration) ServiceError
 	DeleteSessionByToken(ctx *fiber.Ctx, token string) ServiceError
-	RotateSession(ctx *fiber.Ctx, userId uint, oldToken, newToken string, expiry time.Duration) (*models.User, ServiceError)
+	RotateSession(ctx *fiber.Ctx, userId domain.UserID, oldToken, newToken string, expiry time.Duration) (*models.User, ServiceError)
 }
 
 type sessionService struct {
@@ -29,7 +30,7 @@ func NewSessionService(userRepo repository.UserRepository, sessionRepo repositor
 	}
 }
 
-func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId uint, token string, expiry time.Duration) ServiceError {
+func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId domain.UserID, token string, expiry time.Duration) ServiceError {
 	tokenHash := hash.HashToken(token)
 	session := &models.UserSession{
 		UserID:    userId,
@@ -54,7 +55,7 @@ func (ss *sessionService) DeleteSessionByToken(ctx *fiber.Ctx, token string) Ser
 	return nil
 }
 
-func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId uint, oldToken, newToken string, expiry time.Duration) (*models.User, ServiceError) {
+func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId domain.UserID, oldToken, newToken string, expiry time.Duration) (*models.User, ServiceError) {
 	oldTokenHash := hash.HashToken(oldToken)
 	newTokenHash := hash.HashToken(newToken)
 	newSession := &models.UserSession{

@@ -18,4 +18,5 @@ database:
 auth:
   jwt_secret: dev-secret
   access_token_ttl: 15m
+  refresh_token_secret: dev-refresh-secret
   refresh_token_ttl: 720h

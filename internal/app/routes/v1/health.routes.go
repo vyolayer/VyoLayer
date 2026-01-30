@@ -6,8 +6,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func HealthRoutes(app *fiber.App) {
+type HealthRoute struct {
+	router fiber.Router
+}
+
+func NewHealthRouter(router fiber.Router) *HealthRoute {
+	return &HealthRoute{
+		router: router,
+	}
+}
+
+func (hr *HealthRoute) SetupRoutes() {
 	healthController := controller.NewHealthController()
 
-	app.Get("/health", healthController.HealthCheck)
+	hr.router.Get("/health", healthController.HealthCheck)
 }

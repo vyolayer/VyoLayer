@@ -38,9 +38,10 @@ type DatabaseConfig struct {
 }
 
 type AuthConfig struct {
-	JWTSecret       string        `yaml:"jwt_secret"`
-	AccessTokenTTL  time.Duration `yaml:"access_token_ttl"`
-	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl"`
+	JWTSecret          string        `yaml:"jwt_secret"`
+	AccessTokenTTL     time.Duration `yaml:"access_token_ttl"`
+	RefreshTokenSecret string        `yaml:"refresh_token_secret"`
+	RefreshTokenTTL    time.Duration `yaml:"refresh_token_ttl"`
 }
 
 func Load(path string) (*Config, error) {

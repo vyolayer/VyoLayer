@@ -1,6 +1,10 @@
 package response
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"worklayer/internal/utils/validation"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 const (
 	BAD_REQUEST           = "BAD_REQUEST"           // 400
@@ -19,14 +23,14 @@ const (
 )
 
 type ErrorResponse struct {
-	Success    bool              `json:"success"`
-	StatusCode int               `json:"statusCode"`
-	Code       string            `json:"code"`
-	Message    string            `json:"message"`
-	Errors     map[string]string `json:"errors,omitempty"`
+	Success    bool   `json:"success"`
+	StatusCode int    `json:"statusCode"`
+	Code       string `json:"code"`
+	Message    string `json:"message"`
+	Errors     any    `json:"errors,omitempty"`
 }
 
-func NewErrorResponse(statusCode int, code string, message string, errors map[string]string) *ErrorResponse {
+func NewErrorResponse(statusCode int, code string, message string, errors any) *ErrorResponse {
 	return &ErrorResponse{
 		Success:    false,
 		StatusCode: statusCode,
@@ -60,8 +64,17 @@ func ConflictError(message string) *ErrorResponse {
 	return NewErrorResponse(fiber.StatusConflict, CONFLICT, message, nil)
 }
 
-func ValidationError(message string) *ErrorResponse {
-	return NewErrorResponse(fiber.StatusUnprocessableEntity, VALIDATION_ERROR, message, nil)
+func ValidationError(message string, validationErrors []*validation.ErrorResponse) *ErrorResponse {
+	errs := make([]any, 0)
+	for _, details := range validationErrors {
+		errs = append(errs, map[string]any{
+			"field":   details.Field,
+			"tag":     details.Tag,
+			"message": details.Message,
+		})
+	}
+
+	return NewErrorResponse(fiber.StatusUnprocessableEntity, VALIDATION_ERROR, message, errs)
 }
 
 func TooManyRequestsError(message string) *ErrorResponse {

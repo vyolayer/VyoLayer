@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"worklayer/internal/utils/response"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,14 +12,12 @@ func NewHealthController() *HealthController {
 }
 
 func (h *HealthController) HealthCheck(c *fiber.Ctx) error {
-	return response.Success(
+	return Success(
 		c,
-		response.NewSuccessResponse(
-			fiber.StatusOK,
-			"Welcome to WorkLayer",
-			fiber.Map{
-				"version": "1.0.0",
-			},
-		),
+		fiber.StatusOK,
+		"Welcome to WorkLayer",
+		map[string]string{
+			"version": "1.0.0",
+		},
 	)
 }

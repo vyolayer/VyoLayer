@@ -13,6 +13,7 @@ import (
 	"worklayer/internal/app/routes/v1"
 	"worklayer/internal/config"
 	"worklayer/internal/platform/database"
+	"worklayer/internal/repository"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -57,8 +58,25 @@ func (a *App) SetupMiddleware() {
 
 // Setup routes
 func (a *App) SetupRoutes() {
-	routes.HealthRoutes(a.app)
+	userRepo := repository.NewUserRepository(a.db)
+	sessionRepo := repository.NewSessionRepository(a.db)
 
+	api := a.app.Group("/api")
+	apiV1 := api.Group("/v1")
+
+	// Health routes
+	routes.NewHealthRouter(apiV1).SetupRoutes()
+	// Auth routes
+	routes.NewAuthRouter(
+		apiV1,
+		routes.AuthRouteDependencies{
+			AuthConfig:  a.cfg.Auth,
+			UserRepo:    userRepo,
+			SessionRepo: sessionRepo,
+		},
+	).SetupRoutes()
+
+	// Not found middleware
 	a.app.Use(middleware.NotFoundMiddleware)
 
 	if !isRoutesSetup {

@@ -17,19 +17,17 @@ func main() {
 		panic(err)
 	}
 
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	defer sqlDB.Close()
+
 	err = db.AutoMigrate(
-		db,
 		models.User{},
 		models.UserSession{},
 	)
 	if err != nil {
 		panic(err)
 	}
-
-	sqlDB, err := db.DB()
-	if err != nil {
-		panic(err)
-	}
-
-	defer sqlDB.Close()
 }

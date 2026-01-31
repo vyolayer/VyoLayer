@@ -1,0 +1,92 @@
+# =========================
+# Go Build Artifacts
+# =========================
+# Binaries
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+
+# Output of 'go coverage'
+*.out
+*.prof
+coverage.txt
+
+# =========================
+# Dependency Directories
+# =========================
+# Vendor folder (only uncomment if you are NOT using Go Modules)
+# /vendor/
+
+# =========================
+# Environment & Secrets
+# =========================
+# Dotenv files
+.env
+.env.*
+!.env.example
+
+# Local configuration overrides
+config/*.local.yaml
+config/*.secret.yaml
+
+# SSL Certificates (Local dev)
+*.pem
+*.key
+*.crt
+
+# =========================
+# IDE & Editors
+# =========================
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (GoLand)
+.idea/
+*.iml
+
+# Vim / Emacs
+*~
+*.swp
+*.swo
+
+# =========================
+# OS Generated Files
+# =========================
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# =========================
+# Project Specific
+# =========================
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+
+# If you compile your main app to a specific name (e.g., 'worklayer'), add it here:
+worklayer
+main

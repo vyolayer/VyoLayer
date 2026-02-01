@@ -1,16 +1,35 @@
 package dto
 
 import (
+	"time"
 	"worklayer/internal/domain"
 )
 
-type UserID = domain.UserID
-
 type UserDTO struct {
-	ID              UserID `json:"id"`
-	Email           string `json:"email"`
-	IsActive        bool   `json:"isActive"`
-	IsEmailVerified bool   `json:"isEmailVerified"`
+	ID              string `json:"id"`
 	FullName        string `json:"fullName"`
-	CreatedAt       string `json:"createdAt"`
+	Email           string `json:"email"`
+	Status          string `json:"status"`
+	IsEmailVerified bool   `json:"isEmailVerified"`
+	JoinedAt        string `json:"joinedAt"`
+}
+
+func FromDomainUser(user *domain.User) UserDTO {
+	if user == nil {
+		return UserDTO{}
+	}
+
+	status := "inactive"
+	if user.IsActive {
+		status = "active"
+	}
+
+	return UserDTO{
+		ID:              user.ID.String(),
+		Email:           user.Email,
+		Status:          status,
+		IsEmailVerified: user.IsEmailVerified,
+		FullName:        user.FullName,
+		JoinedAt:        user.CreatedAt.Format(time.RFC3339),
+	}
 }

@@ -1,0 +1,35 @@
+package dto
+
+// # Auth DTOs
+//
+// RegisterUserDTO is a struct that holds the data for registering a new user
+type RegisterUserDTO struct {
+	Email    string `json:"email" validate:"required,email,max=255"`
+	Password string `json:"password" validate:"required,min=8,max=20,containsany=!@#$%^&*"`
+	FullName string `json:"fullName" validate:"required,min=3,max=100"`
+}
+
+// LoginUserDTO is a struct that holds the data for logging in a user
+type LoginUserDTO struct {
+	Email    string `json:"email" validate:"required,email,max=255"`
+	Password string `json:"password" validate:"required"`
+}
+
+// # Response DTOs
+//
+// TokenResponseDTO is a struct that holds the data for tokens
+type TokenResponseDTO struct {
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}
+
+// LoginUserResponseDTO is a struct that holds the data for logging in a user
+type LoginUserResponseDTO struct {
+	TokenResponseDTO
+	User UserDTO `json:"user"`
+}
+
+// RefreshSessionResponseDTO is a struct that holds the data for refreshing a session
+type RefreshSessionResponseDTO struct {
+	TokenResponseDTO
+}

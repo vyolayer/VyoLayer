@@ -3,6 +3,7 @@ package repository
 import (
 	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/models"
+	"worklayer/internal/platform/database/types"
 )
 
 var (
@@ -11,15 +12,15 @@ var (
 )
 
 type UserRepository interface {
-	CreateUser(email string, hashedPassword string, fullName string) error
-	FindByEmail(email string) (*models.User, error)
-	FindById(id domain.UserID) (*models.User, error)
+	CreateUser(user domain.User) RepositoryError
+	FindByEmail(email string) (*domain.User, RepositoryError)
+	FindById(id types.UserID) (*domain.User, RepositoryError)
 }
 
 type SessionRepository interface {
-	Save(session *models.UserSession) error
-	FindByUserId(userId domain.UserID) (*models.UserSession, error)
-	FindByTokenHash(hashedToken string) (*models.UserSession, error)
-	RotateByTokenHash(oldHashedToken string, newSession *models.UserSession) error
-	DeleteByTokenHash(tokenHash string) error
+	Save(session *models.UserSession) RepositoryError
+	FindByUserId(userId types.UserID) (*models.UserSession, RepositoryError)
+	FindByTokenHash(hashedToken string) (*models.UserSession, RepositoryError)
+	RotateByTokenHash(oldHashedToken string, newSession *models.UserSession) RepositoryError
+	DeleteByTokenHash(tokenHash string) RepositoryError
 }

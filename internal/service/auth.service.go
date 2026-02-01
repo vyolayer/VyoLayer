@@ -1,19 +1,17 @@
 package service
 
 import (
-	"time"
 	"worklayer/internal/app/dto"
+	"worklayer/internal/domain"
 	"worklayer/internal/repository"
-	"worklayer/internal/utils/email"
 	"worklayer/internal/utils/hash"
-	"worklayer/internal/utils/response"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type AuthService interface {
 	RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserDTO) ServiceError
-	LoginUser(ctx *fiber.Ctx, input dto.LoginUserDTO) (*dto.UserDTO, ServiceError)
+	LoginUser(ctx *fiber.Ctx, input dto.LoginUserDTO) (*domain.User, ServiceError)
 }
 
 type authService struct {
@@ -25,46 +23,44 @@ func NewAuthService(user repository.UserRepository) AuthService {
 }
 
 func (as *authService) RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserDTO) ServiceError {
-	email := email.NewEmail(input.Email)
-	hashedPassword, err := hash.HashPassword(input.Password)
+	user, err := domain.NewUser(input.Email, input.Password, input.FullName)
 	if err != nil {
-		return NewServiceError(response.InternalServerError("Failed to hash password"))
+		return NewServiceError(err.Code, err.Message)
 	}
 
 	// Check if user already exists
-	existUser, _ := as.user.FindByEmail(email.Value())
+	existUser, _ := as.user.FindByEmail(user.Email)
 	if existUser != nil {
-		return NewServiceError(response.ConflictError("User already exists"))
+		return NewServiceError(409, "User already exists")
 	}
 
 	// Create user
-	if err := as.user.CreateUser(email.Value(), hashedPassword, input.FullName); err != nil {
-		return NewServiceError(response.InternalServerError("Failed to create user"))
+	if err := as.user.CreateUser(*user); err != nil {
+		return NewServiceError(err.Code, err.Message)
 	}
 
 	return nil
 }
 
-func (as *authService) LoginUser(ctx *fiber.Ctx, input dto.LoginUserDTO) (*dto.UserDTO, ServiceError) {
-	email := email.NewEmail(input.Email)
+func (as *authService) LoginUser(ctx *fiber.Ctx, input dto.LoginUserDTO) (*domain.User, ServiceError) {
+	email, err := domain.NewEmail(input.Email)
+	if err != nil {
+		return nil, NewServiceError(err.Code, err.Message)
+	}
 
 	// Check if user already exists
-	existUser, _ := as.user.FindByEmail(email.Value())
-	if existUser == nil {
-		return nil, NewServiceError(response.NotFoundError("User not found"))
+	user, repoErr := as.user.FindByEmail(email.String())
+	if repoErr != nil {
+		return nil, NewServiceError(repoErr.Code, repoErr.Message)
+	}
+	if user == nil {
+		return nil, NewServiceError(404, "User not found")
 	}
 
 	// Compare password
-	if !hash.CheckPasswordHash(input.Password, existUser.PasswordHash) {
-		return nil, NewServiceError(response.UnauthorizedError("Invalid password"))
+	if !hash.CheckPasswordHash(input.Password, user.HashedPassword) {
+		return nil, NewServiceError(401, "Invalid password")
 	}
 
-	return &dto.UserDTO{
-		ID:              existUser.ID,
-		Email:           existUser.Email,
-		IsActive:        existUser.IsActive,
-		IsEmailVerified: existUser.IsEmailVerified,
-		FullName:        existUser.FullName,
-		CreatedAt:       existUser.CreatedAt.Format(time.RFC3339),
-	}, nil
+	return user, nil
 }

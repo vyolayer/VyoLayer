@@ -1,15 +1,13 @@
 package service
 
 import (
-	"time"
-	"worklayer/internal/app/dto"
 	"worklayer/internal/domain"
+	"worklayer/internal/platform/database/types"
 	"worklayer/internal/repository"
-	"worklayer/internal/utils/response"
 )
 
 type UserService interface {
-	GetUser(userId domain.UserID) (*dto.UserDTO, ServiceError)
+	GetUser(userId types.UserID) (*domain.User, ServiceError)
 }
 
 type userService struct {
@@ -20,18 +18,15 @@ func NewUserService(user repository.UserRepository) UserService {
 	return &userService{user: user}
 }
 
-func (us *userService) GetUser(userId domain.UserID) (*dto.UserDTO, ServiceError) {
-	user, err := us.user.FindById(userId)
+func (us *userService) GetUser(userId types.UserID) (*domain.User, ServiceError) {
+	userModel, err := us.user.FindById(userId)
 	if err != nil {
-		return nil, NewServiceError(response.InternalServerError("Failed to get user"))
+		return nil, ServiceError(err)
 	}
 
-	return &dto.UserDTO{
-		ID:              user.ID,
-		Email:           user.Email,
-		FullName:        user.FullName,
-		IsActive:        user.IsActive,
-		IsEmailVerified: user.IsEmailVerified,
-		CreatedAt:       user.CreatedAt.Format(time.RFC3339),
-	}, nil
+	if userModel == nil {
+		return nil, domain.NewDomainError(404, "User not found")
+	}
+
+	return userModel, nil
 }

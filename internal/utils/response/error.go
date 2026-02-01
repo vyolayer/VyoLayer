@@ -31,6 +31,35 @@ type ErrorResponse struct {
 }
 
 func NewErrorResponse(statusCode int, code string, message string, errors any) *ErrorResponse {
+	switch statusCode {
+	case fiber.StatusBadRequest:
+		code = BAD_REQUEST
+	case fiber.StatusUnauthorized:
+		code = UNAUTHORIZED
+	case fiber.StatusForbidden:
+		code = FORBIDDEN
+	case fiber.StatusNotFound:
+		code = NOT_FOUND
+	case fiber.StatusMethodNotAllowed:
+		code = METHOD_NOT_ALLOWED
+	case fiber.StatusConflict:
+		code = CONFLICT
+	case fiber.StatusUnprocessableEntity:
+		code = VALIDATION_ERROR
+	case fiber.StatusTooManyRequests:
+		code = TOO_MANY_REQUESTS
+	case fiber.StatusInternalServerError:
+		code = INTERNAL_SERVER_ERROR
+	case fiber.StatusNotImplemented:
+		code = NOT_IMPLEMENTED
+	case fiber.StatusBadGateway:
+		code = BAD_GATEWAY
+	case fiber.StatusServiceUnavailable:
+		code = SERVICE_UNAVAILABLE
+	case fiber.StatusGatewayTimeout:
+		code = GATEWAY_TIMEOUT
+	}
+
 	return &ErrorResponse{
 		Success:    false,
 		StatusCode: statusCode,
@@ -38,6 +67,40 @@ func NewErrorResponse(statusCode int, code string, message string, errors any) *
 		Message:    message,
 		Errors:     errors,
 	}
+}
+
+func NewErrorMessage(statusCode int, message string) *ErrorResponse {
+	code := ""
+	switch statusCode {
+	case fiber.StatusBadRequest:
+		code = BAD_REQUEST
+	case fiber.StatusUnauthorized:
+		code = UNAUTHORIZED
+	case fiber.StatusForbidden:
+		code = FORBIDDEN
+	case fiber.StatusNotFound:
+		code = NOT_FOUND
+	case fiber.StatusMethodNotAllowed:
+		code = METHOD_NOT_ALLOWED
+	case fiber.StatusConflict:
+		code = CONFLICT
+	case fiber.StatusUnprocessableEntity:
+		code = VALIDATION_ERROR
+	case fiber.StatusTooManyRequests:
+		code = TOO_MANY_REQUESTS
+	case fiber.StatusInternalServerError:
+		code = INTERNAL_SERVER_ERROR
+	case fiber.StatusNotImplemented:
+		code = NOT_IMPLEMENTED
+	case fiber.StatusBadGateway:
+		code = BAD_GATEWAY
+	case fiber.StatusServiceUnavailable:
+		code = SERVICE_UNAVAILABLE
+	case fiber.StatusGatewayTimeout:
+		code = GATEWAY_TIMEOUT
+	}
+
+	return NewErrorResponse(statusCode, code, message, nil)
 }
 
 func BadRequestError(message string) *ErrorResponse {

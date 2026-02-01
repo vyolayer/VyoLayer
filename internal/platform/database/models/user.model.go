@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"worklayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -15,11 +16,9 @@ type BaseModel struct {
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {
-	id, err := uuid.NewV7()
-	if err != nil {
-		return err
+	if b.ID == uuid.Nil {
+		b.ID = uuid.New()
 	}
-	b.ID = id
 	return nil
 }
 
@@ -36,8 +35,8 @@ type User struct {
 
 type UserSession struct {
 	BaseModel
-	UserID    uuid.UUID `gorm:"index;not null"`
-	TokenHash string    `gorm:"uniqueIndex;not null"`
+	UserID    types.InternalID `gorm:"index;not null"`
+	TokenHash string           `gorm:"uniqueIndex;not null"`
 	ExpiresAt time.Time
 	Revoked   bool   `gorm:"default:false"`
 	IpAddress string `gorm:"size:50"`

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"worklayer/internal/app"
 )
 
@@ -14,7 +12,7 @@ func main() {
 	server.SetupRoutes()
 
 	if err := server.Run(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	server.ListenShutdownEvent()

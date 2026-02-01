@@ -3,7 +3,6 @@ package token
 import (
 	"errors"
 	"time"
-	"worklayer/internal/domain"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -15,20 +14,20 @@ var (
 
 // UserJwtDTO is the input data
 type UserJwtDTO struct {
-	UserID domain.UserID `json:"user_id"`
-	Email  string        `json:"email"`
+	UserID string `json:"user_id"`
+	Email  string `json:"email"`
 }
 
 // AccessClaims: Rich data for the application (Avoids DB lookups)
 type AccessClaims struct {
-	UserID domain.UserID `json:"user_id"`
-	Email  string        `json:"email"`
+	UserID string `json:"user_id"`
+	Email  string `json:"email"`
 	jwt.RegisteredClaims
 }
 
 // RefreshClaims: Minimal data (Just enough to identify user)
 type RefreshClaims struct {
-	UserID domain.UserID `json:"user_id"`
+	UserID string `json:"user_id"`
 	jwt.RegisteredClaims
 }
 

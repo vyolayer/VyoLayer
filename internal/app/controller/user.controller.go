@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"log"
+	"worklayer/internal/app/dto"
+	"worklayer/internal/platform/database/types"
 	"worklayer/internal/service"
 	"worklayer/internal/utils/response"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 type UserController interface {
@@ -22,17 +22,20 @@ func NewUserController(userService service.UserService) UserController {
 }
 
 func (uc *userController) GetMe(ctx *fiber.Ctx) error {
-	userId := ctx.Locals("user_id").(uuid.UUID)
-	user, err := uc.userService.GetUser(userId)
+	localUserIDVal := ctx.Locals("user_id")
+	localUserID, ok := localUserIDVal.(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, "Invalid or missing user context"))
+	}
+	user, err := uc.userService.GetUser(localUserID)
 
 	if err != nil {
-		log.Printf("USER CONTROLLER :: GetMe : %v", err.Error())
-		return Error(ctx, response.InternalServerError("Failed to get user"))
+		return Error(ctx, response.NewErrorMessage(err.Code, err.Message))
 	}
 
 	return SuccessData(
 		ctx,
 		fiber.StatusOK,
-		user,
+		dto.MeResponseDTO{UserDTO: dto.FromDomainUser(user)},
 	)
 }

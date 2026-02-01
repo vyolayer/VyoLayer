@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 	"worklayer/internal/app/dto"
+	"worklayer/internal/platform/database/types"
 	"worklayer/internal/service"
-	"worklayer/internal/utils/constant"
 	"worklayer/internal/utils/response"
 	"worklayer/internal/utils/validation"
 
@@ -39,7 +39,7 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(cmd); err != nil {
 		return Error(
 			ctx,
-			response.BadRequestError("Invalid request body"),
+			InvalidBodyError,
 		)
 	}
 
@@ -51,8 +51,8 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 		)
 	}
 
-	if err := ac.authService.RegisterUser(ctx, *cmd); err != nil {
-		return Error(ctx, err.Error())
+	if authErr := ac.authService.RegisterUser(ctx, *cmd); authErr != nil {
+		return Error(ctx, response.NewErrorMessage(authErr.Code, authErr.Message))
 	}
 
 	return SuccessMessage(
@@ -67,7 +67,7 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(cmd); err != nil {
 		return Error(
 			ctx,
-			response.BadRequestError("Invalid request body"),
+			InvalidBodyError,
 		)
 	}
 
@@ -79,34 +79,46 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 		)
 	}
 
-	user, err := ac.authService.LoginUser(ctx, *cmd)
-	if err != nil {
-		return Error(ctx, err.Error())
+	user, authErr := ac.authService.LoginUser(ctx, *cmd)
+	if authErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(authErr.Code, authErr.Message),
+		)
 	}
 
-	accessToken, err := ac.tokenService.GenerateAccessToken(user)
-	if err != nil {
-		return Error(ctx, response.InternalServerError("Failed to generate access token"))
+	accessToken, tokenErr := ac.tokenService.GenerateAccessToken(*user)
+	if tokenErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
+		)
 	}
 
-	refreshToken, err := ac.tokenService.GenerateRefreshToken(user)
-	if err != nil {
-		return Error(ctx, response.InternalServerError("Failed to generate refresh token"))
+	refreshToken, tokenErr := ac.tokenService.GenerateRefreshToken(user.ID.InternalID().String())
+	if tokenErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
+		)
 	}
 
-	if err := ac.sessionService.SaveSession(
+	if sessionErr := ac.sessionService.SaveSession(
 		ctx,
 		user.ID,
 		refreshToken,
 		ac.tokenService.GetRefreshTokenExpiry(),
-	); err != nil {
-		return Error(ctx, response.InternalServerError("Failed to save session"))
+	); sessionErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(sessionErr.Code, sessionErr.Message),
+		)
 	}
 
 	ac.setAuthCookies(ctx, accessToken, refreshToken)
 	response := dto.LoginUserResponseDTO{
-		Tokens: dto.TokenResponseDTO{AccessToken: accessToken, RefreshToken: refreshToken},
-		User:   *user,
+		TokenResponseDTO: dto.TokenResponseDTO{AccessToken: accessToken, RefreshToken: refreshToken},
+		User:             dto.FromDomainUser(user),
 	}
 	return Success(
 		ctx,
@@ -117,20 +129,23 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 }
 
 func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
-	localUserID := ctx.Locals("user_id")
-	if localUserID == nil || localUserID.(uint) == 0 {
-		return Error(ctx, response.UnauthorizedError("Authorization failed"))
+	_, err := getUserIDFromContext(ctx)
+	if err != nil {
+		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, err.Error()))
 	}
 
 	// get refresh token from cookie
-	refreshToken := ctx.Cookies(constant.RefreshTokenCookieName)
+	refreshToken := ctx.Cookies(RefreshTokenCookieName)
 	if refreshToken == "" {
-		return Error(ctx, response.UnauthorizedError("Refresh token not found"))
+		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, "Refresh token not found"))
 	}
 
 	// delete session
 	if err := ac.sessionService.DeleteSessionByToken(ctx, refreshToken); err != nil {
-		return Error(ctx, response.InternalServerError("Failed to delete session"))
+		return Error(
+			ctx,
+			response.NewErrorMessage(fiber.StatusInternalServerError, "Failed to delete session"),
+		)
 	}
 
 	// clear cookies
@@ -144,47 +159,82 @@ func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 
 func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 	// get refresh token from cookie
-	oldRefreshToken := ctx.Cookies(constant.RefreshTokenCookieName)
+	oldRefreshToken := ctx.Cookies(RefreshTokenCookieName)
 	if oldRefreshToken == "" {
-		return Error(ctx, response.UnauthorizedError("Refresh token not found"))
+		return Error(
+			ctx,
+			response.NewErrorMessage(fiber.StatusUnauthorized, "Refresh token not found"),
+		)
 	}
 
 	// validate refresh token
-	userID, err := a.tokenService.ValidateRefreshToken(oldRefreshToken)
-	if err != nil {
-		return Error(ctx, response.UnauthorizedError("Refresh token is invalid"))
+	jwtUserID, tokenErr := a.tokenService.ValidateRefreshToken(oldRefreshToken)
+	if tokenErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
+		)
 	}
 
-	// generate new access and refresh tokens
-	newRefreshToken, tokenErr := a.tokenService.GenerateRefreshToken(&dto.UserDTO{ID: userID})
-	if tokenErr != nil {
-		return Error(ctx, response.InternalServerError("Failed to generate refresh token"))
-	}
-	user, err := a.sessionService.RotateSession(ctx, userID, oldRefreshToken, newRefreshToken, a.tokenService.GetRefreshTokenExpiry())
+	userID, err := types.ReconstructUserID(jwtUserID)
+	log.Printf("REFRESH TOKEN CONTROLLER :: userID : %v", userID.InternalID().String())
 	if err != nil {
-		log.Printf("REFRESH TOKEN CONTROLLER :: RotateSession : %v", err.Error())
-		return Error(ctx, response.InternalServerError("Failed to rotate session"))
+		return Error(
+			ctx,
+			response.NewErrorMessage(fiber.StatusInternalServerError, "Failed to reconstruct user ID"),
+		)
 	}
-	accessToken, tokenErr := a.tokenService.GenerateAccessToken(&dto.UserDTO{ID: user.ID, Email: user.Email})
+
+	newRefreshToken, tokenErr := a.tokenService.GenerateRefreshToken(userID.InternalID().String())
 	if tokenErr != nil {
-		log.Printf("REFRESH TOKEN CONTROLLER :: GenerateAccessToken : %v", tokenErr.Error())
-		return Error(ctx, response.InternalServerError("Failed to generate access token"))
+		return Error(
+			ctx,
+			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
+		)
 	}
+
+	user, sessionErr := a.sessionService.RotateSession(
+		ctx,
+		*userID,
+		oldRefreshToken,
+		newRefreshToken,
+		a.tokenService.GetRefreshTokenExpiry(),
+	)
+	if sessionErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(sessionErr.Code, sessionErr.Message),
+		)
+	}
+
+	accessToken, tokenErr := a.tokenService.GenerateAccessToken(*user)
+	if tokenErr != nil {
+		return Error(
+			ctx,
+			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
+		)
+	}
+
 	// set new access and refresh tokens as cookies
 	a.setAuthCookies(ctx, accessToken, newRefreshToken)
-
+	responseData := dto.RefreshSessionResponseDTO{
+		TokenResponseDTO: dto.TokenResponseDTO{
+			AccessToken:  accessToken,
+			RefreshToken: newRefreshToken,
+		},
+	}
 	return Success(
 		ctx,
 		fiber.StatusOK,
 		"Session refreshed successfully",
-		dto.TokenResponseDTO{AccessToken: accessToken, RefreshToken: newRefreshToken},
+		responseData,
 	)
 }
 
 func (a *authController) ValidateSession(ctx *fiber.Ctx) error {
-	userID := ctx.Locals("user_id")
-	if userID == nil {
-		return Error(ctx, response.UnauthorizedError("Unauthorized"))
+	_, err := getUserIDFromContext(ctx)
+	if err != nil {
+		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, err.Error()))
 	}
 
 	return SuccessMessage(
@@ -197,7 +247,7 @@ func (a *authController) ValidateSession(ctx *fiber.Ctx) error {
 // setAuthCookies sets the access and refresh tokens as HTTP cookies
 func (a *authController) setAuthCookies(ctx *fiber.Ctx, accessToken, refreshToken string) {
 	ctx.Cookie(&fiber.Cookie{
-		Name:     constant.AccessTokenCookieName,
+		Name:     AccessTokenCookieName,
 		Value:    accessToken,
 		Expires:  time.Now().Add(a.tokenService.GetAccessTokenExpiry()),
 		HTTPOnly: true,
@@ -206,7 +256,7 @@ func (a *authController) setAuthCookies(ctx *fiber.Ctx, accessToken, refreshToke
 	})
 
 	ctx.Cookie(&fiber.Cookie{
-		Name:     constant.RefreshTokenCookieName,
+		Name:     RefreshTokenCookieName,
 		Value:    refreshToken,
 		Expires:  time.Now().Add(a.tokenService.GetRefreshTokenExpiry()),
 		HTTPOnly: true,
@@ -217,7 +267,7 @@ func (a *authController) setAuthCookies(ctx *fiber.Ctx, accessToken, refreshToke
 
 func (a *authController) clearAuthCookies(ctx *fiber.Ctx) {
 	ctx.Cookie(&fiber.Cookie{
-		Name:     constant.AccessTokenCookieName,
+		Name:     AccessTokenCookieName,
 		Value:    "",
 		Expires:  time.Now().Add(-time.Hour),
 		HTTPOnly: true,
@@ -226,7 +276,7 @@ func (a *authController) clearAuthCookies(ctx *fiber.Ctx) {
 	})
 
 	ctx.Cookie(&fiber.Cookie{
-		Name:     constant.RefreshTokenCookieName,
+		Name:     RefreshTokenCookieName,
 		Value:    "",
 		Expires:  time.Now().Add(-time.Hour),
 		HTTPOnly: true,

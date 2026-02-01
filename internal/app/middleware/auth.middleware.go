@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"strings"
 	"worklayer/internal/app/controller"
 	"worklayer/internal/service"
@@ -45,6 +46,7 @@ func (am *AuthMiddleware) JwtValidated() fiber.Handler {
 		if err != nil {
 			return Error(ctx, response.UnauthorizedError("Unauthorized"))
 		}
+		log.Printf("AUTH MIDDLEWARE :: JwtValidated : userClaims : %v", userClaims)
 
 		ctx.Locals("user_id", userClaims.UserID)
 		ctx.Locals("user_email", userClaims.Email)

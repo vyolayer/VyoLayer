@@ -8,6 +8,14 @@ import (
 
 type ErrorResponse = response.ErrorResponse
 
+// Common errs
+var (
+	InvalidBodyError   *ErrorResponse = response.BadRequestError("Invalid request body")
+	InvalidParamsError *ErrorResponse = response.BadRequestError("Invalid parameters")
+	UnauthorizedError  *ErrorResponse = response.UnauthorizedError("Unauthorized")
+	InternalError      *ErrorResponse = response.InternalServerError("Internal server error")
+)
+
 func Error(ctx *fiber.Ctx, err *ErrorResponse) error {
 	return ctx.Status(err.StatusCode).JSON(err)
 }

@@ -90,3 +90,4 @@ tmp/
 # If you compile your main app to a specific name (e.g., 'worklayer'), add it here:
 worklayer
 main
+playground

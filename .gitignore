@@ -91,3 +91,7 @@ tmp/
 worklayer
 main
 playground
+.gemini/
+
+# =========================
+docs/internal/

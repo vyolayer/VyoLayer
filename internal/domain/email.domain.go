@@ -1,14 +1,17 @@
 package domain
 
-import "strings"
+import (
+	"strings"
+	"worklayer/pkg/errors"
+)
 
 type Email struct {
 	value string
 }
 
-func NewEmail(value string) (*Email, DomainError) {
+func NewEmail(value string) (*Email, *errors.AppError) {
 	if value == "" {
-		return nil, NewDomainError(400, "Invalid email address")
+		return nil, InvalidEmailError(value)
 	}
 	return &Email{value: value}, nil
 }

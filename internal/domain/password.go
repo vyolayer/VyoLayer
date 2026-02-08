@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"worklayer/pkg/errors"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -13,13 +15,13 @@ type password struct {
 	hashedPassword string
 }
 
-func NewPassword(value string) (Password, DomainError) {
+func NewPassword(value string) (Password, *errors.AppError) {
 	if len(value) < 8 {
-		return nil, ErrPasswordWeak
+		return nil, InvalidPasswordError("Password must be at least 8 characters")
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, &ErrPasswordHashFailed
+		return nil, PasswordHashFailedError(err)
 	}
 	return &password{hashedPassword: string(hashedPassword)}, nil
 }

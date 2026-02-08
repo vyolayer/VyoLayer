@@ -4,12 +4,13 @@ import (
 	"log"
 	"time"
 	"worklayer/internal/platform/database/types"
+	"worklayer/pkg/errors"
 )
 
 var (
-	ErrInvalidEmail    = NewDomainError(400, "Invalid email address")
-	ErrPasswordWeak    = NewDomainError(400, "Password must be at least 8 characters")
-	ErrInvalidPassword = NewDomainError(400, "Invalid password")
+	ErrInvalidEmail    = errors.ErrValidationInvalidEmail
+	ErrPasswordWeak    = errors.ErrValidationInvalidPassword
+	ErrInvalidPassword = errors.ErrValidationInvalidPassword
 )
 
 type User struct {
@@ -23,7 +24,7 @@ type User struct {
 	UpdatedAt       time.Time
 }
 
-func NewUser(email, rawPassword, fullName string) (*User, DomainError) {
+func NewUser(email, rawPassword, fullName string) (*User, *errors.AppError) {
 	hashedPassword, err := NewPassword(rawPassword)
 
 	if err != nil {
@@ -78,15 +79,15 @@ func (u *User) VerifyPassword(password string) bool {
 }
 
 // ChangePassword changes the user's password.
-func (u *User) ChangePassword(oldPassword, newPassword string) DomainError {
+func (u *User) ChangePassword(oldPassword, newPassword string) *errors.AppError {
 	// Verify old password
 	if !u.VerifyPassword(oldPassword) {
-		return ErrInvalidPassword
+		return InvalidPasswordError("Current password is incorrect")
 	}
 
 	// Check if new password is weak
 	if len(newPassword) < 8 {
-		return ErrPasswordWeak
+		return InvalidPasswordError("Password must be at least 8 characters")
 	}
 
 	// Hash new password

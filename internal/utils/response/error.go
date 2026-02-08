@@ -30,6 +30,10 @@ type ErrorResponse struct {
 	Errors     any    `json:"errors,omitempty"`
 }
 
+func (e *ErrorResponse) Error() string {
+	return e.Message
+}
+
 func NewErrorResponse(statusCode int, code string, message string, errors any) *ErrorResponse {
 	switch statusCode {
 	case fiber.StatusBadRequest:

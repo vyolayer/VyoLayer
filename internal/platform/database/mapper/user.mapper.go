@@ -3,7 +3,6 @@ package mapper
 import (
 	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
 )
 
 // ToDomainUser converts a User model to a User domain object.
@@ -12,13 +11,8 @@ func ToDomainUser(userModel *models.User) *domain.User {
 		return nil
 	}
 
-	userID, err := types.ReconstructUserID(userModel.ID.String())
-	if err != nil {
-		return nil
-	}
-
 	return domain.ReconstructUser(
-		*userID,
+		userModel.PublicID(),
 		userModel.Email,
 		userModel.PasswordHash,
 		userModel.FullName,
@@ -37,9 +31,8 @@ func ToDBUser(user *domain.User) *models.User {
 
 	return &models.User{
 		BaseModel: models.BaseModel{
-			ID:        user.ID.InternalID().ID(),
-			CreatedAt: user.CreatedAt,
-			UpdatedAt: user.UpdatedAt,
+			ID:         user.ID.InternalID().ID(),
+			TimeStamps: models.TimeStamps{CreatedAt: user.CreatedAt, UpdatedAt: user.UpdatedAt},
 		},
 		Email:           user.Email,
 		PasswordHash:    user.HashedPassword,

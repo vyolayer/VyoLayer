@@ -19,7 +19,7 @@ func NewPassword(value string) (Password, DomainError) {
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, ErrPasswordHashFailed
+		return nil, &ErrPasswordHashFailed
 	}
 	return &password{hashedPassword: string(hashedPassword)}, nil
 }

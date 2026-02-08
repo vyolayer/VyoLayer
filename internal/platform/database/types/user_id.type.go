@@ -8,14 +8,16 @@ import (
 	"github.com/google/uuid"
 )
 
-// UserID is the type for user IDs.
 type UserID struct {
 	PublicID
 }
 
+// NewUserID creates a new UserID.
 func NewUserID() UserID {
 	return UserID{PublicID: NewPublicID(UserPrefix)}
 }
+
+// ReconstructUserID reconstructs a UserID from a string.
 func ReconstructUserID(s string) (*UserID, error) {
 	if s == "" {
 		return nil, errors.New("id cannot be empty")
@@ -44,14 +46,25 @@ func ReconstructUserID(s string) (*UserID, error) {
 	// 3. Construct and return
 	return &UserID{
 		PublicID: PublicID{
-			Prefix: UserPrefix,
-			UUID:   ReconstructInternalID(id),
+			prefix: UserPrefix,
+			uuid:   ReconstructInternalID(id),
 		},
 	}, nil
 }
 
+func ParseUserID(s string) (UserID, error) {
+	public, err := ParsePublicID(s)
+	if err != nil {
+		return UserID{}, err
+	}
+	if public.prefix != UserPrefix {
+		return UserID{}, fmt.Errorf("invalid prefix: %s", public.prefix)
+	}
+	return UserID{PublicID: public}, nil
+}
+
 func (id UserID) MarshalJSON() ([]byte, error) {
-	public := PublicID{Prefix: UserPrefix, UUID: id.PublicID.UUID}
+	public := PublicID{prefix: UserPrefix, uuid: id.PublicID.uuid}
 	return public.MarshalJSON()
 }
 
@@ -62,15 +75,17 @@ func (id *UserID) UnmarshalJSON(b []byte) error {
 	}
 
 	// Validation: Ensure the ID sent matches the expected type
-	if public.Prefix != UserPrefix {
-		return fmt.Errorf("id type mismatch: expected %s but got %s", UserPrefix, public.Prefix)
+	if public.prefix != UserPrefix {
+		return fmt.Errorf("id type mismatch: expected %s but got %s", UserPrefix, public.prefix)
 	}
 
-	id.PublicID.UUID = public.UUID
+	// Validation: Ensure the ID sent matches the expected type
+	id.PublicID.prefix = public.prefix
+	id.PublicID.uuid = public.uuid
 	return nil
 }
 
 func (id *UserID) String() string {
-	public := PublicID{Prefix: UserPrefix, UUID: id.PublicID.UUID}
+	public := PublicID{prefix: UserPrefix, uuid: id.PublicID.uuid}
 	return public.String()
 }

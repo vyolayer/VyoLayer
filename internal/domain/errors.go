@@ -64,16 +64,16 @@ func NewUnknownError(code int, message string) *AppError {
 
 // Common errors for domain error
 var (
-	ErrUserNotFound       *AppError = NewDomainError(404, "user not found")
-	ErrUserNotVerified    *AppError = NewDomainError(401, "user is not verified")
-	ErrInvalidCredentials *AppError = NewDomainError(401, "invalid credentials")
-	ErrSessionNotFound    *AppError = NewDomainError(404, "session not found")
-	ErrSessionExpired     *AppError = NewDomainError(401, "session has expired")
-	ErrTokenExpired       *AppError = NewDomainError(401, "token has expired")
-	ErrTokenInvalid       *AppError = NewDomainError(401, "token is invalid")
-	ErrUserAlreadyExists  *AppError = NewDomainError(409, "user already exists")
-	ErrInternal           *AppError = NewDomainError(500, "internal error")
-	ErrPasswordHashFailed *AppError = NewDomainError(500, "password hash failed")
+	ErrUserNotFound       AppError = AppError{Code: 404, Message: "user not found"}
+	ErrUserNotVerified    AppError = AppError{Code: 401, Message: "user is not verified"}
+	ErrInvalidCredentials AppError = AppError{Code: 401, Message: "invalid credentials"}
+	ErrSessionNotFound    AppError = AppError{Code: 401, Message: "session not found"}
+	ErrSessionExpired     AppError = AppError{Code: 401, Message: "session has expired"}
+	ErrTokenExpired       AppError = AppError{Code: 401, Message: "token has expired"}
+	ErrTokenInvalid       AppError = AppError{Code: 401, Message: "token is invalid"}
+	ErrUserAlreadyExists  AppError = AppError{Code: 409, Message: "user already exists"}
+	ErrInternal           AppError = AppError{Code: 500, Message: "internal error"}
+	ErrPasswordHashFailed AppError = AppError{Code: 500, Message: "password hash failed"}
 )
 
 type DomainError *AppError

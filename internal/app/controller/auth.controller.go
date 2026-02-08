@@ -35,7 +35,7 @@ func NewAuthController(authService service.AuthService, tokenService service.Tok
 }
 
 func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
-	cmd := &dto.RegisterUserDTO{}
+	cmd := &dto.RegisterUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
 		return Error(
 			ctx,
@@ -51,19 +51,21 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 		)
 	}
 
-	if authErr := ac.authService.RegisterUser(ctx, *cmd); authErr != nil {
+	user, authErr := ac.authService.RegisterUser(ctx, *cmd)
+	if authErr != nil {
 		return Error(ctx, response.NewErrorMessage(authErr.Code, authErr.Message))
 	}
 
-	return SuccessMessage(
+	return Success(
 		ctx,
 		fiber.StatusOK,
 		"User registered successfully",
+		dto.FromDomainUser(user),
 	)
 }
 
 func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
-	cmd := &dto.LoginUserDTO{}
+	cmd := &dto.LoginUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
 		return Error(
 			ctx,

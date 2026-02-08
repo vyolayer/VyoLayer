@@ -8,15 +8,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type BaseModel struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
+type TimeStamps struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type BaseModel struct {
+	ID uuid.UUID `gorm:"<-:create;type:uuid;primaryKey"`
+	TimeStamps
 	DeletedAt *time.Time `gorm:"index"`
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {
-	if b.ID == uuid.Nil {
+	if b.ID.String() == "00000000-0000-0000-0000-000000000000" || b.ID.String() == "" {
 		b.ID = uuid.New()
 	}
 	return nil
@@ -31,6 +35,15 @@ type User struct {
 	IsEmailVerified bool
 	IsActive        bool `gorm:"default:true"`
 	LastLoginAt     *time.Time
+}
+
+func (u User) TableName() string {
+	return "users"
+}
+
+func (u *User) PublicID() types.UserID {
+	uid, _ := types.ReconstructUserID(u.ID.String())
+	return *uid
 }
 
 type UserSession struct {

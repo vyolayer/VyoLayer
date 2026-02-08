@@ -127,21 +127,21 @@ func (id *InternalID) Scan(value any) error {
 
 // Public id for API/external use
 type PublicID struct {
-	Prefix IDPrefix
-	UUID   InternalID
+	prefix IDPrefix
+	uuid   InternalID
 }
 
 func NewPublicID(prefix IDPrefix) PublicID {
 	return PublicID{
-		Prefix: prefix,
-		UUID:   NewInternalID(),
+		prefix: prefix,
+		uuid:   NewInternalID(),
 	}
 }
 
 func NewPublicIDFromInternalID(prefix IDPrefix, id InternalID) PublicID {
 	return PublicID{
-		Prefix: prefix,
-		UUID:   id,
+		prefix: prefix,
+		uuid:   id,
 	}
 }
 
@@ -162,21 +162,21 @@ func ParsePublicID(s string) (PublicID, error) {
 	}
 
 	return PublicID{
-		Prefix: prefix,
-		UUID:   uuid,
+		prefix: prefix,
+		uuid:   uuid,
 	}, nil
 }
 
 func (id PublicID) String() string {
-	return string(id.Prefix) + PrefixSeparator + id.UUID.String()
+	return string(id.prefix) + PrefixSeparator + id.uuid.String()
 }
 
 func (id PublicID) IsNil() bool {
-	return id.Prefix == "" && id.UUID.IsNil()
+	return id.prefix == "" && id.uuid.IsNil()
 }
 
 func (id PublicID) InternalID() InternalID {
-	return id.UUID
+	return id.uuid
 }
 
 func (id PublicID) MarshalJSON() ([]byte, error) {
@@ -204,7 +204,7 @@ func NewPublicIDFromUUID(prefix IDPrefix, id uuid.UUID) (PublicID, error) {
 		return PublicID{}, fmt.Errorf("invalid uuid: %s", id)
 	}
 	return PublicID{
-		Prefix: prefix,
-		UUID:   InternalID(id),
+		prefix: prefix,
+		uuid:   InternalID(id),
 	}, nil
 }

@@ -25,7 +25,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{db: db}
 }
 
-func (ur *userRepository) CreateUser(user domain.User) RepositoryError {
+func (ur *userRepository) CreateUser(user domain.User) (*domain.User, RepositoryError) {
 	err := ur.db.Create(&models.User{
 		Email:           user.Email,
 		PasswordHash:    user.HashedPassword,
@@ -36,11 +36,12 @@ func (ur *userRepository) CreateUser(user domain.User) RepositoryError {
 	if err != nil {
 		// check if the error is due to duplicate key
 		if err == gorm.ErrDuplicatedKey {
-			return ErrUserAlreadyExists
+			return nil, ErrUserAlreadyExists
 		}
-		return NewRepositoryError(500, err.Error())
+		return nil, NewRepositoryError(500, err.Error())
 	}
-	return nil
+
+	return &user, nil
 }
 
 func (ur *userRepository) FindByEmail(email string) (*domain.User, RepositoryError) {

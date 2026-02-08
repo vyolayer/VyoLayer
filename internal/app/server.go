@@ -17,6 +17,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"gorm.io/gorm"
 )
@@ -53,6 +54,20 @@ func (a *App) SetupMiddleware() {
 	a.app.Use(middleware.NewRequestIDMiddleware().RequestIDMiddleware)
 	a.app.Use(logger.New())
 	a.app.Use(middleware.ErrorMiddleware)
+
+	a.app.Get("/metrics", monitor.New())
+	// get all route list from fiber
+	a.app.Get("/routes", func(c *fiber.Ctx) error {
+		noOfRoutes := len(a.app.GetRoutes())
+		routesPath := make(map[string]string, noOfRoutes)
+
+		for _, r := range a.app.GetRoutes() {
+			path := r.Path
+			routesPath[path] = r.Method
+		}
+
+		return c.JSON(routesPath)
+	})
 }
 
 // Setup routes

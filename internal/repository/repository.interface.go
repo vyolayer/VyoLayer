@@ -12,7 +12,7 @@ var (
 )
 
 type UserRepository interface {
-	CreateUser(user domain.User) RepositoryError
+	CreateUser(user domain.User) (*domain.User, RepositoryError)
 	FindByEmail(email string) (*domain.User, RepositoryError)
 	FindById(id types.UserID) (*domain.User, RepositoryError)
 }

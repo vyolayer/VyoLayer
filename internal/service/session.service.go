@@ -8,14 +8,15 @@ import (
 	"worklayer/internal/platform/database/types"
 	"worklayer/internal/repository"
 	"worklayer/internal/utils/hash"
+	"worklayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type SessionService interface {
-	SaveSession(ctx *fiber.Ctx, userId types.UserID, token string, expiry time.Duration) ServiceError
-	DeleteSessionByToken(ctx *fiber.Ctx, token string) ServiceError
-	RotateSession(ctx *fiber.Ctx, userId types.UserID, oldToken, newToken string, expiry time.Duration) (*domain.User, ServiceError)
+	SaveSession(ctx *fiber.Ctx, userId types.UserID, token string, expiry time.Duration) *errors.AppError
+	DeleteSessionByToken(ctx *fiber.Ctx, token string) *errors.AppError
+	RotateSession(ctx *fiber.Ctx, userId types.UserID, oldToken, newToken string, expiry time.Duration) (*domain.User, *errors.AppError)
 }
 
 type sessionService struct {
@@ -30,7 +31,7 @@ func NewSessionService(userRepo repository.UserRepository, sessionRepo repositor
 	}
 }
 
-func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId types.UserID, token string, expiry time.Duration) ServiceError {
+func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId types.UserID, token string, expiry time.Duration) *errors.AppError {
 	tokenHash := hash.HashToken(token)
 	session := &models.UserSession{
 		UserID:    userId.InternalID(),
@@ -41,21 +42,21 @@ func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId types.UserID, token
 	}
 
 	if err := ss.session.Save(session); err != nil {
-		return NewServiceError(err.Code, err.Message)
+		return WrapRepositoryError(err, "save session")
 	}
 	return nil
 }
 
-func (ss *sessionService) DeleteSessionByToken(ctx *fiber.Ctx, token string) ServiceError {
+func (ss *sessionService) DeleteSessionByToken(ctx *fiber.Ctx, token string) *errors.AppError {
 	tokenHash := hash.HashToken(token)
 
 	if err := ss.session.DeleteByTokenHash(tokenHash); err != nil {
-		return NewServiceError(err.Code, err.Message)
+		return WrapRepositoryError(err, "delete session")
 	}
 	return nil
 }
 
-func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId types.UserID, oldToken, newToken string, expiry time.Duration) (*domain.User, ServiceError) {
+func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId types.UserID, oldToken, newToken string, expiry time.Duration) (*domain.User, *errors.AppError) {
 	oldTokenHash := hash.HashToken(oldToken)
 	newTokenHash := hash.HashToken(newToken)
 	newSession := &models.UserSession{
@@ -68,12 +69,12 @@ func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId types.UserID, old
 
 	if err := ss.session.RotateByTokenHash(oldTokenHash, newSession); err != nil {
 		log.Printf("SESSION SERVICE :: RotateSession : %v", err.Message)
-		return nil, NewServiceError(err.Code, err.Message)
+		return nil, WrapRepositoryError(err, "rotate session")
 	}
 
 	user, err := ss.user.FindById(userId)
 	if err != nil {
-		return nil, NewServiceError(err.Code, err.Message)
+		return nil, WrapRepositoryError(err, "get user after session rotation")
 	}
 	return user, nil
 }

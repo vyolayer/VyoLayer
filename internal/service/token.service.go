@@ -6,13 +6,14 @@ import (
 	"worklayer/internal/config"
 	"worklayer/internal/domain"
 	"worklayer/internal/utils/token"
+	"worklayer/pkg/errors"
 )
 
 type TokenService interface {
-	GenerateAccessToken(user domain.User) (string, ServiceError)
-	GenerateRefreshToken(userId string) (string, ServiceError)
-	ValidateAccessToken(accessToken string) (*token.UserJwtDTO, ServiceError)
-	ValidateRefreshToken(refreshToken string) (string, ServiceError)
+	GenerateAccessToken(user domain.User) (string, *errors.AppError)
+	GenerateRefreshToken(userId string) (string, *errors.AppError)
+	ValidateAccessToken(accessToken string) (*token.UserJwtDTO, *errors.AppError)
+	ValidateRefreshToken(refreshToken string) (string, *errors.AppError)
 	GetAccessTokenExpiry() time.Duration
 	GetRefreshTokenExpiry() time.Duration
 }
@@ -30,32 +31,32 @@ func NewTokenService(authConfig config.AuthConfig) TokenService {
 	}
 }
 
-func (ts *tokenService) GenerateAccessToken(user domain.User) (string, ServiceError) {
+func (ts *tokenService) GenerateAccessToken(user domain.User) (string, *errors.AppError) {
 	accessToken, err := ts.tokenManager.GenerateAccessToken(token.UserJwtDTO{
 		UserID: user.ID.InternalID().String(),
 		Email:  user.Email,
 	})
 	if err != nil {
 		log.Printf("TOKEN SERVICE :: GenerateAccessToken :: err : %v", err)
-		return "", NewServiceError(500, err.Error())
+		return "", errors.Wrap(err, errors.ErrInternalUnexpected, "Failed to generate access token")
 	}
 	return accessToken, nil
 }
 
-func (ts *tokenService) GenerateRefreshToken(userID string) (string, ServiceError) {
+func (ts *tokenService) GenerateRefreshToken(userID string) (string, *errors.AppError) {
 	refreshToken, err := ts.tokenManager.GenerateRefreshToken(token.UserJwtDTO{
 		UserID: userID,
 	})
 	if err != nil {
-		return "", NewServiceError(500, err.Error())
+		return "", errors.Wrap(err, errors.ErrInternalUnexpected, "Failed to generate refresh token")
 	}
 	return refreshToken, nil
 }
 
-func (ts *tokenService) ValidateAccessToken(accessToken string) (*token.UserJwtDTO, ServiceError) {
+func (ts *tokenService) ValidateAccessToken(accessToken string) (*token.UserJwtDTO, *errors.AppError) {
 	user, err := ts.tokenManager.ValidateAccessToken(accessToken)
 	if err != nil {
-		return nil, NewServiceError(500, err.Error())
+		return nil, domain.TokenInvalidError(err.Error())
 	}
 	return &token.UserJwtDTO{
 		UserID: user.UserID,
@@ -63,10 +64,10 @@ func (ts *tokenService) ValidateAccessToken(accessToken string) (*token.UserJwtD
 	}, nil
 }
 
-func (ts *tokenService) ValidateRefreshToken(refreshToken string) (string, ServiceError) {
+func (ts *tokenService) ValidateRefreshToken(refreshToken string) (string, *errors.AppError) {
 	user, err := ts.tokenManager.ValidateRefreshToken(refreshToken)
 	if err != nil {
-		return "", NewServiceError(500, err.Error())
+		return "", domain.TokenInvalidError(err.Error())
 	}
 
 	return user.UserID, nil

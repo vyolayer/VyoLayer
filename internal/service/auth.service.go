@@ -5,13 +5,14 @@ import (
 	"worklayer/internal/domain"
 	"worklayer/internal/repository"
 	"worklayer/internal/utils/hash"
+	"worklayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type AuthService interface {
-	RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserSchema) (*domain.User, ServiceError)
-	LoginUser(ctx *fiber.Ctx, input dto.LoginUserSchema) (*domain.User, ServiceError)
+	RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserSchema) (*domain.User, *errors.AppError)
+	LoginUser(ctx *fiber.Ctx, input dto.LoginUserSchema) (*domain.User, *errors.AppError)
 }
 
 type authService struct {
@@ -22,51 +23,55 @@ func NewAuthService(user repository.UserRepository) AuthService {
 	return &authService{user: user}
 }
 
-func (as *authService) RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserSchema) (*domain.User, ServiceError) {
+func (as *authService) RegisterUser(ctx *fiber.Ctx, input dto.RegisterUserSchema) (*domain.User, *errors.AppError) {
 	user, err := domain.NewUser(input.Email, input.Password, input.FullName)
 	if err != nil {
-		return nil, NewServiceError(err.Code, err.Message)
+		return nil, err
 	}
 
 	// Check if user already exists
 	existUser, _ := as.user.FindByEmail(user.Email)
 	if existUser != nil {
-		return nil, NewServiceError(409, "User already exists")
+		return nil, domain.UserAlreadyExistsError(input.Email)
 	}
 
 	// Create user
-	userResponse, domainErr := as.user.CreateUser(*user)
-	if domainErr != nil {
-		return nil, NewServiceError(domainErr.Code, domainErr.Message)
-	}
-
-	// repository user created successfully
-	userResponse, repoErr := as.user.FindById(userResponse.ID)
+	userResponse, repoErr := as.user.CreateUser(*user)
 	if repoErr != nil {
-		return nil, NewServiceError(repoErr.Code, repoErr.Message)
+		return nil, WrapRepositoryError(repoErr, "register user")
 	}
 
 	return userResponse, nil
 }
 
-func (as *authService) LoginUser(ctx *fiber.Ctx, input dto.LoginUserSchema) (*domain.User, ServiceError) {
+func (as *authService) LoginUser(ctx *fiber.Ctx, input dto.LoginUserSchema) (*domain.User, *errors.AppError) {
 	email, err := domain.NewEmail(input.Email)
 	if err != nil {
-		return nil, NewServiceError(err.Code, err.Message)
+		return nil, err
 	}
 
-	// Check if user already exists
+	// Find user by email
 	user, repoErr := as.user.FindByEmail(email.String())
 	if repoErr != nil {
-		return nil, NewServiceError(repoErr.Code, repoErr.Message)
+		// Don't leak information about whether user exists
+		if errors.Is(repoErr, errors.ErrDBRecordNotFound) {
+			return nil, domain.InvalidCredentialsError()
+		}
+		return nil, WrapRepositoryError(repoErr, "login user")
 	}
+
 	if user == nil {
-		return nil, NewServiceError(404, "User not found")
+		return nil, domain.InvalidCredentialsError()
+	}
+
+	// Verify user is active and verified
+	if !user.IsActive {
+		return nil, errors.NewWithMessage(errors.ErrUserInactive, "Account is inactive")
 	}
 
 	// Compare password
 	if !hash.CheckPasswordHash(input.Password, user.HashedPassword) {
-		return nil, NewServiceError(401, "Invalid password")
+		return nil, domain.InvalidCredentialsError()
 	}
 
 	return user, nil

@@ -23,6 +23,7 @@ import (
 	"gorm.io/gorm"
 
 	_ "worklayer/docs"
+	appLogger "worklayer/pkg/logger"
 )
 
 // @title WorkLayer API
@@ -67,11 +68,17 @@ func New() *App {
 
 // Setup middleware
 func (a *App) SetupMiddleware() {
-	a.app.Use(recover.New())
+	// Request context MUST come first
+	a.app.Use(middleware.RequestContext())
+
+	// Error handler with panic recovery
+	a.app.Use(middleware.ErrorHandler())
+
+	// Other middleware
 	a.app.Use(cors.New(cors.Config{}))
-	a.app.Use(middleware.NewRequestIDMiddleware().RequestIDMiddleware)
 	a.app.Use(logger.New())
-	a.app.Use(middleware.ErrorMiddleware)
+	a.app.Use(recover.New())
+	appLogger.InitLogger(true)
 
 	a.app.Get("/metrics", monitor.New())
 

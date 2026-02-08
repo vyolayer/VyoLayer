@@ -2,7 +2,8 @@ package middleware
 
 import (
 	"fmt"
-	"worklayer/internal/utils/response"
+	"worklayer/pkg/errors"
+	"worklayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -10,6 +11,6 @@ import (
 func NotFoundMiddleware(c *fiber.Ctx) error {
 	return response.Error(
 		c,
-		response.NotFoundError(fmt.Sprintf("%s not found", c.Path())),
+		errors.NotFound(fmt.Sprintf("Route %s not found", c.Path())),
 	)
 }

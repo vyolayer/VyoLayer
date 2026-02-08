@@ -3,15 +3,14 @@ package middleware
 import (
 	"log"
 	"strings"
-	"worklayer/internal/app/controller"
+	"worklayer/internal/platform/database/types"
 	"worklayer/internal/service"
 	"worklayer/internal/utils/constant"
-	"worklayer/internal/utils/response"
+	"worklayer/pkg/errors"
+	"worklayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )
-
-var Error = controller.Error
 
 type AuthMiddleware struct {
 	tokenService service.TokenService
@@ -39,16 +38,22 @@ func (am *AuthMiddleware) JwtValidated() fiber.Handler {
 		}
 
 		if accessToken == "" {
-			return Error(ctx, response.UnauthorizedError("Unauthorized"))
+			return response.Error(ctx, errors.Unauthorized("Missing authentication token"))
 		}
 
 		userClaims, err := am.tokenService.ValidateAccessToken(accessToken)
 		if err != nil {
-			return Error(ctx, response.UnauthorizedError("Unauthorized"))
+			return response.Error(ctx, err)
 		}
 		log.Printf("AUTH MIDDLEWARE :: JwtValidated : userClaims : %v", userClaims)
 
-		ctx.Locals("user_id", userClaims.UserID)
+		// Parse user ID
+		userID, parseErr := types.ReconstructUserID(userClaims.UserID)
+		if parseErr != nil {
+			return response.Error(ctx, errors.Unauthorized("Invalid user ID in token"))
+		}
+
+		ctx.Locals("user_id", *userID)
 		ctx.Locals("user_email", userClaims.Email)
 
 		return ctx.Next()

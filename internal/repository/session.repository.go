@@ -4,6 +4,7 @@ import (
 	"log"
 	"worklayer/internal/platform/database/models"
 	"worklayer/internal/platform/database/types"
+	"worklayer/pkg/errors"
 
 	"gorm.io/gorm"
 )
@@ -16,53 +17,53 @@ func NewSessionRepository(db *gorm.DB) SessionRepository {
 	return &sessionRepository{db: db}
 }
 
-func (sr *sessionRepository) Save(session *models.UserSession) RepositoryError {
+func (sr *sessionRepository) Save(session *models.UserSession) *errors.AppError {
 	if err := sr.db.Create(session).Error; err != nil {
-		return NewRepositoryError(500, err.Error())
+		return ConvertDBError(err, "saving session")
 	}
 	return nil
 }
 
-func (sr *sessionRepository) FindByTokenHash(hashedToken string) (*models.UserSession, RepositoryError) {
+func (sr *sessionRepository) FindByTokenHash(hashedToken string) (*models.UserSession, *errors.AppError) {
 	var session models.UserSession
 	err := sr.db.Where("token_hash = ?", hashedToken).First(&session).Error
 	if err != nil {
 		log.Println("Error finding session:", err)
-		return nil, NewRepositoryError(500, err.Error())
+		return nil, ConvertDBError(err, "finding session by token hash")
 	}
 	return &session, nil
 }
 
-func (sr *sessionRepository) DeleteByTokenHash(hashedToken string) RepositoryError {
+func (sr *sessionRepository) DeleteByTokenHash(hashedToken string) *errors.AppError {
 	result := sr.db.Where("token_hash = ?", hashedToken).Delete(&models.UserSession{})
 	if result.Error != nil {
-		return NewRepositoryError(500, result.Error.Error())
+		return ConvertDBError(result.Error, "deleting session")
 	}
 
 	if result.RowsAffected == 0 {
-		return NewRepositoryError(404, "Session not found")
+		return errors.NotFound("Session with token hash not found")
 	}
 	return nil
 }
 
-func (sr *sessionRepository) FindByUserId(userId types.UserID) (*models.UserSession, RepositoryError) {
+func (sr *sessionRepository) FindByUserId(userId types.UserID) (*models.UserSession, *errors.AppError) {
 	var session models.UserSession
 	err := sr.db.Where("user_id = ?", userId.InternalID).First(&session).Error
 	if err != nil {
-		return nil, NewRepositoryError(500, err.Error())
+		return nil, ConvertDBError(err, "finding session by user ID")
 	}
 	return &session, nil
 }
 
-func (sr *sessionRepository) DeleteAllByUserId(userId types.UserID) RepositoryError {
+func (sr *sessionRepository) DeleteAllByUserId(userId types.UserID) *errors.AppError {
 	if err := sr.db.Where("user_id = ?", userId.InternalID).Delete(&models.UserSession{}).Error; err != nil {
-		return NewRepositoryError(500, err.Error())
+		return ConvertDBError(err, "deleting all sessions for user")
 	}
 	return nil
 }
 
 // RotateByTokenHash rotates a session by old token hash and new token hash
-func (sr *sessionRepository) RotateByTokenHash(oldHashedToken string, newSession *models.UserSession) RepositoryError {
+func (sr *sessionRepository) RotateByTokenHash(oldHashedToken string, newSession *models.UserSession) *errors.AppError {
 	err := sr.db.Transaction(func(tx *gorm.DB) error {
 		result := tx.Delete(&models.UserSession{}, "token_hash = ?", oldHashedToken)
 		if result.Error != nil {
@@ -83,7 +84,7 @@ func (sr *sessionRepository) RotateByTokenHash(oldHashedToken string, newSession
 	})
 
 	if err != nil {
-		return NewRepositoryError(500, err.Error())
+		return TransactionError(err, "rotating session")
 	}
 	return nil
 }

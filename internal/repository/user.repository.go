@@ -6,15 +6,9 @@ import (
 	"worklayer/internal/platform/database/mapper"
 	"worklayer/internal/platform/database/models"
 	"worklayer/internal/platform/database/types"
+	"worklayer/pkg/errors"
 
 	"gorm.io/gorm"
-)
-
-var (
-	ErrUserAlreadyExists  RepositoryError = NewRepositoryError(409, "User already exists")
-	ErrUserNotFound       RepositoryError = NewRepositoryError(404, "User not found")
-	ErrFailedToCreateUser RepositoryError = NewRepositoryError(500, "Failed to create user")
-	ErrFailedToFindUser   RepositoryError = NewRepositoryError(500, "Failed to find user")
 )
 
 type userRepository struct {
@@ -25,7 +19,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{db: db}
 }
 
-func (ur *userRepository) CreateUser(user domain.User) (*domain.User, RepositoryError) {
+func (ur *userRepository) CreateUser(user domain.User) (*domain.User, *errors.AppError) {
 	err := ur.db.Create(&models.User{
 		Email:           user.Email,
 		PasswordHash:    user.HashedPassword,
@@ -33,41 +27,32 @@ func (ur *userRepository) CreateUser(user domain.User) (*domain.User, Repository
 		IsActive:        user.IsActive,
 		IsEmailVerified: user.IsEmailVerified,
 	}).Error
+
 	if err != nil {
-		// check if the error is due to duplicate key
-		if err == gorm.ErrDuplicatedKey {
-			return nil, ErrUserAlreadyExists
-		}
-		return nil, NewRepositoryError(500, err.Error())
+		return nil, ConvertDBError(err, "creating user")
 	}
 
 	return &user, nil
 }
 
-func (ur *userRepository) FindByEmail(email string) (*domain.User, RepositoryError) {
+func (ur *userRepository) FindByEmail(email string) (*domain.User, *errors.AppError) {
 	var user models.User
 	err := ur.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		log.Printf("Error finding user by email: %v", err)
-		if err == gorm.ErrRecordNotFound {
-			return nil, ErrUserNotFound
-		}
-		return nil, NewRepositoryError(500, err.Error())
+		return nil, ConvertDBError(err, "finding user by email")
 	}
 
 	log.Printf("USER REPOSITORY :: User: %v", user)
 	return mapper.ToDomainUser(&user), nil
 }
 
-func (ur *userRepository) FindById(id types.UserID) (*domain.User, RepositoryError) {
+func (ur *userRepository) FindById(id types.UserID) (*domain.User, *errors.AppError) {
 	var user models.User
 	err := ur.db.Where("id = ?", id.InternalID().String()).First(&user).Error
 	if err != nil {
 		log.Printf("Error finding user by id: %v", err)
-		if err == gorm.ErrRecordNotFound {
-			return nil, ErrUserNotFound
-		}
-		return nil, NewRepositoryError(500, err.Error())
+		return nil, ConvertDBError(err, "finding user by ID")
 	}
 
 	log.Printf("USER REPOSITORY :: User: %v", user)

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"worklayer/pkg/response"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -16,15 +18,16 @@ func NewHealthController() *HealthController {
 // @Description Check the status of the API.
 // @Tags health
 // @Produce json
-// @Success 200 {object} response.Response "Welcome to WorkLayer"
+// @Success 200 {object} response.SuccessResponse
 // @Router /health [get]
 func (h *HealthController) HealthCheck(c *fiber.Ctx) error {
-	return Success(
+	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"Welcome to WorkLayer",
 		map[string]string{
 			"version": "1.0.0",
+			"status":  "healthy",
 		},
 	)
 }

@@ -15,8 +15,6 @@ type LoginUserSchema struct {
 	Password string `json:"password" validate:"required" example:"Password!123"`
 }
 
-// # Response DTOs
-//
 // TokenResponseDTO is a struct that holds the data for tokens
 type TokenResponseDTO struct {
 	AccessToken  string `json:"accessToken"`

@@ -6,19 +6,17 @@ import (
 	"worklayer/internal/app/dto"
 	"worklayer/internal/platform/database/types"
 	"worklayer/internal/service"
-	"worklayer/internal/utils/response"
 	"worklayer/internal/utils/validation"
+	"worklayer/pkg/errors"
+	"worklayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-type AuthController interface {
-	RegisterUser(ctx *fiber.Ctx) error
-	LoginUser(ctx *fiber.Ctx) error
-	RefreshSession(ctx *fiber.Ctx) error
-	LogoutUser(ctx *fiber.Ctx) error
-	ValidateSession(ctx *fiber.Ctx) error
-}
+const (
+	AccessTokenCookieName  = "access_token"
+	RefreshTokenCookieName = "refresh_token"
+)
 
 type authController struct {
 	authService    service.AuthService
@@ -41,32 +39,29 @@ func NewAuthController(authService service.AuthService, tokenService service.Tok
 // @Accept json
 // @Produce json
 // @Param user body dto.RegisterUserSchema true "Registration details"
-// @Success 200 {object} response.Response{data=dto.UserDTO} "User registered successfully"
-// @Failure 400 {object} response.ErrorResponse "Invalid request body or validation failed"
+// @Success 200 {object} response.SuccessResponse{data=dto.UserDTO}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
 // @Router /auth/register [post]
 func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 	cmd := &dto.RegisterUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
-		return Error(
-			ctx,
-			InvalidBodyError,
-		)
+		return response.Error(ctx, errors.BadRequest("Invalid request body"))
 	}
 
 	// Validate the command
 	if errs := validation.ValidateStruct(cmd); len(errs) > 0 {
-		return Error(
-			ctx,
-			response.ValidationError("Validation failed", errs),
-		)
+		validationErr := errors.ValidationFailed("Validation failed")
+		validationErr.WithMetadata("validation_errors", errs)
+		return response.Error(ctx, validationErr)
 	}
 
 	user, authErr := ac.authService.RegisterUser(ctx, *cmd)
 	if authErr != nil {
-		return Error(ctx, response.NewErrorMessage(authErr.Code, authErr.Message))
+		return response.Error(ctx, authErr)
 	}
 
-	return Success(
+	return response.SuccessWithMessage(
 		ctx,
 		fiber.StatusOK,
 		"User registered successfully",
@@ -81,48 +76,35 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param credentials body dto.LoginUserSchema true "Login credentials"
-// @Success 200 {object} response.Response{data=dto.LoginUserResponseDTO} "User logged in successfully"
-// @Failure 401 {object} response.ErrorResponse "Invalid email or password"
+// @Success 200 {object} response.SuccessResponse{data=dto.LoginUserResponseDTO}
+// @Failure 401 {object} response.ErrorResponse
 // @Router /auth/login [post]
 func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 	cmd := &dto.LoginUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
-		return Error(
-			ctx,
-			InvalidBodyError,
-		)
+		return response.Error(ctx, errors.BadRequest("Invalid request body"))
 	}
 
 	// Validate the command
 	if errs := validation.ValidateStruct(cmd); len(errs) > 0 {
-		return Error(
-			ctx,
-			response.ValidationError("Validation failed", errs),
-		)
+		validationErr := errors.ValidationFailed("Validation failed")
+		validationErr.WithMetadata("validation_errors", errs)
+		return response.Error(ctx, validationErr)
 	}
 
 	user, authErr := ac.authService.LoginUser(ctx, *cmd)
 	if authErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(authErr.Code, authErr.Message),
-		)
+		return response.Error(ctx, authErr)
 	}
 
 	accessToken, tokenErr := ac.tokenService.GenerateAccessToken(*user)
 	if tokenErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
-		)
+		return response.Error(ctx, tokenErr)
 	}
 
 	refreshToken, tokenErr := ac.tokenService.GenerateRefreshToken(user.ID.InternalID().String())
 	if tokenErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
-		)
+		return response.Error(ctx, tokenErr)
 	}
 
 	if sessionErr := ac.sessionService.SaveSession(
@@ -131,22 +113,19 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 		refreshToken,
 		ac.tokenService.GetRefreshTokenExpiry(),
 	); sessionErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(sessionErr.Code, sessionErr.Message),
-		)
+		return response.Error(ctx, sessionErr)
 	}
 
 	ac.setAuthCookies(ctx, accessToken, refreshToken)
-	response := dto.LoginUserResponseDTO{
+	responseData := dto.LoginUserResponseDTO{
 		TokenResponseDTO: dto.TokenResponseDTO{AccessToken: accessToken, RefreshToken: refreshToken},
 		User:             dto.FromDomainUser(user),
 	}
-	return Success(
+	return response.SuccessWithMessage(
 		ctx,
 		fiber.StatusOK,
 		"User logged in successfully",
-		response,
+		responseData,
 	)
 }
 
@@ -155,36 +134,29 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 // @Description Invalidate the user's session and clear authentication cookies.
 // @Tags auth
 // @Produce json
-// @Success 204 "User logged out successfully"
-// @Failure 401 {object} response.ErrorResponse "Unauthorized"
+// @Success 204 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
 // @Router /auth/logout [post]
 func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 	_, err := getUserIDFromContext(ctx)
 	if err != nil {
-		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, err.Error()))
+		return response.Error(ctx, errors.Unauthorized(err.Error()))
 	}
 
 	// get refresh token from cookie
 	refreshToken := ctx.Cookies(RefreshTokenCookieName)
 	if refreshToken == "" {
-		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, "Refresh token not found"))
+		return response.Error(ctx, errors.Unauthorized("Refresh token not found"))
 	}
 
 	// delete session
 	if err := ac.sessionService.DeleteSessionByToken(ctx, refreshToken); err != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(fiber.StatusInternalServerError, "Failed to delete session"),
-		)
+		return response.Error(ctx, err)
 	}
 
 	// clear cookies
 	ac.clearAuthCookies(ctx)
-	return SuccessMessage(
-		ctx,
-		fiber.StatusNoContent,
-		"User logged out successfully",
-	)
+	return response.NoContent(ctx)
 }
 
 // RefreshSession godoc
@@ -192,43 +164,31 @@ func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 // @Description Get a new access token using a valid refresh token from cookies.
 // @Tags auth
 // @Produce json
-// @Success 200 {object} response.Response{data=dto.RefreshSessionResponseDTO} "Session refreshed successfully"
-// @Failure 401 {object} response.ErrorResponse "Invalid or missing refresh token"
+// @Success 200 {object} response.SuccessResponse{data=dto.RefreshSessionResponseDTO}
+// @Failure 401 {object} response.ErrorResponse
 // @Router /auth/refresh [post]
 func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 	// get refresh token from cookie
 	oldRefreshToken := ctx.Cookies(RefreshTokenCookieName)
 	if oldRefreshToken == "" {
-		return Error(
-			ctx,
-			response.NewErrorMessage(fiber.StatusUnauthorized, "Refresh token not found"),
-		)
+		return response.Error(ctx, errors.Unauthorized("Refresh token not found"))
 	}
 
 	// validate refresh token
 	jwtUserID, tokenErr := a.tokenService.ValidateRefreshToken(oldRefreshToken)
 	if tokenErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
-		)
+		return response.Error(ctx, tokenErr)
 	}
 
 	userID, err := types.ReconstructUserID(jwtUserID)
 	log.Printf("REFRESH TOKEN CONTROLLER :: userID : %v", userID.InternalID().String())
 	if err != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(fiber.StatusInternalServerError, "Failed to reconstruct user ID"),
-		)
+		return response.Error(ctx, errors.Internal("Failed to reconstruct user ID"))
 	}
 
 	newRefreshToken, tokenErr := a.tokenService.GenerateRefreshToken(userID.InternalID().String())
 	if tokenErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
-		)
+		return response.Error(ctx, tokenErr)
 	}
 
 	user, sessionErr := a.sessionService.RotateSession(
@@ -239,18 +199,12 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 		a.tokenService.GetRefreshTokenExpiry(),
 	)
 	if sessionErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(sessionErr.Code, sessionErr.Message),
-		)
+		return response.Error(ctx, sessionErr)
 	}
 
 	accessToken, tokenErr := a.tokenService.GenerateAccessToken(*user)
 	if tokenErr != nil {
-		return Error(
-			ctx,
-			response.NewErrorMessage(tokenErr.Code, tokenErr.Message),
-		)
+		return response.Error(ctx, tokenErr)
 	}
 
 	// set new access and refresh tokens as cookies
@@ -261,7 +215,7 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 			RefreshToken: newRefreshToken,
 		},
 	}
-	return Success(
+	return response.SuccessWithMessage(
 		ctx,
 		fiber.StatusOK,
 		"Session refreshed successfully",
@@ -274,20 +228,16 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 // @Description Check if the current session (access token) is still valid.
 // @Tags auth
 // @Produce json
-// @Success 200 {object} response.Response "Session validated successfully"
-// @Failure 401 {object} response.ErrorResponse "Unauthorized"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
 // @Router /auth/validate [post]
 func (a *authController) ValidateSession(ctx *fiber.Ctx) error {
 	_, err := getUserIDFromContext(ctx)
 	if err != nil {
-		return Error(ctx, response.NewErrorMessage(fiber.StatusUnauthorized, err.Error()))
+		return response.Error(ctx, errors.Unauthorized(err.Error()))
 	}
 
-	return SuccessMessage(
-		ctx,
-		fiber.StatusOK,
-		"Session validated successfully",
-	)
+	return response.SuccessMessage(ctx, "Session validated successfully")
 }
 
 // setAuthCookies sets the access and refresh tokens as HTTP cookies
@@ -329,4 +279,13 @@ func (a *authController) clearAuthCookies(ctx *fiber.Ctx) {
 		Secure:   true,
 		SameSite: fiber.CookieSameSiteStrictMode,
 	})
+}
+
+func getUserIDFromContext(ctx *fiber.Ctx) (types.UserID, error) {
+	localUserIDVal := ctx.Locals("user_id")
+	localUserID, ok := localUserIDVal.(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return types.UserID{}, fiber.NewError(fiber.StatusUnauthorized, "Invalid or missing user context")
+	}
+	return localUserID, nil
 }

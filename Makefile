@@ -2,7 +2,7 @@
 APP_NAME=worklayer
 DB_URL=postgres://worklayer_user:worklayer_password@localhost:4444/worklayer_db?sslmode=disable
 
-.PHONY: run build docker-up docker-start docker-stop docker-down migrate
+.PHONY: run build docs docker-up docker-start docker-stop docker-down migrate
 
 # Run the API locally
 run:
@@ -11,6 +11,14 @@ run:
 # Build the binary
 build:
 	go build -o bin/$(APP_NAME) cmd/server/main.go
+
+# Docs generate
+docs:
+	@echo "Installing swag if needed..."
+	@go install github.com/swaggo/swag/cmd/swag@latest
+	@echo "Generating Swagger documentation..."
+	@$(shell go env GOPATH)/bin/swag init -g internal/app/server.go
+
 
 # Start the database container
 docker-up:

@@ -21,6 +21,15 @@ func NewUserController(userService service.UserService) UserController {
 	return &userController{userService: userService}
 }
 
+// GetMe godoc
+// @Summary Get current user
+// @Description Get the profile information of the currently authenticated user.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.Response{data=dto.MeResponseDTO} "Success"
+// @Failure 401 {object} response.ErrorResponse "Unauthorized"
+// @Router /users/me [get]
 func (uc *userController) GetMe(ctx *fiber.Ctx) error {
 	localUserIDVal := ctx.Locals("user_id")
 	localUserID, ok := localUserIDVal.(types.UserID)

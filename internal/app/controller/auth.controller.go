@@ -34,6 +34,16 @@ func NewAuthController(authService service.AuthService, tokenService service.Tok
 	}
 }
 
+// RegisterUser godoc
+// @Summary Register a new user
+// @Description Create a new user account with email, password, and full name.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param user body dto.RegisterUserSchema true "Registration details"
+// @Success 200 {object} response.Response{data=dto.UserDTO} "User registered successfully"
+// @Failure 400 {object} response.ErrorResponse "Invalid request body or validation failed"
+// @Router /auth/register [post]
 func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 	cmd := &dto.RegisterUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
@@ -64,6 +74,16 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 	)
 }
 
+// LoginUser godoc
+// @Summary Login a user
+// @Description Authenticate a user and return access and refresh tokens.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body dto.LoginUserSchema true "Login credentials"
+// @Success 200 {object} response.Response{data=dto.LoginUserResponseDTO} "User logged in successfully"
+// @Failure 401 {object} response.ErrorResponse "Invalid email or password"
+// @Router /auth/login [post]
 func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 	cmd := &dto.LoginUserSchema{}
 	if err := ctx.BodyParser(cmd); err != nil {
@@ -130,6 +150,14 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 	)
 }
 
+// LogoutUser godoc
+// @Summary Logout a user
+// @Description Invalidate the user's session and clear authentication cookies.
+// @Tags auth
+// @Produce json
+// @Success 204 "User logged out successfully"
+// @Failure 401 {object} response.ErrorResponse "Unauthorized"
+// @Router /auth/logout [post]
 func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 	_, err := getUserIDFromContext(ctx)
 	if err != nil {
@@ -159,6 +187,14 @@ func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 	)
 }
 
+// RefreshSession godoc
+// @Summary Refresh session
+// @Description Get a new access token using a valid refresh token from cookies.
+// @Tags auth
+// @Produce json
+// @Success 200 {object} response.Response{data=dto.RefreshSessionResponseDTO} "Session refreshed successfully"
+// @Failure 401 {object} response.ErrorResponse "Invalid or missing refresh token"
+// @Router /auth/refresh [post]
 func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 	// get refresh token from cookie
 	oldRefreshToken := ctx.Cookies(RefreshTokenCookieName)
@@ -233,6 +269,14 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 	)
 }
 
+// ValidateSession godoc
+// @Summary Validate session
+// @Description Check if the current session (access token) is still valid.
+// @Tags auth
+// @Produce json
+// @Success 200 {object} response.Response "Session validated successfully"
+// @Failure 401 {object} response.ErrorResponse "Unauthorized"
+// @Router /auth/validate [post]
 func (a *authController) ValidateSession(ctx *fiber.Ctx) error {
 	_, err := getUserIDFromContext(ctx)
 	if err != nil {

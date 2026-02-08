@@ -1,0 +1,271 @@
+basePath: /api/v1
+definitions:
+  dto.LoginUserResponseDTO:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserDTO'
+    type: object
+  dto.LoginUserSchema:
+    properties:
+      email:
+        example: subhajit@worklayer.com
+        maxLength: 255
+        type: string
+      password:
+        example: Password!123
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.MeResponseDTO:
+    properties:
+      user:
+        $ref: '#/definitions/dto.UserDTO'
+    type: object
+  dto.RefreshSessionResponseDTO:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  dto.RegisterUserSchema:
+    properties:
+      email:
+        example: subhajit@worklayer.com
+        maxLength: 255
+        type: string
+      fullName:
+        example: Subhajit Pramanik
+        maxLength: 100
+        minLength: 3
+        type: string
+      password:
+        example: Password!123
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    - fullName
+    - password
+    type: object
+  dto.UserDTO:
+    properties:
+      email:
+        example: subhajit@worklayer.com
+        type: string
+      fullName:
+        example: Subhajit Pramanik
+        type: string
+      id:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isEmailVerified:
+        example: true
+        type: boolean
+      joinedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      status:
+        enum:
+        - active
+        - inactive
+        example: active
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      code:
+        type: string
+      errors: {}
+      message:
+        type: string
+      statusCode:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      statusCode:
+        type: integer
+      success:
+        type: boolean
+    type: object
+host: localhost:6999
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the WorkLayer API documentation.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: WorkLayer API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return access and refresh tokens.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginUserSchema'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged in successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.LoginUserResponseDTO'
+              type: object
+        "401":
+          description: Invalid email or password
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Login a user
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: Invalidate the user's session and clear authentication cookies.
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: User logged out successfully
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Logout a user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      description: Get a new access token using a valid refresh token from cookies.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Session refreshed successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RefreshSessionResponseDTO'
+              type: object
+        "401":
+          description: Invalid or missing refresh token
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Refresh session
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account with email, password, and full name.
+      parameters:
+      - description: Registration details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterUserSchema'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User registered successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.UserDTO'
+              type: object
+        "400":
+          description: Invalid request body or validation failed
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - auth
+  /auth/validate:
+    post:
+      description: Check if the current session (access token) is still valid.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Session validated successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Validate session
+      tags:
+      - auth
+  /health:
+    get:
+      description: Check the status of the API.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Welcome to WorkLayer
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Health check
+      tags:
+      - health
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Get the profile information of the currently authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.MeResponseDTO'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get current user
+      tags:
+      - users
+swagger: "2.0"

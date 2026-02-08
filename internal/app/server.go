@@ -19,8 +19,26 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
 	"gorm.io/gorm"
+
+	_ "worklayer/docs"
 )
+
+// @title WorkLayer API
+// @version 1.0
+// @description This is the WorkLayer API documentation.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:6999
+// @BasePath /api/v1
 
 var (
 	isConfigLoaded      = false
@@ -56,18 +74,8 @@ func (a *App) SetupMiddleware() {
 	a.app.Use(middleware.ErrorMiddleware)
 
 	a.app.Get("/metrics", monitor.New())
-	// get all route list from fiber
-	a.app.Get("/routes", func(c *fiber.Ctx) error {
-		noOfRoutes := len(a.app.GetRoutes())
-		routesPath := make(map[string]string, noOfRoutes)
 
-		for _, r := range a.app.GetRoutes() {
-			path := r.Path
-			routesPath[path] = r.Method
-		}
-
-		return c.JSON(routesPath)
-	})
+	a.app.Get("/swagger/*", swagger.HandlerDefault)
 }
 
 // Setup routes

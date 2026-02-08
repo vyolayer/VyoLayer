@@ -16,6 +16,10 @@ type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
+func (e ErrorResponse) Error() string {
+	return e.Message
+}
+
 // ValidateStruct checks for struct tags and returns formatted errors
 func ValidateStruct(payload interface{}) []*ErrorResponse {
 	var errors []*ErrorResponse

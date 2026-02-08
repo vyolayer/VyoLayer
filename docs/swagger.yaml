@@ -79,26 +79,70 @@ definitions:
         example: active
         type: string
     type: object
-  response.ErrorResponse:
+  response.ErrorDetail:
     properties:
       code:
+        example: ERR_VALIDATION_FAILED
         type: string
-      errors: {}
+      details: {}
       message:
+        example: Validation failed
         type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      requestId:
+        example: req-123456
+        type: string
+      timestamp:
+        example: "2026-02-08T18:30:00Z"
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      error:
+        $ref: '#/definitions/response.ErrorDetail'
       statusCode:
+        example: 400
         type: integer
       success:
+        example: false
         type: boolean
     type: object
-  response.Response:
+  response.Meta:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      page:
+        example: 1
+        type: integer
+      requestId:
+        example: req-123456
+        type: string
+      timestamp:
+        example: "2026-02-08T18:30:00Z"
+        type: string
+      total:
+        example: 100
+        type: integer
+      totalPages:
+        example: 10
+        type: integer
+    type: object
+  response.SuccessResponse:
     properties:
       data: {}
       message:
+        example: Operation successful
         type: string
+      meta:
+        $ref: '#/definitions/response.Meta'
       statusCode:
+        example: 200
         type: integer
       success:
+        example: true
         type: boolean
     type: object
 host: localhost:6999
@@ -131,16 +175,16 @@ paths:
       - application/json
       responses:
         "200":
-          description: User logged in successfully
+          description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Response'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   $ref: '#/definitions/dto.LoginUserResponseDTO'
               type: object
         "401":
-          description: Invalid email or password
+          description: Unauthorized
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Login a user
@@ -153,7 +197,9 @@ paths:
       - application/json
       responses:
         "204":
-          description: User logged out successfully
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
         "401":
           description: Unauthorized
           schema:
@@ -168,16 +214,16 @@ paths:
       - application/json
       responses:
         "200":
-          description: Session refreshed successfully
+          description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Response'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   $ref: '#/definitions/dto.RefreshSessionResponseDTO'
               type: object
         "401":
-          description: Invalid or missing refresh token
+          description: Unauthorized
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Refresh session
@@ -199,16 +245,20 @@ paths:
       - application/json
       responses:
         "200":
-          description: User registered successfully
+          description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Response'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   $ref: '#/definitions/dto.UserDTO'
               type: object
         "400":
-          description: Invalid request body or validation failed
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Register a new user
@@ -221,9 +271,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Session validated successfully
+          description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.SuccessResponse'
         "401":
           description: Unauthorized
           schema:
@@ -238,9 +288,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Welcome to WorkLayer
+          description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.SuccessResponse'
       summary: Health check
       tags:
       - health
@@ -253,10 +303,10 @@ paths:
       - application/json
       responses:
         "200":
-          description: Success
+          description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Response'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   $ref: '#/definitions/dto.MeResponseDTO'

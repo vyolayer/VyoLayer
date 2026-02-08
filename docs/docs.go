@@ -50,11 +50,11 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "User logged in successfully",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -68,7 +68,7 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": "Invalid email or password",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -88,7 +88,10 @@ const docTemplate = `{
                 "summary": "Logout a user",
                 "responses": {
                     "204": {
-                        "description": "User logged out successfully"
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
                     },
                     "401": {
                         "description": "Unauthorized",
@@ -111,11 +114,11 @@ const docTemplate = `{
                 "summary": "Refresh session",
                 "responses": {
                     "200": {
-                        "description": "Session refreshed successfully",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -129,7 +132,7 @@ const docTemplate = `{
                         }
                     },
                     "401": {
-                        "description": "Invalid or missing refresh token",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -163,11 +166,11 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "User registered successfully",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -181,7 +184,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid request body or validation failed",
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -201,9 +210,9 @@ const docTemplate = `{
                 "summary": "Validate session",
                 "responses": {
                     "200": {
-                        "description": "Session validated successfully",
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "401": {
@@ -227,9 +236,9 @@ const docTemplate = `{
                 "summary": "Health check",
                 "responses": {
                     "200": {
-                        "description": "Welcome to WorkLayer",
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -250,11 +259,11 @@ const docTemplate = `{
                 "summary": "Get current user",
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -389,36 +398,95 @@ const docTemplate = `{
                 }
             }
         },
-        "response.ErrorResponse": {
+        "response.ErrorDetail": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ERR_VALIDATION_FAILED"
                 },
-                "errors": {},
+                "details": {},
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Validation failed"
                 },
-                "statusCode": {
-                    "type": "integer"
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
                 },
-                "success": {
-                    "type": "boolean"
+                "requestId": {
+                    "type": "string",
+                    "example": "req-123456"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2026-02-08T18:30:00Z"
                 }
             }
         },
-        "response.Response": {
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/response.ErrorDetail"
+                },
+                "statusCode": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "response.Meta": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "requestId": {
+                    "type": "string",
+                    "example": "req-123456"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2026-02-08T18:30:00Z"
+                },
+                "total": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "totalPages": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "response.SuccessResponse": {
             "type": "object",
             "properties": {
                 "data": {},
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Operation successful"
+                },
+                "meta": {
+                    "$ref": "#/definitions/response.Meta"
                 },
                 "statusCode": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200
                 },
                 "success": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": true
                 }
             }
         }

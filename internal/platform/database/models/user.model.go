@@ -43,15 +43,16 @@ func (u User) TableName() string {
 
 func (u *User) PublicID() types.UserID {
 	uid, _ := types.ReconstructUserID(u.ID.String())
-	return *uid
+	return uid
 }
 
 type UserSession struct {
 	BaseModel
-	UserID    types.InternalID `gorm:"index;not null"`
-	TokenHash string           `gorm:"uniqueIndex;not null"`
+	UserID    uuid.UUID `gorm:"index;not null"`
+	TokenHash string    `gorm:"uniqueIndex;not null"`
 	ExpiresAt time.Time
 	Revoked   bool   `gorm:"default:false"`
+	Reason    string `gorm:"size:255"`
 	IpAddress string `gorm:"size:50"`
 	UserAgent string `gorm:"size:255"`
 }

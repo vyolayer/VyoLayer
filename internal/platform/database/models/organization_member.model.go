@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"worklayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
 )
@@ -16,13 +17,11 @@ type OrganizationMember struct {
 	UserID uuid.UUID `gorm:"type:uuid;not null;uniqueIndex:idx_org_member_unique,priority:2"`
 	User   User      `gorm:"foreignKey:UserID;constraints:OnDelete:CASCADE;"`
 
-	InvitedBy     *uuid.UUID `gorm:"type:uuid"`
-	InvitedByUser *User      `gorm:"foreignKey:InvitedBy"`
-	InvitedAt     *time.Time
-	JoinedAt      *time.Time `gorm:"autoCreateTime"`
-
-	RemovedBy *uuid.UUID `gorm:"type:uuid"`
+	InvitedAt *time.Time
+	InvitedBy *uuid.UUID `gorm:"type:uuid"`
+	JoinedAt  *time.Time `gorm:"autoCreateTime"`
 	RemovedAt *time.Time `gorm:"index"`
+	RemovedBy *uuid.UUID `gorm:"type:uuid"`
 }
 
 func (OrganizationMember) TableName() string {
@@ -34,4 +33,14 @@ func (om *OrganizationMember) IsActive() bool {
 		om.RemovedAt == nil && // not removed
 		om.DeletedAt == nil && // not deleted
 		om.Organization.IsActive // organization is active
+}
+
+func (om *OrganizationMember) IsOwner() bool {
+	return om.Organization.OwnerID == om.UserID
+}
+
+// PublicID returns the public ID of the organization member
+func (om *OrganizationMember) PublicID() types.OrganizationMemberID {
+	id, _ := types.ReconstructOrganizationMemberID(om.ID.String())
+	return id
 }

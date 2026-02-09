@@ -24,13 +24,19 @@ func main() {
 	defer sqlDB.Close()
 
 	err = db.AutoMigrate(
+		// IAM models
 		models.User{},
 		models.UserSession{},
+
+		// Organization models
 		models.Organization{},
+		models.OrganizationMember{},
+
+		// Organization RBAC models
 		models.OrganizationRole{},
 		models.OrganizationPermission{},
 		models.OrganizationRolePermission{},
-		models.UserOrganizationRole{},
+		models.MemberOrganizationRole{},
 	)
 	if err != nil {
 		panic(err)

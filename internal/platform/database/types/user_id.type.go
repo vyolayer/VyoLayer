@@ -1,75 +1,50 @@
 package types
 
 import (
-	"errors"
 	"fmt"
-	"strings"
-
-	"github.com/google/uuid"
 )
 
-type UserID struct {
-	PublicID
+// User id
+type userID struct {
+	PublicID[IDPrefix]
+}
+
+type UserID interface {
+	WorkLayerPublicID
 }
 
 // NewUserID creates a new UserID.
 func NewUserID() UserID {
-	return UserID{PublicID: NewPublicID(UserPrefix)}
+	return &userID{PublicID: NewPublicID(UserPrefix)}
 }
 
 // ReconstructUserID reconstructs a UserID from a string.
-func ReconstructUserID(s string) (*UserID, error) {
-	if s == "" {
-		return nil, errors.New("id cannot be empty")
-	}
-
-	// 1. Clean the string
-	// This handles both "user_123..." AND "123..." automatically.
-	// We check specifically for your prefix to ensure we don't accidentally
-	// parse an 'org_' id as a 'user_' id.
-	prefix := UserPrefix.String() + "_"
-
-	// Safety Check: If it has a prefix, but it's the WRONG prefix (e.g. "org_...")
-	if strings.Contains(s, "_") && !strings.HasPrefix(s, prefix) {
-		return nil, errors.New("id type mismatch")
-	}
-
-	// Remove the prefix if it exists
-	cleanUUID := strings.TrimPrefix(s, prefix)
-
-	// 2. Parse safely (No MustParse)
-	id, err := uuid.Parse(cleanUUID)
+func ReconstructUserID(s string) (UserID, error) {
+	public, err := ReconstructPublicID(UserPrefix, s)
 	if err != nil {
-		return nil, errors.New("invalid uuid format")
+		return nil, err
 	}
-
-	// 3. Construct and return
-	return &UserID{
-		PublicID: PublicID{
-			prefix: UserPrefix,
-			uuid:   ReconstructInternalID(id),
-		},
-	}, nil
+	return &userID{PublicID: public}, nil
 }
 
 func ParseUserID(s string) (UserID, error) {
 	public, err := ParsePublicID(s)
 	if err != nil {
-		return UserID{}, err
+		return nil, err
 	}
 	if public.prefix != UserPrefix {
-		return UserID{}, fmt.Errorf("invalid prefix: %s", public.prefix)
+		return nil, fmt.Errorf("invalid prefix: %s", public.prefix)
 	}
-	return UserID{PublicID: public}, nil
+	return &userID{PublicID: public}, nil
 }
 
-func (id UserID) MarshalJSON() ([]byte, error) {
-	public := PublicID{prefix: UserPrefix, uuid: id.PublicID.uuid}
+func (id *userID) MarshalJSON() ([]byte, error) {
+	public := PublicID[IDPrefix]{prefix: UserPrefix, uuid: id.PublicID.uuid}
 	return public.MarshalJSON()
 }
 
-func (id *UserID) UnmarshalJSON(b []byte) error {
-	var public PublicID
+func (id *userID) UnmarshalJSON(b []byte) error {
+	var public PublicID[IDPrefix]
 	if err := public.UnmarshalJSON(b); err != nil {
 		return err
 	}
@@ -85,7 +60,7 @@ func (id *UserID) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (id *UserID) String() string {
-	public := PublicID{prefix: UserPrefix, uuid: id.PublicID.uuid}
+func (id *userID) String() string {
+	public := PublicID[IDPrefix]{prefix: UserPrefix, uuid: id.PublicID.uuid}
 	return public.String()
 }

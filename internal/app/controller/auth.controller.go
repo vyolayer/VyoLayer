@@ -193,7 +193,7 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 
 	user, sessionErr := a.sessionService.RotateSession(
 		ctx,
-		*userID,
+		userID,
 		oldRefreshToken,
 		newRefreshToken,
 		a.tokenService.GetRefreshTokenExpiry(),
@@ -285,7 +285,7 @@ func getUserIDFromContext(ctx *fiber.Ctx) (types.UserID, error) {
 	localUserIDVal := ctx.Locals("user_id")
 	localUserID, ok := localUserIDVal.(types.UserID)
 	if !ok || localUserID.IsNil() {
-		return types.UserID{}, fiber.NewError(fiber.StatusUnauthorized, "Invalid or missing user context")
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid or missing user context")
 	}
 	return localUserID, nil
 }

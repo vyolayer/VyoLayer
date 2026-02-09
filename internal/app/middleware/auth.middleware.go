@@ -53,7 +53,7 @@ func (am *AuthMiddleware) JwtValidated() fiber.Handler {
 			return response.Error(ctx, errors.Unauthorized("Invalid user ID in token"))
 		}
 
-		ctx.Locals("user_id", *userID)
+		ctx.Locals("user_id", userID)
 		ctx.Locals("user_email", userClaims.Email)
 
 		return ctx.Next()

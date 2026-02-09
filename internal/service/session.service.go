@@ -34,7 +34,7 @@ func NewSessionService(userRepo repository.UserRepository, sessionRepo repositor
 func (ss *sessionService) SaveSession(ctx *fiber.Ctx, userId types.UserID, token string, expiry time.Duration) *errors.AppError {
 	tokenHash := hash.HashToken(token)
 	session := &models.UserSession{
-		UserID:    userId.InternalID(),
+		UserID:    userId.InternalID().ID(),
 		TokenHash: tokenHash,
 		ExpiresAt: time.Now().Add(expiry),
 		IpAddress: ctx.IP(),
@@ -60,7 +60,7 @@ func (ss *sessionService) RotateSession(ctx *fiber.Ctx, userId types.UserID, old
 	oldTokenHash := hash.HashToken(oldToken)
 	newTokenHash := hash.HashToken(newToken)
 	newSession := &models.UserSession{
-		UserID:    userId.InternalID(),
+		UserID:    userId.InternalID().ID(),
 		TokenHash: newTokenHash,
 		ExpiresAt: time.Now().Add(expiry),
 		IpAddress: ctx.IP(),

@@ -7,9 +7,41 @@ import (
 	"worklayer/pkg/errors"
 )
 
-var (
-	user    = &models.User{}
-	session = &models.UserSession{}
+// IDs type
+type (
+	// User IDs
+	UserID = types.UserID
+
+	// Organization IDs
+	OrgID = types.OrganizationID
+
+	// Organization Role IDs
+	OrgRoleID       = types.OrganizationRoleID
+	OrgPermissionID = types.OrganizationPermissionID
+
+	// Organization Member IDs
+	OrgMemberID     = types.OrganizationMemberID
+	OrgMemberRoleID = types.MemberOrganizationRoleID
+)
+
+type (
+	// Base Models
+	TBaseModel  = models.BaseModel
+	TTimeStamps = models.TimeStamps
+
+	// User Management
+	TUser    = models.User
+	TSession = models.UserSession
+
+	// Organization Management
+	TOrganization       = models.Organization
+	TOrganizationMember = models.OrganizationMember
+
+	// Organization Role Management
+	TOrganizationRole           = models.OrganizationRole
+	TMemberOrganizationRole     = models.MemberOrganizationRole
+	TOrganizationPermission     = models.OrganizationPermission
+	TOrganizationRolePermission = models.OrganizationRolePermission
 )
 
 type UserRepository interface {

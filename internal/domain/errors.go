@@ -81,3 +81,64 @@ func InvalidPasswordError(reason string) *errors.AppError {
 	return errors.NewWithMessage(errors.ErrValidationInvalidPassword, "Invalid password: %s", reason).
 		WithMetadata("reason", reason)
 }
+
+// Organization errors
+var (
+	ErrOrganizationNotFound            = errors.ErrOrganizationNotFound
+	ErrOrganizationNotActive           = errors.ErrOrganizationNotActive
+	ErrOrganizationNotOwner            = errors.ErrOrganizationNotOwner
+	ErrOrganizationFull                = errors.ErrOrganizationFull
+	ErrOrganizationInfoNotLoadedFromDB = errors.ErrOrganizationInfoNotLoadedFromDB
+	ErrOrganizationMemberAlreadyExists = errors.ErrOrganizationMemberAlreadyExists
+	ErrOrganizationMemberNotFound      = errors.ErrOrganizationMemberNotFound
+	ErrOrganizationMemberNotActive     = errors.ErrOrganizationMemberNotActive
+)
+
+// OrganizationNotFoundError creates an organization not found error
+func OrganizationNotFoundError(orgID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationNotFound, "Organization '%s' not found", orgID).
+		WithMetadata("organization_id", orgID)
+}
+
+// OrganizationNotActiveError creates an organization not active error
+func OrganizationNotActiveError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationNotActive, "Organization is not active")
+}
+
+// OrganizationNotOwnerError creates an organization not owner error
+func OrganizationNotOwnerError(userID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationNotOwner, "User '%s' is not the owner of this organization", userID).
+		WithMetadata("user_id", userID)
+}
+
+// OrganizationFullError creates an organization full error
+func OrganizationFullError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationFull, "Organization has reached maximum member capacity")
+}
+
+// OrganizationMembersNotLoadedError creates an error for when members are not loaded
+func OrganizationMembersNotLoadedError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationInfoNotLoadedFromDB, "Organization member information not loaded from database")
+}
+
+// OrganizationMemberAlreadyExistsError creates an error for when a member already exists
+func OrganizationMemberAlreadyExistsError(userID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationMemberAlreadyExists, "User '%s' is already a member of this organization", userID).
+		WithMetadata("user_id", userID)
+}
+
+// OrganizationMemberNotFoundError creates a member not found error
+func OrganizationMemberNotFoundError(memberID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationMemberNotFound, "Organization member '%s' not found", memberID).
+		WithMetadata("member_id", memberID)
+}
+
+// OrganizationMemberNotActiveError creates a member not active error
+func OrganizationMemberNotActiveError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationMemberNotActive, "Organization member is not active")
+}
+
+// OrganizationCannotRemoveOwnerError creates an error for when trying to remove the owner
+func OrganizationCannotRemoveOwnerError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrOrganizationNotOwner, "Cannot remove the organization owner")
+}

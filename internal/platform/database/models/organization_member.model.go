@@ -18,10 +18,12 @@ type OrganizationMember struct {
 	User   User      `gorm:"foreignKey:UserID;constraints:OnDelete:CASCADE;"`
 
 	InvitedAt *time.Time
-	InvitedBy *uuid.UUID `gorm:"type:uuid"`
+	InvitedBy *uuid.UUID `gorm:"type:uuid"` // organization member id
 	JoinedAt  *time.Time `gorm:"autoCreateTime"`
 	RemovedAt *time.Time `gorm:"index"`
-	RemovedBy *uuid.UUID `gorm:"type:uuid"`
+	RemovedBy *uuid.UUID `gorm:"type:uuid"` // organization member id
+
+	Roles []MemberOrganizationRole `gorm:"foreignKey:MemberID;references:ID;constraint:OnDelete:CASCADE"`
 }
 
 func (OrganizationMember) TableName() string {
@@ -43,4 +45,20 @@ func (om *OrganizationMember) IsOwner() bool {
 func (om *OrganizationMember) PublicID() types.OrganizationMemberID {
 	id, _ := types.ReconstructOrganizationMemberID(om.ID.String())
 	return id
+}
+
+func (om *OrganizationMember) GetInvitedBy() *types.OrganizationMemberID {
+	if om.InvitedBy == nil {
+		return nil
+	}
+	id, _ := types.ReconstructOrganizationMemberID(om.InvitedBy.String())
+	return &id
+}
+
+func (om *OrganizationMember) GetRemovedBy() *types.OrganizationMemberID {
+	if om.RemovedBy == nil {
+		return nil
+	}
+	id, _ := types.ReconstructOrganizationMemberID(om.RemovedBy.String())
+	return &id
 }

@@ -18,6 +18,9 @@ type OrganizationRole struct {
 	// Flags
 	IsSystem  bool `gorm:"default:false"` // This role is a system role, cannot be deleted
 	IsDefault bool `gorm:"default:false"` // This role is the default role, auto assigned to new members
+
+	// relationships
+	Permissions []OrganizationPermission `gorm:"many2many:organization_role_permissions;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:PermissionID"`
 }
 
 func (OrganizationRole) TableName() string {
@@ -81,9 +84,9 @@ type MemberOrganizationRole struct {
 	RoleID         uuid.UUID `gorm:"type:uuid;not null;index"`
 
 	// relationships
-	Member       OrganizationMember `gorm:"foreignKey:MemberID;constraint:OnDelete:CASCADE"`
-	Organization Organization       `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE"`
-	Role         OrganizationRole   `gorm:"foreignKey:RoleID;constraint:OnDelete:CASCADE"`
+	// Member       OrganizationMember `gorm:"foreignKey:MemberID;constraint:OnDelete:CASCADE"`
+	// Organization Organization       `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE"`
+	Role OrganizationRole `gorm:"foreignKey:RoleID;constraint:OnDelete:CASCADE"`
 
 	GrantedBy uuid.UUID `gorm:"type:uuid"` // Member ID of the user who granted the role
 	GrantedAt time.Time `gorm:"autoCreateTime"`

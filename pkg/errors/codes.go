@@ -52,6 +52,22 @@ const (
 	ErrUserInactive      ErrorCode = "ERR_USER_INACTIVE"
 	ErrUserDeleted       ErrorCode = "ERR_USER_DELETED"
 
+	// Organization Errors (ORGANIZATION)
+	ErrOrganizationFull                ErrorCode = "ERR_ORGANIZATION_FULL"
+	ErrOrganizationNotFound            ErrorCode = "ERR_ORGANIZATION_NOT_FOUND"
+	ErrOrganizationDeleted             ErrorCode = "ERR_ORGANIZATION_DELETED"
+	ErrOrganizationNotActive           ErrorCode = "ERR_ORGANIZATION_NOT_ACTIVE"
+	ErrOrganizationNotVerified         ErrorCode = "ERR_ORGANIZATION_NOT_VERIFIED"
+	ErrOrganizationNotOwner            ErrorCode = "ERR_ORGANIZATION_NOT_OWNER"
+	ErrOrganizationInfoNotLoadedFromDB ErrorCode = "ERR_ORGANIZATION_INFO_NOT_LOADED_FROM_DB"
+
+	ErrOrganizationMemberAlreadyExists ErrorCode = "ERR_ORGANIZATION_MEMBER_ALREADY_EXISTS"
+	ErrOrganizationMemberNotFound      ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_FOUND"
+	ErrOrganizationMemberDeleted       ErrorCode = "ERR_ORGANIZATION_MEMBER_DELETED"
+	ErrOrganizationMemberNotActive     ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_ACTIVE"
+	ErrOrganizationMemberNotVerified   ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_VERIFIED"
+	ErrOrganizationMemberNotOwner      ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_OWNER"
+
 	// Request Errors (REQUEST)
 	ErrRequestInvalidBody    ErrorCode = "ERR_REQUEST_INVALID_BODY"
 	ErrRequestInvalidParams  ErrorCode = "ERR_REQUEST_INVALID_PARAMS"

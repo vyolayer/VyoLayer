@@ -38,12 +38,18 @@ func (router *routesV1) SetupRoutes() {
 	sessionService := service.NewSessionService(repo.User, repo.Session)
 	userService := service.NewUserService(repo.User)
 
+	// Organization services
+	orgService := service.NewOrganizationService(repo.Organization, repo.User)
+	orgMemberService := service.NewOrganizationMemberService(repo.OrganizationMember)
+
 	// Utility services
 	tokenService := service.NewTokenService(router.cfg.Auth)
 
 	// Controller
 	authController := controller.NewAuthController(authService, tokenService, sessionService)
 	userController := controller.NewUserController(userService)
+	orgController := controller.NewOrganizationController(orgService)
+	orgMemberController := controller.NewOrganizationMemberController(orgMemberService)
 
 	// Middleware
 	authMiddleware := middleware.NewAuthMiddleware(tokenService)
@@ -64,4 +70,16 @@ func (router *routesV1) SetupRoutes() {
 	userRouter := router.router.Group("/users")
 	userRouter.Use(authMiddleware.JwtValidated())
 	userRouter.Get("/me", userController.GetMe)
+
+	// Organization routes
+	orgRouter := router.router.Group("/organizations")
+	orgRouter.Use(authMiddleware.JwtValidated())
+	orgRouter.Post("/", orgController.CreateOrganization)
+	orgRouter.Get("/", orgController.ListOrganizations)
+	orgRouter.Post("/onboarding", orgController.OnboardOrganization)
+	orgRouter.Get("/:orgId", orgController.GetOrganizationByID)
+	orgRouter.Get("/slug/:slug", orgController.GetOrganizationBySlug)
+
+	// Organization member routes
+	orgRouter.Get("/:orgId/members", orgMemberController.GetAllMembersByOrgID)
 }

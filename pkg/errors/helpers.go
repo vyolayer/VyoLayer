@@ -196,3 +196,35 @@ func SessionNotFound() *AppError {
 func AccountNotVerified() *AppError {
 	return New(ErrAuthAccountNotVerified)
 }
+
+// Invitation-specific error helpers
+
+// InvitationNotFound creates an invitation not found error
+func InvitationNotFound(invitationID string) *AppError {
+	return NewWithMessage(ErrInvitationNotFound, "Invitation with ID '%s' not found", invitationID).
+		WithMetadata("invitation_id", invitationID)
+}
+
+// InvitationExpired creates an invitation expired error
+func InvitationExpired() *AppError {
+	return New(ErrInvitationExpired)
+}
+
+// InvitationAlreadyAccepted creates an invitation already accepted error
+func InvitationAlreadyAccepted(invitationID string) *AppError {
+	return NewWithMessage(ErrInvitationAlreadyAccepted, "Invitation '%s' has already been accepted", invitationID).
+		WithMetadata("invitation_id", invitationID)
+}
+
+// InvitationAlreadyExists creates an invitation already exists error
+func InvitationAlreadyExists(email, orgID string) *AppError {
+	return NewWithMessage(ErrInvitationAlreadyExists, "An invitation for '%s' to organization '%s' already exists", email, orgID).
+		WithMetadata("email", email).
+		WithMetadata("organization_id", orgID)
+}
+
+// InvitationInvalid creates an invalid invitation error
+func InvitationInvalid(reason string) *AppError {
+	return NewWithMessage(ErrInvitationInvalid, "Invalid invitation: %s", reason).
+		WithMetadata("reason", reason)
+}

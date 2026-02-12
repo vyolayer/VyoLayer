@@ -142,3 +142,37 @@ func OrganizationMemberNotActiveError() *errors.AppError {
 func OrganizationCannotRemoveOwnerError() *errors.AppError {
 	return errors.NewWithMessage(errors.ErrOrganizationNotOwner, "Cannot remove the organization owner")
 }
+
+// Invitation errors
+var (
+	ErrInvitationNotFound        = errors.ErrInvitationNotFound
+	ErrInvitationExpired         = errors.ErrInvitationExpired
+	ErrInvitationAlreadyAccepted = errors.ErrInvitationAlreadyAccepted
+	ErrInvitationAlreadyExists   = errors.ErrInvitationAlreadyExists
+	ErrInvitationInvalid         = errors.ErrInvitationInvalid
+)
+
+// InvitationNotFoundError creates an invitation not found error
+func InvitationNotFoundError(invitationID string) *errors.AppError {
+	return errors.InvitationNotFound(invitationID)
+}
+
+// InvitationExpiredError creates an invitation expired error
+func InvitationExpiredError() *errors.AppError {
+	return errors.InvitationExpired()
+}
+
+// InvitationAlreadyAcceptedError creates an invitation already accepted error
+func InvitationAlreadyAcceptedError(invitationID string) *errors.AppError {
+	return errors.InvitationAlreadyAccepted(invitationID)
+}
+
+// InvitationAlreadyExistsError creates an invitation already exists error
+func InvitationAlreadyExistsError(email, orgID string) *errors.AppError {
+	return errors.InvitationAlreadyExists(email, orgID)
+}
+
+// InvitationInvalidError creates an invalid invitation error
+func InvitationInvalidError(reason string) *errors.AppError {
+	return errors.InvitationInvalid(reason)
+}

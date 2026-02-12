@@ -68,6 +68,12 @@ const (
 	ErrOrganizationMemberNotVerified   ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_VERIFIED"
 	ErrOrganizationMemberNotOwner      ErrorCode = "ERR_ORGANIZATION_MEMBER_NOT_OWNER"
 
+	ErrInvitationNotFound        ErrorCode = "ERR_INVITATION_NOT_FOUND"
+	ErrInvitationExpired         ErrorCode = "ERR_INVITATION_EXPIRED"
+	ErrInvitationAlreadyAccepted ErrorCode = "ERR_INVITATION_ALREADY_ACCEPTED"
+	ErrInvitationAlreadyExists   ErrorCode = "ERR_INVITATION_ALREADY_EXISTS"
+	ErrInvitationInvalid         ErrorCode = "ERR_INVITATION_INVALID"
+
 	// Request Errors (REQUEST)
 	ErrRequestInvalidBody    ErrorCode = "ERR_REQUEST_INVALID_BODY"
 	ErrRequestInvalidParams  ErrorCode = "ERR_REQUEST_INVALID_PARAMS"

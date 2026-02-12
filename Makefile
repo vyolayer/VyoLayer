@@ -2,11 +2,11 @@
 APP_NAME=worklayer
 DB_URL=postgres://worklayer_user:worklayer_password@localhost:4444/worklayer_db?sslmode=disable
 
-.PHONY: run build docs docker-up docker-start docker-stop docker-down migrate
+.PHONY: run build docs docker-up docker-start docker-stop docker-down migrate seed
 
 # Run the API locally
 run:
-	go run cmd/server/main.go
+	go run cmd/server/main.go	
 
 # Build the binary
 build:
@@ -36,5 +36,10 @@ docker-stop:
 docker-down:
 	docker-compose -f docker/docker-compose.dev.yml down
 
+# Migrate database
 migrate:
 	go run cmd/migrate/main.go
+
+# Seed database
+seed:
+	go run cmd/seed/main.go

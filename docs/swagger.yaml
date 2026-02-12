@@ -1,5 +1,19 @@
 basePath: /api/v1
 definitions:
+  dto.CreateOrganizationRequestDTO:
+    properties:
+      description:
+        example: Building amazing products
+        maxLength: 500
+        type: string
+      name:
+        example: Acme Corp
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
   dto.LoginUserResponseDTO:
     properties:
       accessToken:
@@ -26,6 +40,115 @@ definitions:
     properties:
       user:
         $ref: '#/definitions/dto.UserDTO'
+    type: object
+  dto.OrganizationDTO:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      deactivatedAt:
+        type: string
+      deactivatedBy:
+        type: string
+      description:
+        example: Building amazing products
+        type: string
+      id:
+        example: org_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      maxMembers:
+        example: 10
+        type: integer
+      maxProjects:
+        example: 5
+        type: integer
+      memberCount:
+        example: 3
+        type: integer
+      name:
+        example: Acme Corp
+        type: string
+      ownerId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      slug:
+        example: acme-corp
+        type: string
+    type: object
+  dto.OrganizationMemberDTO:
+    properties:
+      deactivatedAt:
+        type: string
+      deactivatedBy:
+        type: string
+      email:
+        example: john@example.com
+        type: string
+      fullName:
+        example: John Doe
+        type: string
+      id:
+        example: orgmem_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      invitedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      invitedBy:
+        example: orgmem_550e8400-e29b-41d4-a716-446655440001
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      joinedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      userId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    type: object
+  dto.OrganizationResponseDTO:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      deactivatedAt:
+        type: string
+      deactivatedBy:
+        type: string
+      description:
+        example: Building amazing products
+        type: string
+      id:
+        example: org_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      maxMembers:
+        example: 10
+        type: integer
+      maxProjects:
+        example: 5
+        type: integer
+      memberCount:
+        example: 3
+        type: integer
+      members:
+        items:
+          $ref: '#/definitions/dto.OrganizationMemberDTO'
+        type: array
+      name:
+        example: Acme Corp
+        type: string
+      ownerId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      slug:
+        example: acme-corp
+        type: string
     type: object
   dto.RefreshSessionResponseDTO:
     properties:
@@ -294,6 +417,230 @@ paths:
       summary: Health check
       tags:
       - health
+  /organizations:
+    get:
+      consumes:
+      - application/json
+      description: List organizations the user is a member of.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.OrganizationDTO'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: List organizations
+      tags:
+      - organizations
+    post:
+      consumes:
+      - application/json
+      description: Create a new organization. The authenticated user becomes the owner.
+      parameters:
+      - description: Organization details
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOrganizationRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationResponseDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Create organization
+      tags:
+      - organizations
+  /organizations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve organization details by ID. User must be a member.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationResponseDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get organization by ID
+      tags:
+      - organizations
+  /organizations/{orgId}/members:
+    get:
+      consumes:
+      - application/json
+      description: Get all members of an organization
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.OrganizationMemberDTO'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get all members of an organization
+      tags:
+      - organization_member
+  /organizations/onboarding:
+    post:
+      consumes:
+      - application/json
+      description: Guided onboarding flow for creating a new organization. Similar
+        to create but may include additional steps.
+      parameters:
+      - description: Organization details
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOrganizationRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationResponseDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Onboard organization
+      tags:
+      - organizations
+  /organizations/slug/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve organization details by slug. User must be a member.
+      parameters:
+      - description: Organization slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationResponseDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get organization by slug
+      tags:
+      - organizations
   /users/me:
     get:
       consumes:

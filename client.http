@@ -1,0 +1,70 @@
+# Worklayer rest api enpoints
+
+@email = "worklayer@http.com"
+@password = "Password!123"
+@refreshTokenCookieName = "refresh_token"
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjY3NGQxOGEtOWJlZS00ODZlLWE2OWMtMDYyMjk3MWU3MTAyIiwiaXNzIjoiV29ya0xheWVyIiwiZXhwIjoxNzczMjg3NDgwLCJuYmYiOjE3NzA2OTU0ODAsImlhdCI6MTc3MDY5NTQ4MH0.UqFHYrdwBcWo01b6klu1a5T0Acb1_CO4o620fhgQ9mU
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMmJmNWJiMmYtYTdlMy00MDg2LTg3MDItMjFjOTVkOTQ2NWYxIiwiZW1haWwiOiJ3b3JrbGF5ZXJAaHR0cC5jb20iLCJpc3MiOiJXb3JrTGF5ZXIiLCJleHAiOjE3NzA3MzUyNTYsIm5iZiI6MTc3MDczNDM1NiwiaWF0IjoxNzcwNzM0MzU2fQ.T2jr9N6wd1yEjxQfrHWT3DdagsNh8aMFm_b-aqB91Kw
+@organizationId=org_b42924e5-4fa8-4b07-9d47-056f5467d67a
+@organizationSlug=worklayer-http-2
+
+# Health check
+GET http://localhost:6999/api/v1/health
+
+### User register
+POST http://localhost:6999/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "email": {{email}},
+    "password": {{password}},
+    "fullName": "worklayer http"
+}
+
+### User login
+POST http://localhost:6999/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "email": {{email}},
+    "password": {{password}}
+}
+
+### User logout
+POST http://localhost:6999/api/v1/auth/logout
+Cookie: refresh_token={{refreshToken}}
+Authorization: Bearer {{accessToken}}
+
+### Refresh token
+POST http://localhost:6999/api/v1/auth/refresh
+Cookie: refresh_token={{refreshToken}}
+
+### Get user
+GET http://localhost:6999/api/v1/users/me
+Authorization: Bearer {{accessToken}}
+
+### Create organization
+POST http://localhost:6999/api/v1/organizations
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "name": "worklayer http 2",
+    "description": "worklayer http description"
+}
+
+### Get organization
+GET http://localhost:6999/api/v1/organizations/{{organizationId}}
+Authorization: Bearer {{accessToken}}
+
+### Get all organizations
+GET http://localhost:6999/api/v1/organizations
+Authorization: Bearer {{accessToken}}
+
+### Get organization by slug
+GET http://localhost:6999/api/v1/organizations/slug/{{organizationSlug}}
+Authorization: Bearer {{accessToken}}
+
+### Get organization members
+GET http://localhost:6999/api/v1/organizations/{{organizationId}}/members
+Authorization: Bearer {{accessToken}}

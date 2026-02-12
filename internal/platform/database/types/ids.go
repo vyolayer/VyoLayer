@@ -20,6 +20,7 @@ const (
 	OrgPermissionPrefix     IDPrefix = "org_permission"
 	OrgMemberPrefix         IDPrefix = "org_member"
 	OrgMemberRolePrefix     IDPrefix = "org_member_role"
+	OrgInvitationPrefix     IDPrefix = "org_invitation"
 	ProjectPrefix           IDPrefix = "project"
 	ProjectMemberPrefix     IDPrefix = "project_member"
 	ProjectRolePrefix       IDPrefix = "project_role"
@@ -32,6 +33,7 @@ var validPrefixes = map[IDPrefix]bool{
 	OrgRolePrefix:           true,
 	OrgPermissionPrefix:     true,
 	OrgMemberPrefix:         true,
+	OrgInvitationPrefix:     true,
 	ProjectPrefix:           true,
 	ProjectMemberPrefix:     true,
 	ProjectRolePrefix:       true,
@@ -362,4 +364,25 @@ func ReconstructMemberOrganizationRoleID(s string) (MemberOrganizationRoleID, er
 		return nil, err
 	}
 	return memberOrganizationRoleID{PublicID: public}, nil
+}
+
+// --- Organization Member Invitation ID ---
+type organizationMemberInvitationID struct {
+	PublicID[IDPrefix]
+}
+
+type OrganizationMemberInvitationID interface {
+	WorkLayerPublicID
+}
+
+func NewOrganizationMemberInvitationID() OrganizationMemberInvitationID {
+	return organizationMemberInvitationID{PublicID: NewPublicID(OrgInvitationPrefix)}
+}
+
+func ReconstructOrganizationMemberInvitationID(s string) (OrganizationMemberInvitationID, error) {
+	public, err := ReconstructPublicID(OrgInvitationPrefix, s)
+	if err != nil {
+		return nil, err
+	}
+	return organizationMemberInvitationID{PublicID: public}, nil
 }

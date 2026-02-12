@@ -31,6 +31,7 @@ func main() {
 		// Organization models
 		models.Organization{},
 		models.OrganizationMember{},
+		models.OrganizationMemberInvitation{},
 
 		// Organization RBAC models
 		models.OrganizationRole{},

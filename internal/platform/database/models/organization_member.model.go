@@ -62,3 +62,58 @@ func (om *OrganizationMember) GetRemovedBy() *types.OrganizationMemberID {
 	id, _ := types.ReconstructOrganizationMemberID(om.RemovedBy.String())
 	return &id
 }
+
+// MemberInvitation Model
+type OrganizationMemberInvitation struct {
+	BaseModel
+
+	OrganizationID uuid.UUID `gorm:"type:uuid;not null;index"`                                            // organization id
+	InvitedBy      uuid.UUID `gorm:"type:uuid;not null"`                                                  // organization member id who created the invitation
+	Email          string    `gorm:"type:varchar(255);not null;uniqueIndex:idx_org_invitation_email_org"` // email of the person being invited
+	Token          string    `gorm:"type:varchar(64);not null;uniqueIndex"`                               // unique invitation token
+	RoleIDs        string    `gorm:"type:text"`                                                           // JSON array of role IDs to assign on acceptance
+	InvitedAt      time.Time `gorm:"autoCreateTime"`
+	IsAccepted     bool      `gorm:"default:false"`
+	AcceptedAt     *time.Time
+	ExpiredAt      time.Time  `gorm:"not null"`  // expiration time for the invitation
+	DeletedBy      *uuid.UUID `gorm:"type:uuid"` // organization member id who deleted the invitation
+}
+
+func (OrganizationMemberInvitation) TableName() string {
+	return "organization_member_invitations"
+}
+
+// OrganizationMemberInvitationPublicID returns the public ID of the organization member invitation
+func (omi *OrganizationMemberInvitation) OrganizationPublicID() types.OrganizationID {
+	id, _ := types.ReconstructOrganizationID(omi.OrganizationID.String())
+	return id
+}
+
+func (omi *OrganizationMemberInvitation) InvitedByPublicID() types.OrganizationMemberID {
+	id, _ := types.ReconstructOrganizationMemberID(omi.InvitedBy.String())
+	return id
+}
+
+func (omi *OrganizationMemberInvitation) DeletedByPublicID() *types.OrganizationMemberID {
+	if omi.DeletedBy == nil {
+		return nil
+	}
+	id, _ := types.ReconstructOrganizationMemberID(omi.DeletedBy.String())
+	return &id
+}
+
+// PublicID returns the public ID of the organization member invitation
+func (omi *OrganizationMemberInvitation) PublicID() types.OrganizationMemberInvitationID {
+	id, _ := types.ReconstructOrganizationMemberInvitationID(omi.ID.String())
+	return id
+}
+
+// IsExpired checks if the invitation has expired
+func (omi *OrganizationMemberInvitation) IsExpired() bool {
+	return time.Now().After(omi.ExpiredAt)
+}
+
+// IsPending checks if the invitation is still pending (not accepted and not expired)
+func (omi *OrganizationMemberInvitation) IsPending() bool {
+	return !omi.IsAccepted && !omi.IsExpired() && omi.DeletedAt == nil
+}

@@ -47,7 +47,7 @@ func FromDomainOrganizationMemberInvitation(inv *domain.OrganizationMemberInvita
 		OrganizationID: inv.OrganizationID.String(),
 		InvitedBy:      inv.InvitedBy.String(),
 		Email:          inv.Email,
-		RoleIDs:        inv.RoleIDs,
+		RoleIDs:        inv.ToRoleIDsString(),
 		InvitedAt:      inv.InvitedAt.Format(time.RFC3339),
 		IsAccepted:     inv.IsAccepted,
 		AcceptedAt:     acceptedAt,

@@ -15,7 +15,7 @@ type OrganizationMemberInvitation struct {
 	InvitedBy      types.OrganizationMemberID
 	Email          string
 	Token          string
-	RoleIDs        []string
+	RoleIDs        []types.OrganizationRoleID
 
 	// Status
 	InvitedAt  time.Time
@@ -23,6 +23,7 @@ type OrganizationMemberInvitation struct {
 	AcceptedAt *time.Time
 	ExpiredAt  time.Time
 	DeletedBy  *types.OrganizationMemberID
+	DeletedAt  *time.Time
 }
 
 // NewOrganizationMemberInvitation creates a new organization member invitation
@@ -47,13 +48,18 @@ func NewOrganizationMemberInvitation(
 
 	id := types.NewOrganizationMemberInvitationID()
 
+	orgRoleIDs := make([]types.OrganizationRoleID, len(roleIDs))
+	for i, roleID := range roleIDs {
+		orgRoleIDs[i], _ = types.ReconstructOrganizationRoleID(roleID)
+	}
+
 	return &OrganizationMemberInvitation{
 		ID:             id,
 		OrganizationID: organizationID,
 		InvitedBy:      invitedBy,
 		Email:          email,
 		Token:          token,
-		RoleIDs:        roleIDs,
+		RoleIDs:        orgRoleIDs,
 		InvitedAt:      now,
 		IsAccepted:     false,
 		AcceptedAt:     nil,
@@ -75,13 +81,17 @@ func ReconstructOrganizationMemberInvitation(
 	expiredAt time.Time,
 	deletedBy *types.OrganizationMemberID,
 ) *OrganizationMemberInvitation {
+	orgRoleIDs := make([]types.OrganizationRoleID, len(roleIDs))
+	for i, roleID := range roleIDs {
+		orgRoleIDs[i], _ = types.ReconstructOrganizationRoleID(roleID)
+	}
 	return &OrganizationMemberInvitation{
 		ID:             id,
 		OrganizationID: organizationID,
 		InvitedBy:      invitedBy,
 		Email:          email,
 		Token:          token,
-		RoleIDs:        roleIDs,
+		RoleIDs:        orgRoleIDs,
 		InvitedAt:      invitedAt,
 		IsAccepted:     isAccepted,
 		AcceptedAt:     acceptedAt,
@@ -114,7 +124,33 @@ func (omi *OrganizationMemberInvitation) IsExpired() bool {
 
 // IsPending checks if the invitation is still pending
 func (omi *OrganizationMemberInvitation) IsPending() bool {
-	return !omi.IsAccepted && !omi.IsExpired()
+	return !omi.IsAccepted && !omi.IsExpired() && omi.DeletedBy == nil
+}
+
+// Cancel marks the invitation as canceled
+func (omi *OrganizationMemberInvitation) Cancel(canceledBy types.OrganizationMemberID) *errors.AppError {
+	if omi.IsAccepted {
+		return InvitationAlreadyAcceptedError(omi.ID.String())
+	}
+
+	if omi.IsExpired() {
+		return InvitationExpiredError()
+	}
+
+	now := time.Now()
+	omi.DeletedBy = &canceledBy
+	omi.DeletedAt = &now
+
+	return nil
+}
+
+// To roles ids string slice
+func (omi *OrganizationMemberInvitation) ToRoleIDsString() []string {
+	roleIDs := make([]string, len(omi.RoleIDs))
+	for i, roleID := range omi.RoleIDs {
+		roleIDs[i] = roleID.String()
+	}
+	return roleIDs
 }
 
 // Validate validates the invitation

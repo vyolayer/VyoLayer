@@ -41,6 +41,7 @@ func (router *routesV1) SetupRoutes() {
 	// Organization services
 	orgService := service.NewOrganizationService(repo.Organization, repo.User)
 	orgMemberService := service.NewOrganizationMemberService(repo.OrganizationMember)
+	orgInvitationService := service.NewOrganizationMemberInvitationService(repo.OrganizationMemberInvitation, repo.OrganizationMember, repo.User)
 
 	// Utility services
 	tokenService := service.NewTokenService(router.cfg.Auth)
@@ -50,6 +51,7 @@ func (router *routesV1) SetupRoutes() {
 	userController := controller.NewUserController(userService)
 	orgController := controller.NewOrganizationController(orgService)
 	orgMemberController := controller.NewOrganizationMemberController(orgMemberService)
+	orgInvitationController := controller.NewOrganizationMemberInvitationController(orgInvitationService)
 
 	// Middleware
 	authMiddleware := middleware.NewAuthMiddleware(tokenService)
@@ -82,4 +84,12 @@ func (router *routesV1) SetupRoutes() {
 
 	// Organization member routes
 	orgRouter.Get("/:orgId/members", orgMemberController.GetAllMembersByOrgID)
+
+	// Organization invitation routes
+	orgRouter.Post("/:orgId/invitations", orgInvitationController.CreateInvitation)
+	orgRouter.Get("/:orgId/invitations", orgInvitationController.ListInvitations)
+
+	orgRouter.Get("/invitations/pending", orgInvitationController.GetPendingInvitations)
+	orgRouter.Post("/invitations/accept", orgInvitationController.AcceptInvitation)
+	orgRouter.Delete("/invitations/:invitationId", orgInvitationController.CancelInvitation)
 }

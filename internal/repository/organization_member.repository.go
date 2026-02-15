@@ -11,6 +11,13 @@ import (
 
 type OrganizationMemberRepository interface {
 	GetByOrgID(ctx context.Context, userID UserID, orgID OrgID) ([]domain.OrganizationMember, *errors.AppError)
+
+	Create(
+		ctx context.Context,
+		userID UserID,
+		orgID OrgID,
+		roleIDs []string,
+	) (*domain.OrganizationMember, *errors.AppError)
 }
 
 type organizationMemberRepository struct {
@@ -30,7 +37,7 @@ func (orm *organizationMemberRepository) GetByOrgID(
 	var userMembership TOrganizationMember
 	checkErr := orm.db.
 		Model(&TOrganizationMember{}).
-		Where("organization_id = ? AND user_id = ?", orgID.InternalID().String(), userID.InternalID().String()).
+		Where("organization_id = ? AND user_id = ? AND deleted_at IS NULL", orgID.InternalID(), userID.InternalID()).
 		First(&userMembership).Error
 
 	if checkErr != nil {
@@ -63,4 +70,36 @@ func (orm *organizationMemberRepository) GetByOrgID(
 	}
 
 	return domainMembers, nil
+}
+
+func (orm *organizationMemberRepository) Create(
+	ctx context.Context,
+	userID UserID,
+	orgID OrgID,
+	roleIDs []string,
+) (*domain.OrganizationMember, *errors.AppError) {
+	// First, verify that the requesting user is a member of the organization
+	var userMembership TOrganizationMember
+	checkErr := orm.db.
+		Model(&TOrganizationMember{}).
+		Where("organization_id = ? AND user_id = ?", orgID.InternalID().String(), userID.InternalID().String()).
+		First(&userMembership).Error
+
+	isRecordNotFound := checkErr == gorm.ErrRecordNotFound
+	if !isRecordNotFound {
+		return nil, ConvertDBError(checkErr, "checking user membership")
+	}
+
+	// Create the organization member
+	member := &TOrganizationMember{
+		OrganizationID: orgID.InternalID().ID(),
+		UserID:         userID.InternalID().ID(),
+	}
+
+	result := orm.db.Create(member)
+	if result.Error != nil {
+		return nil, ConvertDBError(result.Error, "creating organization member")
+	}
+
+	return mapper.ToDomainOrganizationMember(member), nil
 }

@@ -22,6 +22,9 @@ type (
 	// Organization Member IDs
 	OrgMemberID     = types.OrganizationMemberID
 	OrgMemberRoleID = types.MemberOrganizationRoleID
+
+	// Invitation IDs
+	InvitationID = types.OrganizationMemberInvitationID
 )
 
 type (
@@ -34,8 +37,9 @@ type (
 	TSession = models.UserSession
 
 	// Organization Management
-	TOrganization       = models.Organization
-	TOrganizationMember = models.OrganizationMember
+	TOrganization                 = models.Organization
+	TOrganizationMember           = models.OrganizationMember
+	TOrganizationMemberInvitation = models.OrganizationMemberInvitation
 
 	// Organization Role Management
 	TOrganizationRole           = models.OrganizationRole

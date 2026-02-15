@@ -118,3 +118,39 @@ func (om *OrganizationMember) Validate() *errors.AppError {
 
 	return nil
 }
+
+// Organization member with roles
+type OrganizationMemberWithRoles struct {
+	OrganizationMember
+	Roles []types.OrganizationRoleID
+}
+
+func NewOrganizationMemberWithRoles(
+	organizationID types.OrganizationID,
+	invitedBy *types.OrganizationMemberID,
+	invitedAt *time.Time,
+	user *User,
+	roleIDs *[]types.OrganizationRoleID,
+) *OrganizationMemberWithRoles {
+	return &OrganizationMemberWithRoles{
+		OrganizationMember: *NewOrganizationMember(
+			organizationID,
+			invitedBy,
+			invitedAt,
+			user,
+		),
+		Roles: *roleIDs,
+	}
+}
+
+func (om *OrganizationMemberWithRoles) AssignRoles(roleIDs *[]types.OrganizationRoleID) {
+	om.Roles = *roleIDs
+}
+
+func (om *OrganizationMemberWithRoles) RolesString() []string {
+	roles := make([]string, len(om.Roles))
+	for i, roleID := range om.Roles {
+		roles[i] = roleID.InternalID().ID().String()
+	}
+	return roles
+}

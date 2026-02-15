@@ -33,8 +33,7 @@ func (OrganizationMember) TableName() string {
 func (om *OrganizationMember) IsActive() bool {
 	return om.JoinedAt != nil && // joined
 		om.RemovedAt == nil && // not removed
-		om.DeletedAt == nil && // not deleted
-		om.Organization.IsActive // organization is active
+		om.DeletedAt == nil
 }
 
 func (om *OrganizationMember) IsOwner() bool {

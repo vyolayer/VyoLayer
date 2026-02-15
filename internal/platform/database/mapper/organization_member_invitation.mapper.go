@@ -45,7 +45,7 @@ func ToModelOrganizationMemberInvitation(inv *domain.OrganizationMemberInvitatio
 	}
 
 	// Marshal role IDs to JSON
-	roleIDsJSON, _ := domain.MarshalRoleIDs(inv.RoleIDs)
+	roleIDsJSON, _ := domain.MarshalRoleIDs(inv.ToRoleIDsString())
 
 	var deletedBy *uuid.UUID
 	if inv.DeletedBy != nil {

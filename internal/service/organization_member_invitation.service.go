@@ -258,19 +258,9 @@ func (s *organizationMemberInvitationService) CancelInvitation(
 
 	// find inviter details by email
 	theInvitedUser, err := s.userRepo.FindByEmail(invitation.Email)
-	if err != nil {
-		return errors.BadRequest("Invalid invitation")
-	}
-
-	// Delete by user id
-	var deletedByUserID types.UserID
-	// check if the inviter is the same as the user who is trying to cancel the invitation
-	if theInvitedUser.ID.String() == canceledByUserID.String() {
-		deletedByUserID = types.UserID(theInvitedUser.ID)
-	}
-
-	if !deletedByUserID.IsNil() {
-		if deleteErr := s.invitationRepo.Delete(ctx.Context(), invitationID, deletedByUserID); deleteErr != nil {
+	if err == nil && theInvitedUser != nil && theInvitedUser.ID.Compare(canceledByUserID) {
+		deleteErr := s.invitationRepo.Delete(ctx.Context(), invitationID, canceledByUserID)
+		if deleteErr != nil {
 			return WrapRepositoryError(deleteErr, "canceling invitation")
 		}
 

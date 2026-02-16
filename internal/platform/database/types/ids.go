@@ -60,6 +60,7 @@ type WorkLayerPublicID interface {
 	String() string
 	IsNil() bool
 	InternalID() WorkLayerInternalID
+	Compare(other WorkLayerPublicID) bool
 }
 
 // Internal id for database
@@ -222,6 +223,10 @@ func (id PublicID[T]) String() string {
 
 func (id PublicID[T]) IsNil() bool {
 	return id.prefix == "" && id.uuid.IsNil()
+}
+
+func (id PublicID[T]) Compare(other WorkLayerPublicID) bool {
+	return id.uuid.String() == other.InternalID().String()
 }
 
 func (id PublicID[T]) InternalID() WorkLayerInternalID {

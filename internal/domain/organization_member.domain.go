@@ -130,7 +130,7 @@ func NewOrganizationMemberWithRoles(
 	invitedBy *types.OrganizationMemberID,
 	invitedAt *time.Time,
 	user *User,
-	roleIDs *[]types.OrganizationRoleID,
+	roleIDs []types.OrganizationRoleID,
 ) *OrganizationMemberWithRoles {
 	return &OrganizationMemberWithRoles{
 		OrganizationMember: *NewOrganizationMember(
@@ -139,12 +139,12 @@ func NewOrganizationMemberWithRoles(
 			invitedAt,
 			user,
 		),
-		Roles: *roleIDs,
+		Roles: roleIDs,
 	}
 }
 
-func (om *OrganizationMemberWithRoles) AssignRoles(roleIDs *[]types.OrganizationRoleID) {
-	om.Roles = *roleIDs
+func (om *OrganizationMemberWithRoles) AssignRoles(roleIDs []types.OrganizationRoleID) {
+	om.Roles = roleIDs
 }
 
 func (om *OrganizationMemberWithRoles) RolesString() []string {

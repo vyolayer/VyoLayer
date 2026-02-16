@@ -108,7 +108,7 @@ func (r *organizationMemberInvitationRepository) GetByToken(
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, errors.InvitationNotFound(token)
+			return nil, errors.InvitationNotFound("token")
 		}
 		return nil, ConvertDBError(err, "getting invitation by token")
 	}
@@ -131,11 +131,11 @@ func (r *organizationMemberInvitationRepository) GetByOrgID(
 		return nil, ConvertDBError(err, "getting invitations by organization ID")
 	}
 
-	domainInvitations := make([]domain.OrganizationMemberInvitation, len(invitations))
-	for i, inv := range invitations {
+	domainInvitations := make([]domain.OrganizationMemberInvitation, 0, len(invitations))
+	for _, inv := range invitations {
 		domainInv := mapper.ToDomainOrganizationMemberInvitation(&inv)
 		if domainInv != nil {
-			domainInvitations[i] = *domainInv
+			domainInvitations = append(domainInvitations, *domainInv)
 		}
 	}
 

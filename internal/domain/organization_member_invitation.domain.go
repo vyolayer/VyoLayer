@@ -50,7 +50,11 @@ func NewOrganizationMemberInvitation(
 
 	orgRoleIDs := make([]types.OrganizationRoleID, len(roleIDs))
 	for i, roleID := range roleIDs {
-		orgRoleIDs[i], _ = types.ReconstructOrganizationRoleID(roleID)
+		var err error
+		orgRoleIDs[i], err = types.ReconstructOrganizationRoleID(roleID)
+		if err != nil {
+			return nil, errors.InternalWrap(err, "Failed to reconstruct organization role ID")
+		}
 	}
 
 	return &OrganizationMemberInvitation{
@@ -131,6 +135,10 @@ func (omi *OrganizationMemberInvitation) IsPending() bool {
 func (omi *OrganizationMemberInvitation) Cancel(canceledBy types.OrganizationMemberID) *errors.AppError {
 	if omi.IsAccepted {
 		return InvitationAlreadyAcceptedError(omi.ID.String())
+	}
+
+	if omi.DeletedBy != nil {
+		return errors.BadRequest("Invitation is already canceled")
 	}
 
 	if omi.IsExpired() {

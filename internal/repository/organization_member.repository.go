@@ -80,13 +80,16 @@ func (orm *organizationMemberRepository) Create(
 ) (*domain.OrganizationMember, *errors.AppError) {
 	// First, verify that the requesting user is a member of the organization
 	var userMembership TOrganizationMember
-	checkErr := orm.db.
+	checkErr := orm.db.WithContext(ctx).
 		Model(&TOrganizationMember{}).
-		Where("organization_id = ? AND user_id = ?", orgID.InternalID().String(), userID.InternalID().String()).
+		Where("organization_id = ? AND user_id = ? AND deleted_at IS NULL", orgID.InternalID(), userID.InternalID()).
 		First(&userMembership).Error
 
-	isRecordNotFound := checkErr == gorm.ErrRecordNotFound
-	if !isRecordNotFound {
+	if checkErr == nil {
+		return nil, errors.Conflict("User is already a member of this organization")
+	}
+
+	if checkErr != gorm.ErrRecordNotFound {
 		return nil, ConvertDBError(checkErr, "checking user membership")
 	}
 
@@ -96,9 +99,13 @@ func (orm *organizationMemberRepository) Create(
 		UserID:         userID.InternalID().ID(),
 	}
 
-	result := orm.db.Create(member)
+	result := orm.db.WithContext(ctx).Create(member)
 	if result.Error != nil {
 		return nil, ConvertDBError(result.Error, "creating organization member")
+	}
+
+	if err := orm.db.Preload("User").First(member, member.ID).Error; err != nil {
+		return nil, ConvertDBError(err, "loading created organization member")
 	}
 
 	return mapper.ToDomainOrganizationMember(member), nil

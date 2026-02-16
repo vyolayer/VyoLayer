@@ -151,7 +151,7 @@ func (ctrl *organizationMemberInvitationController) GetPendingInvitations(ctx *f
 // @Tags organization_invitations
 // @Accept json
 // @Produce json
-// @QueryParam org-invite-token query string true "Invitation token"
+// @Param org-invite-token query string true "Invitation token"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
@@ -159,7 +159,7 @@ func (ctrl *organizationMemberInvitationController) GetPendingInvitations(ctx *f
 // @Failure 404 {object} response.ErrorResponse
 // @Failure 409 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /organizations/invitations/accept?org-invite-token={invitationToken} [post]
+// @Router /organizations/invitations/accept [post]
 func (ctrl *organizationMemberInvitationController) AcceptInvitation(ctx *fiber.Ctx) error {
 	// Get user ID from context
 	userID, ok := ctx.Locals("user_id").(types.UserID)

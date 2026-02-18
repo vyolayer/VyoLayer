@@ -282,12 +282,35 @@ definitions:
         example: false
         type: boolean
     type: object
+  response.Meta:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      page:
+        example: 1
+        type: integer
+      requestId:
+        example: req-123456
+        type: string
+      timestamp:
+        example: "2026-02-08T18:30:00Z"
+        type: string
+      total:
+        example: 100
+        type: integer
+      totalPages:
+        example: 10
+        type: integer
+    type: object
   response.SuccessResponse:
     properties:
       data: {}
       message:
         example: Operation successful
         type: string
+      meta:
+        $ref: '#/definitions/response.Meta'
       statusCode:
         example: 200
         type: integer
@@ -683,6 +706,95 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get all members of an organization
+      tags:
+      - organization_member
+  /organizations/{orgId}/members/{memberId}:
+    get:
+      consumes:
+      - application/json
+      description: Get a member of an organization by member id
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationMemberDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get a member of an organization by member id
+      tags:
+      - organization_member
+  /organizations/{orgId}/members/me:
+    get:
+      consumes:
+      - application/json
+      description: Get the current member of an organization
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationMemberDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get the current member of an organization
       tags:
       - organization_member
   /organizations/invitations/{invitationId}:

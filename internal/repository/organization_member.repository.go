@@ -18,6 +18,18 @@ type OrganizationMemberRepository interface {
 		orgID OrgID,
 		roleIDs []string,
 	) (*domain.OrganizationMember, *errors.AppError)
+
+	GetByOrgIDAndMemberID(
+		ctx context.Context,
+		orgID OrgID,
+		memberID OrgMemberID,
+	) (*domain.OrganizationMember, *errors.AppError)
+
+	GetCurrentMember(
+		ctx context.Context,
+		orgID OrgID,
+		userID UserID,
+	) (*domain.OrganizationMemberWithRBAC, *errors.AppError)
 }
 
 type organizationMemberRepository struct {
@@ -109,4 +121,45 @@ func (orm *organizationMemberRepository) Create(
 	}
 
 	return mapper.ToDomainOrganizationMember(member), nil
+}
+
+func (orm *organizationMemberRepository) GetByOrgIDAndMemberID(
+	ctx context.Context,
+	orgID OrgID,
+	memberID OrgMemberID,
+) (*domain.OrganizationMember, *errors.AppError) {
+	var member TOrganizationMember
+	result := orm.db.WithContext(ctx).
+		Model(&TOrganizationMember{}).
+		Preload("User").
+		Where("organization_id = ? AND id = ? AND deleted_at IS NULL", orgID.InternalID(), memberID.InternalID()).
+		First(&member)
+
+	if result.Error != nil {
+		return nil, ConvertDBError(result.Error, "getting organization member")
+	}
+
+	return mapper.ToDomainOrganizationMember(&member), nil
+}
+
+func (orm *organizationMemberRepository) GetCurrentMember(
+	ctx context.Context,
+	orgID OrgID,
+	userID UserID,
+) (*domain.OrganizationMemberWithRBAC, *errors.AppError) {
+	var member TOrganizationMember
+	result := orm.db.WithContext(ctx).
+		Model(&TOrganizationMember{}).
+		Preload("User").
+		Preload("Roles").
+		Preload("Roles.Role").
+		Preload("Roles.Role.Permissions").
+		Where("organization_id = ? AND user_id = ? AND deleted_at IS NULL", orgID.InternalID(), userID.InternalID()).
+		First(&member)
+
+	if result.Error != nil {
+		return nil, ConvertDBError(result.Error, "getting organization member")
+	}
+
+	return mapper.ToDomainOrganizationMemberWithRBAC(&member), nil
 }

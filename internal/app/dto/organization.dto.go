@@ -141,3 +141,62 @@ func FromDomainOrganizationMember(member *domain.OrganizationMember) Organizatio
 		DeactivatedAt: deactivatedAt,
 	}
 }
+
+type OrganizationRoleDTO struct {
+	ID           string `json:"id" example:"orgrole_550e8400-e29b-41d4-a716-446655440000"`
+	Name         string `json:"name" example:"Admin"`
+	Description  string `json:"description" example:"Administrator role"`
+	IsSystemRole bool   `json:"isSystemRole" example:"true"`
+	IsDefault    bool   `json:"isDefault" example:"true"`
+}
+
+type OrganizationPermissionDTO struct {
+	ID       string `json:"id" example:"orgperm_550e8400-e29b-41d4-a716-446655440000"`
+	Resource string `json:"resource" example:"project"`
+	Action   string `json:"action" example:"create"`
+	Code     string `json:"code" example:"project.create"`
+	Group    string `json:"group" example:"project"`
+	IsSystem bool   `json:"isSystem" example:"true"`
+}
+
+type OrganizationMemberWithRBACDTO struct {
+	OrganizationMemberDTO
+	Roles       []OrganizationRoleDTO
+	Permissions []OrganizationPermissionDTO
+}
+
+// FromDomainOrganizationMemberWithRBAC converts a domain organization member with rbac to DTO
+func FromDomainOrganizationMemberWithRBAC(member *domain.OrganizationMemberWithRBAC) OrganizationMemberWithRBACDTO {
+	if member == nil {
+		return OrganizationMemberWithRBACDTO{}
+	}
+
+	roles := make([]OrganizationRoleDTO, 0, len(member.Roles))
+	for _, role := range member.Roles {
+		roles = append(roles, OrganizationRoleDTO{
+			ID:           role.ID,
+			Name:         role.Name,
+			Description:  role.Description,
+			IsSystemRole: role.IsSystemRole,
+			IsDefault:    role.IsDefault,
+		})
+	}
+
+	permissions := make([]OrganizationPermissionDTO, 0, len(member.Permissions))
+	for _, permission := range member.Permissions {
+		permissions = append(permissions, OrganizationPermissionDTO{
+			ID:       permission.ID,
+			Resource: permission.Resource,
+			Action:   permission.Action,
+			Code:     permission.Code(),
+			Group:    permission.Group,
+			IsSystem: permission.IsSystem,
+		})
+	}
+
+	return OrganizationMemberWithRBACDTO{
+		OrganizationMemberDTO: FromDomainOrganizationMember(&member.OrganizationMember),
+		Roles:                 roles,
+		Permissions:           permissions,
+	}
+}

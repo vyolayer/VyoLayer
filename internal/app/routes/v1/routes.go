@@ -42,6 +42,7 @@ func (router *routesV1) SetupRoutes() {
 	orgService := service.NewOrganizationService(repo.Organization, repo.User)
 	orgMemberService := service.NewOrganizationMemberService(repo.OrganizationMember)
 	orgInvitationService := service.NewOrganizationMemberInvitationService(repo.OrganizationMemberInvitation, repo.OrganizationMember, repo.User)
+	orgRBACService := service.NewOrganizationRBACService(repo.OrganizationRBAC)
 
 	// Utility services
 	tokenService := service.NewTokenService(router.cfg.Auth)
@@ -52,6 +53,7 @@ func (router *routesV1) SetupRoutes() {
 	orgController := controller.NewOrganizationController(orgService)
 	orgMemberController := controller.NewOrganizationMemberController(orgMemberService)
 	orgInvitationController := controller.NewOrganizationMemberInvitationController(orgInvitationService)
+	orgRBACController := controller.NewOrganizationRBACController(orgRBACService)
 
 	// Middleware
 	authMiddleware := middleware.NewAuthMiddleware(tokenService)
@@ -84,6 +86,8 @@ func (router *routesV1) SetupRoutes() {
 
 	// Organization member routes
 	orgRouter.Get("/:orgId/members", orgMemberController.GetAllMembersByOrgID)
+	orgRouter.Get("/:orgId/members/me", orgMemberController.CurrentMember)
+	orgRouter.Get("/:orgId/members/:memberId", orgMemberController.GetMemberByOrgIDAndMemberID)
 
 	// Organization invitation routes
 	orgRouter.Post("/:orgId/invitations", orgInvitationController.CreateInvitation)
@@ -92,4 +96,8 @@ func (router *routesV1) SetupRoutes() {
 	orgRouter.Get("/invitations/pending", orgInvitationController.GetPendingInvitations)
 	orgRouter.Post("/invitations/accept", orgInvitationController.AcceptInvitation)
 	orgRouter.Delete("/invitations/:invitationId", orgInvitationController.CancelInvitation)
+
+	// Organization rbac routes
+	orgRouter.Get("/:orgId/rbac/permissions", orgRBACController.GetAllPermissions)
+	orgRouter.Get("/:orgId/rbac/roles", orgRBACController.GetAllRoles)
 }

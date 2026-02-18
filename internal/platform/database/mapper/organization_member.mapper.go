@@ -47,3 +47,41 @@ func ToDomainOrganizationMember(memberModel *models.OrganizationMember) *domain.
 		memberModel.RemovedAt,
 	)
 }
+
+// ToDomainOrganizationMemberWithRBAC converts an OrganizationMember model to domain object
+func ToDomainOrganizationMemberWithRBAC(memberModel *models.OrganizationMember) *domain.OrganizationMemberWithRBAC {
+	if memberModel == nil {
+		return nil
+	}
+
+	roles := make(map[string]domain.OrganizationRole)
+	permissions := make(map[string]domain.OrganizationPermission)
+
+	for _, role := range memberModel.Roles {
+		for _, permission := range role.Role.Permissions {
+			domainPermission := domain.OrganizationPermission{
+				ID:       permission.PublicID().String(),
+				Resource: permission.Resource,
+				Action:   permission.Action,
+				Group:    permission.Group,
+				IsSystem: permission.IsSystem,
+			}
+			permissions[permission.PublicID().String()] = domainPermission
+		}
+
+		domainRole := domain.OrganizationRole{
+			ID:           role.Role.PublicID().String(),
+			Name:         role.Role.Name,
+			Description:  role.Role.Description,
+			IsSystemRole: role.Role.IsSystem,
+			IsDefault:    role.Role.IsDefault,
+		}
+		roles[role.Role.PublicID().String()] = domainRole
+	}
+
+	return &domain.OrganizationMemberWithRBAC{
+		OrganizationMember: *ToDomainOrganizationMember(memberModel),
+		Roles:              roles,
+		Permissions:        permissions,
+	}
+}

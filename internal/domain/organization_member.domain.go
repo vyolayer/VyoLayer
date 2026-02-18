@@ -154,3 +154,30 @@ func (om *OrganizationMemberWithRoles) RolesString() []string {
 	}
 	return roles
 }
+
+type OrganizationPermission struct {
+	ID       string
+	Resource string
+	Action   string
+	Group    string
+	IsSystem bool
+}
+
+func (op OrganizationPermission) Code() string {
+	return op.Resource + "." + op.Action
+}
+
+type OrganizationRole struct {
+	ID           string
+	Name         string
+	Description  string
+	IsSystemRole bool
+	IsDefault    bool
+}
+
+// Organization member with rbac
+type OrganizationMemberWithRBAC struct {
+	OrganizationMember
+	Roles       map[string]OrganizationRole
+	Permissions map[string]OrganizationPermission
+}

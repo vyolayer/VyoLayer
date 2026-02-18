@@ -14,6 +14,18 @@ type OrganizationMemberService interface {
 		orgID types.OrganizationID,
 		userID types.UserID,
 	) ([]dto.OrganizationMemberDTO, error)
+
+	GetOrgMemberByMemberID(
+		ctx *fiber.Ctx,
+		orgID types.OrganizationID,
+		memberID types.OrganizationMemberID,
+	) (dto.OrganizationMemberDTO, error)
+
+	GetCurrentMember(
+		ctx *fiber.Ctx,
+		orgID types.OrganizationID,
+		userID types.UserID,
+	) (dto.OrganizationMemberWithRBACDTO, error)
 }
 
 type organizationMemberService struct {
@@ -40,4 +52,30 @@ func (service *organizationMemberService) ListByOrgAndUserId(
 	}
 
 	return membersDto, nil
+}
+
+func (service *organizationMemberService) GetCurrentMember(
+	ctx *fiber.Ctx,
+	orgID types.OrganizationID,
+	userID types.UserID,
+) (dto.OrganizationMemberWithRBACDTO, error) {
+	member, err := service.orgMemberRepo.GetCurrentMember(ctx.Context(), orgID, userID)
+	if err != nil {
+		return dto.OrganizationMemberWithRBACDTO{}, WrapRepositoryError(err, "getting organization member")
+	}
+
+	return dto.FromDomainOrganizationMemberWithRBAC(member), nil
+}
+
+func (service *organizationMemberService) GetOrgMemberByMemberID(
+	ctx *fiber.Ctx,
+	orgID types.OrganizationID,
+	memberID types.OrganizationMemberID,
+) (dto.OrganizationMemberDTO, error) {
+	member, err := service.orgMemberRepo.GetByOrgIDAndMemberID(ctx.Context(), orgID, memberID)
+	if err != nil {
+		return dto.OrganizationMemberDTO{}, WrapRepositoryError(err, "getting organization member")
+	}
+
+	return dto.FromDomainOrganizationMember(member), nil
 }

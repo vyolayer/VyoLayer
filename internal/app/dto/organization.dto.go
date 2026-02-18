@@ -161,8 +161,8 @@ type OrganizationPermissionDTO struct {
 
 type OrganizationMemberWithRBACDTO struct {
 	OrganizationMemberDTO
-	Roles       []OrganizationRoleDTO
-	Permissions []OrganizationPermissionDTO
+	Roles       []OrganizationRoleDTO       `json:"roles"`
+	Permissions []OrganizationPermissionDTO `json:"permissions"`
 }
 
 // FromDomainOrganizationMemberWithRBAC converts a domain organization member with rbac to DTO

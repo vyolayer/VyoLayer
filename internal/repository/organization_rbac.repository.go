@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"sync"
 	"worklayer/internal/platform/database/models"
 	"worklayer/internal/platform/database/types"
 	"worklayer/pkg/errors"
@@ -16,6 +17,7 @@ type OrganizationRBACRepository interface {
 // Current all is common permission and role repository, it will be changed in future
 // for now use simple cache
 var (
+	cacheMutex          sync.RWMutex
 	allPermissionsCache []models.OrganizationPermission
 	allRolesCache       []models.OrganizationRole
 )
@@ -29,9 +31,12 @@ func NewOrganizationRBACRepository(db *gorm.DB) OrganizationRBACRepository {
 }
 
 func (repo *organizationRBACRepository) GetAllPermissions(orgID types.OrganizationID) ([]models.OrganizationPermission, *errors.AppError) {
+	cacheMutex.RLock()
 	if permissions := allPermissionsCache; len(permissions) > 0 {
+		cacheMutex.RUnlock()
 		return permissions, nil
 	}
+	cacheMutex.RUnlock()
 
 	var permissions []models.OrganizationPermission
 	result := repo.db.Find(&permissions)
@@ -39,14 +44,19 @@ func (repo *organizationRBACRepository) GetAllPermissions(orgID types.Organizati
 		return nil, ConvertDBError(result.Error, "Failed to get all permissions")
 	}
 
+	cacheMutex.Lock()
 	allPermissionsCache = permissions
+	cacheMutex.Unlock()
 	return permissions, nil
 }
 
 func (repo *organizationRBACRepository) GetAllRoles(orgID types.OrganizationID) ([]models.OrganizationRole, *errors.AppError) {
+	cacheMutex.RLock()
 	if roles := allRolesCache; len(roles) > 0 {
+		cacheMutex.RUnlock()
 		return roles, nil
 	}
+	cacheMutex.RUnlock()
 
 	var roles []models.OrganizationRole
 	result := repo.db.Find(&roles)
@@ -54,6 +64,8 @@ func (repo *organizationRBACRepository) GetAllRoles(orgID types.OrganizationID) 
 		return nil, ConvertDBError(result.Error, "Failed to get all roles")
 	}
 
+	cacheMutex.Lock()
 	allRolesCache = roles
+	cacheMutex.Unlock()
 	return roles, nil
 }

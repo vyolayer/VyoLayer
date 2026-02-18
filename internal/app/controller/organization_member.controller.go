@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"worklayer/internal/app/dto"
 	"worklayer/internal/platform/database/types"
 	"worklayer/internal/service"
 	"worklayer/pkg/errors"
@@ -134,5 +135,5 @@ func (ctrl *organizationMemberController) CurrentMember(ctx *fiber.Ctx) error {
 		return response.Error(ctx, err)
 	}
 
-	return response.Success(ctx, memberResp)
+	return response.Success(ctx, dto.FromDomainOrganizationMemberWithRBAC(&memberResp))
 }

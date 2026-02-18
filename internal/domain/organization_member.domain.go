@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"strings"
 	"time"
 	"worklayer/internal/platform/database/types"
 	"worklayer/pkg/errors"
@@ -180,4 +181,70 @@ type OrganizationMemberWithRBAC struct {
 	OrganizationMember
 	Roles       map[string]OrganizationRole
 	Permissions map[string]OrganizationPermission
+
+	//
+	roleSet       map[string]bool
+	permissionSet map[string]bool
+}
+
+func ConstructOrganizationMemberWithRBAC(
+	member OrganizationMember,
+	roles []OrganizationRole,
+	permissions []OrganizationPermission,
+) *OrganizationMemberWithRBAC {
+	roleMap := make(map[string]OrganizationRole)
+	for _, role := range roles {
+		roleMap[role.Name] = role
+	}
+
+	permissionMap := make(map[string]OrganizationPermission)
+	for _, permission := range permissions {
+		permissionMap[permission.Code()] = permission
+	}
+
+	roleSet := make(map[string]bool)
+	for _, role := range roles {
+		roleSet[strings.ToLower(role.Name)] = true
+	}
+
+	permissionSet := make(map[string]bool)
+	for _, permission := range permissions {
+		permissionSet[strings.ToLower(permission.Code())] = true
+	}
+
+	return &OrganizationMemberWithRBAC{
+		OrganizationMember: member,
+		Roles:              roleMap,
+		Permissions:        permissionMap,
+		roleSet:            roleSet,
+		permissionSet:      permissionSet,
+	}
+}
+
+func (om *OrganizationMemberWithRBAC) HasPermission(permission string) bool {
+	if len(om.permissionSet) == 0 {
+		return false
+	}
+
+	return om.permissionSet[permission]
+}
+
+func (om *OrganizationMemberWithRBAC) HasRole(roles string) bool {
+	if len(roles) == 0 || len(om.roleSet) == 0 {
+		return false
+	}
+
+	return om.roleSet[roles]
+}
+
+func (om *OrganizationMemberWithRBAC) IsOwner() bool {
+	return om.HasRole("owner")
+}
+
+func (om *OrganizationMemberWithRBAC) IsAdmin() bool {
+	return om.IsOwner() || om.HasRole("admin")
+}
+
+func (om *OrganizationMemberWithRBAC) IsMember() bool {
+	return om.IsAdmin() || om.HasRole("member")
 }

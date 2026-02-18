@@ -57,6 +57,7 @@ func (router *routesV1) SetupRoutes() {
 
 	// Middleware
 	authMiddleware := middleware.NewAuthMiddleware(tokenService)
+	orgMiddleware := middleware.NewOrganizationMiddleware(orgMemberService)
 
 	// Register routes
 	//
@@ -78,26 +79,34 @@ func (router *routesV1) SetupRoutes() {
 	// Organization routes
 	orgRouter := router.router.Group("/organizations")
 	orgRouter.Use(authMiddleware.JwtValidated())
-	orgRouter.Post("/", orgController.CreateOrganization)
-	orgRouter.Get("/", orgController.ListOrganizations)
-	orgRouter.Post("/onboarding", orgController.OnboardOrganization)
-	orgRouter.Get("/:orgId", orgController.GetOrganizationByID)
-	orgRouter.Get("/slug/:slug", orgController.GetOrganizationBySlug)
 
-	// Organization member routes
-	orgRouter.Get("/:orgId/members", orgMemberController.GetAllMembersByOrgID)
-	orgRouter.Get("/:orgId/members/me", orgMemberController.CurrentMember)
-	orgRouter.Get("/:orgId/members/:memberId", orgMemberController.GetMemberByOrgIDAndMemberID)
+	// Access by user
+	orgRouter.Post("/", orgController.CreateOrganization)             // Create organization
+	orgRouter.Get("/", orgController.ListOrganizations)               // List organizations
+	orgRouter.Post("/onboarding", orgController.OnboardOrganization)  // Onboard organization
+	orgRouter.Get("/slug/:slug", orgController.GetOrganizationBySlug) // Get organization by slug
 
-	// Organization invitation routes
-	orgRouter.Post("/:orgId/invitations", orgInvitationController.CreateInvitation)
-	orgRouter.Get("/:orgId/invitations", orgInvitationController.ListInvitations)
-
+	// Organization invitation routes (user)
 	orgRouter.Get("/invitations/pending", orgInvitationController.GetPendingInvitations)
 	orgRouter.Post("/invitations/accept", orgInvitationController.AcceptInvitation)
 	orgRouter.Delete("/invitations/:invitationId", orgInvitationController.CancelInvitation)
 
+	// Access by organization member (all members)
+	orgRouter.Get("/:orgId", orgMiddleware.CheckOrganizationMembership(), orgController.GetOrganizationByID)
+	orgRouter.Get("/:orgId/members/me", orgMiddleware.CheckOrganizationMembership(), orgMemberController.CurrentMember)
+
+	// Access by organization owner and admin
+	orgAdminRouter := orgRouter.Group("/:orgId")
+	orgAdminRouter.Use(orgMiddleware.CheckOrganizationMembership(), orgMiddleware.IsAdmin())
+	// Organization member routes (owner and admin)
+	orgAdminRouter.Get("/members", orgMemberController.GetAllMembersByOrgID)
+	orgAdminRouter.Get("/members/:memberId", orgMemberController.GetMemberByOrgIDAndMemberID)
+
+	// Organization invitation routes (owner and admin)
+	orgAdminRouter.Post("/invitations", orgInvitationController.CreateInvitation)
+	orgAdminRouter.Get("/invitations", orgInvitationController.ListInvitations)
+
 	// Organization rbac routes
-	orgRouter.Get("/:orgId/rbac/permissions", orgRBACController.GetAllPermissions)
-	orgRouter.Get("/:orgId/rbac/roles", orgRBACController.GetAllRoles)
+	orgAdminRouter.Get("/rbac/permissions", orgRBACController.GetAllPermissions)
+	orgAdminRouter.Get("/rbac/roles", orgRBACController.GetAllRoles)
 }

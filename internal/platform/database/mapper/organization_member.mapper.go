@@ -54,8 +54,8 @@ func ToDomainOrganizationMemberWithRBAC(memberModel *models.OrganizationMember) 
 		return nil
 	}
 
-	roles := make(map[string]domain.OrganizationRole)
-	permissions := make(map[string]domain.OrganizationPermission)
+	roles := []domain.OrganizationRole{}
+	permissions := []domain.OrganizationPermission{}
 
 	for _, role := range memberModel.Roles {
 		for _, permission := range role.Role.Permissions {
@@ -66,7 +66,7 @@ func ToDomainOrganizationMemberWithRBAC(memberModel *models.OrganizationMember) 
 				Group:    permission.Group,
 				IsSystem: permission.IsSystem,
 			}
-			permissions[permission.PublicID().String()] = domainPermission
+			permissions = append(permissions, domainPermission)
 		}
 
 		domainRole := domain.OrganizationRole{
@@ -76,12 +76,12 @@ func ToDomainOrganizationMemberWithRBAC(memberModel *models.OrganizationMember) 
 			IsSystemRole: role.Role.IsSystem,
 			IsDefault:    role.Role.IsDefault,
 		}
-		roles[role.Role.PublicID().String()] = domainRole
+		roles = append(roles, domainRole)
 	}
 
-	return &domain.OrganizationMemberWithRBAC{
-		OrganizationMember: *ToDomainOrganizationMember(memberModel),
-		Roles:              roles,
-		Permissions:        permissions,
-	}
+	return domain.ConstructOrganizationMemberWithRBAC(
+		*ToDomainOrganizationMember(memberModel),
+		roles,
+		permissions,
+	)
 }

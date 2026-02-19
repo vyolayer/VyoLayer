@@ -14,10 +14,8 @@ type OrganizationMiddleware struct {
 	memberService service.OrganizationMemberService
 }
 
-func NewOrganizationMiddleware(memberService service.OrganizationMemberService) *OrganizationMiddleware {
-	return &OrganizationMiddleware{
-		memberService: memberService,
-	}
+func NewOrganizationMiddleware(memberService service.OrganizationMemberService) OrganizationMiddleware {
+	return OrganizationMiddleware{memberService: memberService}
 }
 
 func (om *OrganizationMiddleware) CheckOrganizationMembership() fiber.Handler {

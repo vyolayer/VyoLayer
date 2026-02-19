@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 	"worklayer/internal/app/middleware"
-	"worklayer/internal/app/routes/v1"
+	v1 "worklayer/internal/app/routes/v1"
 	"worklayer/internal/config"
 	"worklayer/internal/platform/database"
 
@@ -87,14 +87,8 @@ func (a *App) SetupMiddleware() {
 
 // Setup routes
 func (a *App) SetupRoutes() {
-	api := a.app.Group("/api")
-
 	// V1 routes
-	apiV1 := api.Group("/v1")
-	// Health routes
-	routes.NewHealthRouter(apiV1).SetupRoutes()
-	// V1 routes
-	routes.NewV1Routes(apiV1, a.cfg, a.db).SetupRoutes()
+	v1.New(a.app, a.cfg, a.db).Register()
 
 	// Not found middleware
 	a.app.Use(middleware.NotFoundMiddleware)

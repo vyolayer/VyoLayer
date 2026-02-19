@@ -1,23 +1,9 @@
-package routes
+package v1
 
-import (
-	"worklayer/internal/app/controller"
+import "github.com/gofiber/fiber/v2"
 
-	"github.com/gofiber/fiber/v2"
-)
+func (r *routes) registerHealthRoutes(router fiber.Router, d *dependencies) {
+	health := router.Group("/health")
 
-type HealthRoute struct {
-	router fiber.Router
-}
-
-func NewHealthRouter(router fiber.Router) *HealthRoute {
-	return &HealthRoute{
-		router: router,
-	}
-}
-
-func (hr *HealthRoute) SetupRoutes() {
-	healthController := controller.NewHealthController()
-
-	hr.router.Get("/health", healthController.HealthCheck)
+	health.Get("/", d.HealthCtrl.HealthCheck)
 }

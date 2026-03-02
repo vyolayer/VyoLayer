@@ -38,6 +38,9 @@ func main() {
 		models.OrganizationPermission{},
 		models.OrganizationRolePermission{},
 		models.MemberOrganizationRole{},
+
+		// Audit log models
+		models.AuditLog{},
 	)
 	if err != nil {
 		panic(err)

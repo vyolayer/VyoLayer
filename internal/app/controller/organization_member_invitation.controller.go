@@ -16,6 +16,7 @@ type OrganizationMemberInvitationController interface {
 	GetPendingInvitations(ctx *fiber.Ctx) error
 	AcceptInvitation(ctx *fiber.Ctx) error
 	CancelInvitation(ctx *fiber.Ctx) error
+	ResendInvitation(ctx *fiber.Ctx) error
 }
 
 type organizationMemberInvitationController struct {
@@ -219,4 +220,38 @@ func (ctrl *organizationMemberInvitationController) CancelInvitation(ctx *fiber.
 	}
 
 	return response.SuccessMessage(ctx, "Invitation canceled successfully")
+}
+
+// ResendInvitation godoc
+// @Summary Resend an invitation
+// @Description Regenerate token and reset expiry for a pending invitation
+// @Tags organization_invitations
+// @Produce json
+// @Param orgId path string true "Organization ID"
+// @Param invitationId path string true "Invitation ID"
+// @Success 200 {object} response.SuccessResponse{data=dto.OrganizationMemberInvitationDTO}
+// @Failure 400,401,403,404 {object} response.ErrorResponse
+// @Router /organizations/{orgId}/invitations/{invitationId}/resend [post]
+func (ctrl *organizationMemberInvitationController) ResendInvitation(ctx *fiber.Ctx) error {
+	userID, ok := ctx.Locals("user_id").(types.UserID)
+	if !ok || userID.IsNil() {
+		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
+	}
+
+	invitationIDStr := ctx.Params("invitationId")
+	if invitationIDStr == "" {
+		return response.Error(ctx, errors.BadRequest("Invitation ID is required"))
+	}
+
+	invitationID, err := types.ReconstructOrganizationMemberInvitationID(invitationIDStr)
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid invitation ID format"))
+	}
+
+	invitation, svcErr := ctrl.invitationService.ResendInvitation(ctx, invitationID, userID)
+	if svcErr != nil {
+		return response.Error(ctx, svcErr)
+	}
+
+	return response.Success(ctx, invitation)
 }

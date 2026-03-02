@@ -14,6 +14,10 @@ type OrganizationMemberController interface {
 	GetAllMembersByOrgID(ctx *fiber.Ctx) error
 	GetMemberByOrgIDAndMemberID(ctx *fiber.Ctx) error
 	CurrentMember(ctx *fiber.Ctx) error
+	RemoveMember(ctx *fiber.Ctx) error
+	ChangeRole(ctx *fiber.Ctx) error
+	LeaveOrganization(ctx *fiber.Ctx) error
+	TransferOwnership(ctx *fiber.Ctx) error
 }
 
 type organizationMemberController struct {
@@ -26,25 +30,18 @@ func NewOrganizationMemberController(orgMemberService service.OrganizationMember
 
 // GetAllMembersByOrgID godoc
 // @Summary Get all members of an organization
-// @Description Get all members of an organization
 // @Tags organization_member
-// @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse{data=[]dto.OrganizationMemberDTO}
-// @Failure 400 {object} response.ErrorResponse
-// @Failure 401 {object} response.ErrorResponse
-// @Failure 403 {object} response.ErrorResponse
-// @Failure 500 {object} response.ErrorResponse
+// @Failure 400,401,403,500 {object} response.ErrorResponse
 // @Router /organizations/{orgId}/members [get]
 func (ctrl *organizationMemberController) GetAllMembersByOrgID(ctx *fiber.Ctx) error {
-	// Get user id from context
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
 		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
 	}
 
-	// Get organization id
 	orgIDStr := ctx.Params("orgId")
 	if orgIDStr == "" {
 		return response.Error(ctx, errors.BadRequest("Organization ID is required"))
@@ -64,33 +61,25 @@ func (ctrl *organizationMemberController) GetAllMembersByOrgID(ctx *fiber.Ctx) e
 }
 
 // GetMemberByOrgIDAndMemberID godoc
-// @Summary Get a member of an organization by member id
-// @Description Get a member of an organization by member id
+// @Summary Get a member by ID
 // @Tags organization_member
-// @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Param memberId path string true "Member ID"
 // @Success 200 {object} response.SuccessResponse{data=dto.OrganizationMemberDTO}
-// @Failure 400 {object} response.ErrorResponse
-// @Failure 401 {object} response.ErrorResponse
-// @Failure 403 {object} response.ErrorResponse
-// @Failure 500 {object} response.ErrorResponse
+// @Failure 400,401,403,500 {object} response.ErrorResponse
 // @Router /organizations/{orgId}/members/{memberId} [get]
 func (ctrl *organizationMemberController) GetMemberByOrgIDAndMemberID(ctx *fiber.Ctx) error {
-	// Get user id from context
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
 		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
 	}
 
-	// Get organization id
 	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
 	if err != nil {
 		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
 	}
 
-	// Get member id
 	memberID, err := types.ReconstructOrganizationMemberID(ctx.Params("memberId"))
 	if err != nil {
 		return response.Error(ctx, errors.BadRequest("Invalid member ID format"))
@@ -105,26 +94,19 @@ func (ctrl *organizationMemberController) GetMemberByOrgIDAndMemberID(ctx *fiber
 }
 
 // CurrentMember godoc
-// @Summary Get the current member of an organization
-// @Description Get the current member of an organization
+// @Summary Get the current member
 // @Tags organization_member
-// @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
-// @Success 200 {object} response.SuccessResponse{data=dto.OrganizationMemberDTO}
-// @Failure 400 {object} response.ErrorResponse
-// @Failure 401 {object} response.ErrorResponse
-// @Failure 403 {object} response.ErrorResponse
-// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {object} response.SuccessResponse{data=dto.OrganizationMemberWithRBACDTO}
+// @Failure 400,401,403,500 {object} response.ErrorResponse
 // @Router /organizations/{orgId}/members/me [get]
 func (ctrl *organizationMemberController) CurrentMember(ctx *fiber.Ctx) error {
-	// Get user id from context
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
 		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
 	}
 
-	// Get organization id
 	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
 	if err != nil {
 		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
@@ -136,4 +118,144 @@ func (ctrl *organizationMemberController) CurrentMember(ctx *fiber.Ctx) error {
 	}
 
 	return response.Success(ctx, dto.FromDomainOrganizationMemberWithRBAC(&memberResp))
+}
+
+// RemoveMember godoc
+// @Summary Remove a member from the organization
+// @Tags organization_member
+// @Produce json
+// @Param orgId path string true "Organization ID"
+// @Param memberId path string true "Member ID"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400,401,403,404 {object} response.ErrorResponse
+// @Router /organizations/{orgId}/members/{memberId} [delete]
+func (ctrl *organizationMemberController) RemoveMember(ctx *fiber.Ctx) error {
+	localUserID, ok := ctx.Locals("user_id").(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
+	}
+
+	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
+	}
+
+	memberID, err := types.ReconstructOrganizationMemberID(ctx.Params("memberId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid member ID format"))
+	}
+
+	if svcErr := ctrl.orgMemberService.RemoveMember(ctx, orgID, localUserID, memberID); svcErr != nil {
+		return response.Error(ctx, svcErr)
+	}
+
+	return response.SuccessMessage(ctx, "Member removed successfully")
+}
+
+// ChangeRole godoc
+// @Summary Change a member's role
+// @Tags organization_member
+// @Accept json
+// @Produce json
+// @Param orgId path string true "Organization ID"
+// @Param memberId path string true "Member ID"
+// @Param request body dto.ChangeMemberRoleRequestDTO true "New role"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400,401,403,404 {object} response.ErrorResponse
+// @Router /organizations/{orgId}/members/{memberId}/role [patch]
+func (ctrl *organizationMemberController) ChangeRole(ctx *fiber.Ctx) error {
+	localUserID, ok := ctx.Locals("user_id").(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
+	}
+
+	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
+	}
+
+	memberID, err := types.ReconstructOrganizationMemberID(ctx.Params("memberId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid member ID format"))
+	}
+
+	var req dto.ChangeMemberRoleRequestDTO
+	if parseErr := ctx.BodyParser(&req); parseErr != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid request body"))
+	}
+
+	roleID, roleErr := types.ReconstructOrganizationRoleID(req.RoleID)
+	if roleErr != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid role ID format"))
+	}
+
+	if svcErr := ctrl.orgMemberService.ChangeMemberRole(ctx, orgID, localUserID, memberID, roleID); svcErr != nil {
+		return response.Error(ctx, svcErr)
+	}
+
+	return response.SuccessMessage(ctx, "Role changed successfully")
+}
+
+// LeaveOrganization godoc
+// @Summary Leave an organization
+// @Tags organization_member
+// @Produce json
+// @Param orgId path string true "Organization ID"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400,401,403 {object} response.ErrorResponse
+// @Router /organizations/{orgId}/members/leave [post]
+func (ctrl *organizationMemberController) LeaveOrganization(ctx *fiber.Ctx) error {
+	localUserID, ok := ctx.Locals("user_id").(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
+	}
+
+	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
+	}
+
+	if svcErr := ctrl.orgMemberService.LeaveOrganization(ctx, orgID, localUserID); svcErr != nil {
+		return response.Error(ctx, svcErr)
+	}
+
+	return response.SuccessMessage(ctx, "You have left the organization")
+}
+
+// TransferOwnership godoc
+// @Summary Transfer ownership to another member
+// @Tags organization_member
+// @Accept json
+// @Produce json
+// @Param orgId path string true "Organization ID"
+// @Param request body dto.TransferOwnershipRequestDTO true "New owner details"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400,401,403,404 {object} response.ErrorResponse
+// @Router /organizations/{orgId}/members/transfer-ownership [post]
+func (ctrl *organizationMemberController) TransferOwnership(ctx *fiber.Ctx) error {
+	localUserID, ok := ctx.Locals("user_id").(types.UserID)
+	if !ok || localUserID.IsNil() {
+		return response.Error(ctx, errors.Unauthorized("Invalid or missing user context"))
+	}
+
+	orgID, err := types.ReconstructOrganizationID(ctx.Params("orgId"))
+	if err != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid organization ID format"))
+	}
+
+	var req dto.TransferOwnershipRequestDTO
+	if parseErr := ctx.BodyParser(&req); parseErr != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid request body"))
+	}
+
+	newOwnerID, ownerErr := types.ReconstructOrganizationMemberID(req.NewOwnerMemberID)
+	if ownerErr != nil {
+		return response.Error(ctx, errors.BadRequest("Invalid new owner member ID format"))
+	}
+
+	if svcErr := ctrl.orgMemberService.TransferOwnership(ctx, orgID, localUserID, newOwnerID); svcErr != nil {
+		return response.Error(ctx, svcErr)
+	}
+
+	return response.SuccessMessage(ctx, "Ownership transferred successfully")
 }

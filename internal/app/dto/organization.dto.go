@@ -11,6 +11,28 @@ type CreateOrganizationRequestDTO struct {
 	Description string `json:"description" validate:"max=500" example:"Building amazing products"`
 }
 
+// UpdateOrganizationRequestDTO represents the request to update an organization
+type UpdateOrganizationRequestDTO struct {
+	Name        *string `json:"name,omitempty" validate:"omitempty,min=3,max=100" example:"Acme Corp"`
+	Description *string `json:"description,omitempty" validate:"omitempty,max=500" example:"Building amazing products"`
+	Slug        *string `json:"slug,omitempty" validate:"omitempty,min=3,max=100" example:"acme-corp"`
+}
+
+// DeleteOrganizationRequestDTO represents the request to delete an organization
+type DeleteOrganizationRequestDTO struct {
+	ConfirmName string `json:"confirmName" validate:"required" example:"Acme Corp"`
+}
+
+// ChangeMemberRoleRequestDTO represents the request to change a member's role
+type ChangeMemberRoleRequestDTO struct {
+	RoleID string `json:"roleId" validate:"required" example:"orgrole_550e8400-e29b-41d4-a716-446655440000"`
+}
+
+// TransferOwnershipRequestDTO represents the request to transfer ownership
+type TransferOwnershipRequestDTO struct {
+	NewOwnerMemberID string `json:"newOwnerMemberId" validate:"required" example:"orgmem_550e8400-e29b-41d4-a716-446655440000"`
+}
+
 // OrganizationMemberDTO represents a member of an organization
 type OrganizationMemberDTO struct {
 	ID            string  `json:"id" example:"orgmem_550e8400-e29b-41d4-a716-446655440000"`

@@ -32,8 +32,8 @@ func (r *routes) buildDependencies() *dependencies {
 	userService := service.NewUserService(repo.User)
 
 	// Organization services
-	orgService := service.NewOrganizationService(repo.Organization, repo.User)
-	orgMemberService := service.NewOrganizationMemberService(repo.OrganizationMember)
+	orgService := service.NewOrganizationService(repo.Organization, repo.User, repo.OrganizationMember, repo.AuditLog)
+	orgMemberService := service.NewOrganizationMemberService(repo.OrganizationMember, repo.AuditLog, repo.OrganizationRBAC)
 	orgInvitationService := service.NewOrganizationMemberInvitationService(
 		repo.OrganizationMemberInvitation,
 		repo.OrganizationMember,

@@ -15,6 +15,9 @@ type OrganizationRepository interface {
 	Create(ctx context.Context, org *domain.Organization) (*domain.Organization, *errors.AppError)
 	FindByID(ctx context.Context, orgID OrgID) (*domain.Organization, *errors.AppError)
 	FindBySlug(ctx context.Context, slug string) (*domain.Organization, *errors.AppError)
+	Update(ctx context.Context, org *domain.Organization) *errors.AppError
+	Delete(ctx context.Context, orgID OrgID) *errors.AppError
+	SlugExists(ctx context.Context, slug string, excludeOrgID OrgID) (bool, *errors.AppError)
 }
 
 type organizationRepository struct {
@@ -177,4 +180,76 @@ func (or *organizationRepository) FindBySlug(
 	}
 
 	return mapper.ToDomainOrganizationWithMembers(&org), nil
+}
+
+func (or *organizationRepository) Update(
+	ctx context.Context,
+	org *domain.Organization,
+) *errors.AppError {
+	orgID := org.ID.InternalID().ID()
+
+	updates := map[string]interface{}{
+		"name":        org.Name,
+		"slug":        org.Slug,
+		"description": org.Description,
+		"is_active":   org.IsActive,
+	}
+
+	if org.DeactivatedBy != nil {
+		deactivatedByID := (*org.DeactivatedBy).InternalID().ID()
+		updates["deactivated_by"] = deactivatedByID
+	} else {
+		updates["deactivated_by"] = nil
+	}
+
+	if org.DeactivatedAt != nil {
+		updates["deactivated_at"] = org.DeactivatedAt
+	} else {
+		updates["deactivated_at"] = nil
+	}
+
+	err := or.db.WithContext(ctx).
+		Model(&TOrganization{}).
+		Where("id = ?", orgID).
+		Updates(updates).Error
+
+	if err != nil {
+		return ConvertDBError(err, "updating organization")
+	}
+
+	return nil
+}
+
+func (or *organizationRepository) Delete(
+	ctx context.Context,
+	orgID OrgID,
+) *errors.AppError {
+	err := or.db.WithContext(ctx).
+		Unscoped().
+		Where("id = ?", orgID.InternalID().ID()).
+		Delete(&TOrganization{}).Error
+
+	if err != nil {
+		return ConvertDBError(err, "deleting organization")
+	}
+
+	return nil
+}
+
+func (or *organizationRepository) SlugExists(
+	ctx context.Context,
+	slug string,
+	excludeOrgID OrgID,
+) (bool, *errors.AppError) {
+	var count int64
+	err := or.db.WithContext(ctx).
+		Model(&TOrganization{}).
+		Where("slug = ? AND id != ?", slug, excludeOrgID.InternalID().ID()).
+		Count(&count).Error
+
+	if err != nil {
+		return false, ConvertDBError(err, "checking slug existence")
+	}
+
+	return count > 0, nil
 }

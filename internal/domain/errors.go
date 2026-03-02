@@ -143,6 +143,21 @@ func OrganizationCannotRemoveOwnerError() *errors.AppError {
 	return errors.NewWithMessage(errors.ErrOrganizationNotOwner, "Cannot remove the organization owner")
 }
 
+// OrganizationLastOwnerError creates an error for when an action would leave the org without an owner
+func OrganizationLastOwnerError() *errors.AppError {
+	return errors.BadRequest("Cannot perform this action: organization must always have at least one owner")
+}
+
+// OrganizationSlugConflictError creates an error for slug uniqueness violation
+func OrganizationSlugConflictError(slug string) *errors.AppError {
+	return errors.Conflict("Slug '%s' is already taken", slug)
+}
+
+// OrganizationDeleteConfirmationError creates an error for failed delete confirmation
+func OrganizationDeleteConfirmationError() *errors.AppError {
+	return errors.BadRequest("Organization name does not match. Please type the exact organization name to confirm deletion.")
+}
+
 // Invitation errors
 var (
 	ErrInvitationNotFound        = errors.ErrInvitationNotFound

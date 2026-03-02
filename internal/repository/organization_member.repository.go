@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 	"worklayer/internal/domain"
 	"worklayer/internal/platform/database/mapper"
 	"worklayer/pkg/errors"
@@ -30,6 +31,30 @@ type OrganizationMemberRepository interface {
 		orgID OrgID,
 		userID UserID,
 	) (*domain.OrganizationMemberWithRBAC, *errors.AppError)
+
+	Delete(
+		ctx context.Context,
+		memberID OrgMemberID,
+	) *errors.AppError
+
+	CountOwners(
+		ctx context.Context,
+		orgID OrgID,
+	) (int64, *errors.AppError)
+
+	AssignRole(
+		ctx context.Context,
+		memberID OrgMemberID,
+		orgID OrgID,
+		roleID OrgRoleID,
+		grantedByMemberID OrgMemberID,
+	) *errors.AppError
+
+	RevokeAllRoles(
+		ctx context.Context,
+		memberID OrgMemberID,
+		orgID OrgID,
+	) *errors.AppError
 }
 
 type organizationMemberRepository struct {
@@ -162,4 +187,83 @@ func (orm *organizationMemberRepository) GetCurrentMember(
 	}
 
 	return mapper.ToDomainOrganizationMemberWithRBAC(&member), nil
+}
+
+func (orm *organizationMemberRepository) Delete(
+	ctx context.Context,
+	memberID OrgMemberID,
+) *errors.AppError {
+	now := time.Now()
+	err := orm.db.WithContext(ctx).
+		Model(&TOrganizationMember{}).
+		Where("id = ? AND deleted_at IS NULL", memberID.InternalID()).
+		Updates(map[string]interface{}{
+			"removed_at": now,
+			"deleted_at": now,
+		}).Error
+
+	if err != nil {
+		return ConvertDBError(err, "soft deleting organization member")
+	}
+
+	return nil
+}
+
+func (orm *organizationMemberRepository) CountOwners(
+	ctx context.Context,
+	orgID OrgID,
+) (int64, *errors.AppError) {
+	var count int64
+	err := orm.db.WithContext(ctx).
+		Model(&TMemberOrganizationRole{}).
+		Joins("JOIN organization_roles ON organization_roles.id = member_organization_roles.role_id").
+		Joins("JOIN organization_members ON organization_members.id = member_organization_roles.member_id").
+		Where("member_organization_roles.organization_id = ? AND organization_roles.name = ? AND organization_members.deleted_at IS NULL",
+			orgID.InternalID().ID(), "Owner").
+		Count(&count).Error
+
+	if err != nil {
+		return 0, ConvertDBError(err, "counting owners")
+	}
+
+	return count, nil
+}
+
+func (orm *organizationMemberRepository) AssignRole(
+	ctx context.Context,
+	memberID OrgMemberID,
+	orgID OrgID,
+	roleID OrgRoleID,
+	grantedByMemberID OrgMemberID,
+) *errors.AppError {
+	now := time.Now()
+	roleAssignment := &TMemberOrganizationRole{
+		MemberID:       memberID.InternalID().ID(),
+		OrganizationID: orgID.InternalID().ID(),
+		RoleID:         roleID.InternalID().ID(),
+		GrantedBy:      grantedByMemberID.InternalID().ID(),
+		GrantedAt:      now,
+	}
+
+	if err := orm.db.WithContext(ctx).Create(roleAssignment).Error; err != nil {
+		return ConvertDBError(err, "assigning role to member")
+	}
+
+	return nil
+}
+
+func (orm *organizationMemberRepository) RevokeAllRoles(
+	ctx context.Context,
+	memberID OrgMemberID,
+	orgID OrgID,
+) *errors.AppError {
+	err := orm.db.WithContext(ctx).
+		Where("member_id = ? AND organization_id = ?", memberID.InternalID().ID(), orgID.InternalID().ID()).
+		Delete(&TMemberOrganizationRole{}).Error
+
+	if err != nil {
+		return ConvertDBError(err, "revoking all roles from member")
+	}
+
+	return nil
 }

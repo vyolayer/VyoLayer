@@ -9,6 +9,7 @@ type Registry struct {
 	OrganizationMember           OrganizationMemberRepository
 	OrganizationMemberInvitation OrganizationMemberInvitationRepository
 	OrganizationRBAC             OrganizationRBACRepository
+	AuditLog                     AuditLogRepository
 }
 
 func NewRegistry(db *gorm.DB) *Registry {
@@ -19,5 +20,6 @@ func NewRegistry(db *gorm.DB) *Registry {
 		OrganizationMember:           NewOrganizationMemberRepository(db),
 		OrganizationMemberInvitation: NewOrganizationMemberInvitationRepository(db),
 		OrganizationRBAC:             NewOrganizationRBACRepository(db),
+		AuditLog:                     NewAuditLogRepository(db),
 	}
 }

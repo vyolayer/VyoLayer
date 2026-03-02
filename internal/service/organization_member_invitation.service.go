@@ -40,6 +40,12 @@ type OrganizationMemberInvitationService interface {
 		invitationID types.OrganizationMemberInvitationID,
 		canceledByUserID types.UserID,
 	) error
+
+	ResendInvitation(
+		ctx *fiber.Ctx,
+		invitationID types.OrganizationMemberInvitationID,
+		actorUserID types.UserID,
+	) (*dto.OrganizationMemberInvitationDTO, error)
 }
 
 type organizationMemberInvitationService struct {
@@ -285,4 +291,47 @@ func (s *organizationMemberInvitationService) CancelInvitation(
 	}
 
 	return nil
+}
+
+// ResendInvitation regenerates the token and resets the expiry for a pending invitation
+func (s *organizationMemberInvitationService) ResendInvitation(
+	ctx *fiber.Ctx,
+	invitationID types.OrganizationMemberInvitationID,
+	actorUserID types.UserID,
+) (*dto.OrganizationMemberInvitationDTO, error) {
+	// Get the invitation
+	invitation, err := s.invitationRepo.GetByID(ctx.Context(), invitationID)
+	if err != nil {
+		return nil, WrapRepositoryError(err, "fetching invitation")
+	}
+
+	// Check if already accepted
+	if invitation.IsAccepted {
+		return nil, errors.BadRequest("Invitation is already accepted")
+	}
+
+	// Re-generate a new invitation with the same details
+	newInvitation, domainErr := domain.NewOrganizationMemberInvitation(
+		invitation.OrganizationID,
+		invitation.InvitedBy,
+		invitation.Email,
+		invitation.ToRoleIDsString(),
+		7, // 7 days expiration
+	)
+	if domainErr != nil {
+		return nil, domainErr
+	}
+
+	// Delete old invitation
+	if deleteErr := s.invitationRepo.Delete(ctx.Context(), invitationID, actorUserID); deleteErr != nil {
+		return nil, WrapRepositoryError(deleteErr, "deleting old invitation")
+	}
+
+	// Save new invitation
+	if saveErr := s.invitationRepo.Create(ctx.Context(), newInvitation); saveErr != nil {
+		return nil, WrapRepositoryError(saveErr, "creating resent invitation")
+	}
+
+	invitationDTO := dto.FromDomainOrganizationMemberInvitation(newInvitation)
+	return &invitationDTO, nil
 }

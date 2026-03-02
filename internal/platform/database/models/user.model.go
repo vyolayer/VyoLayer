@@ -9,8 +9,8 @@ import (
 )
 
 type TimeStamps struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `gorm:"<-:create;type:timestamp;default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time `gorm:"<-:update;type:timestamp;default:CURRENT_TIMESTAMP"`
 }
 
 type BaseModel struct {

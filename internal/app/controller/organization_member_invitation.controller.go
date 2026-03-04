@@ -169,7 +169,7 @@ func (ctrl *organizationMemberInvitationController) AcceptInvitation(ctx *fiber.
 	}
 
 	// get invitation token from query
-	invitationToken := ctx.Query("org-invite-token")
+	invitationToken := ctx.Query("token")
 	if invitationToken == "" {
 		return response.Error(ctx, errors.BadRequest("Invitation token is required"))
 	}

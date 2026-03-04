@@ -75,7 +75,10 @@ func (a *App) SetupMiddleware() {
 	a.app.Use(middleware.ErrorHandler())
 
 	// Other middleware
-	a.app.Use(cors.New(cors.Config{}))
+	a.app.Use(cors.New(cors.Config{
+		AllowOrigins:     a.cfg.App.Cors,
+		AllowCredentials: true,
+	}))
 	a.app.Use(logger.New())
 	a.app.Use(recover.New())
 	appLogger.InitLogger(true)

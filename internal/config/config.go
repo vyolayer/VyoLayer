@@ -20,6 +20,7 @@ type Config struct {
 type AppConfig struct {
 	Name string `yaml:"name"`
 	Env  string `yaml:"environment"` // development, production, test
+	Cors string `yaml:"cors"`
 }
 
 type ServerConfig struct {

@@ -1,6 +1,7 @@
 app:
   name: worklayer
   environment: dev
+  cors: "http://localhost:3000,http://localhost:8080"
 
 server:
   host: 0.0.0.0

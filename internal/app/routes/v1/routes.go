@@ -34,4 +34,5 @@ func (r *routes) Register() {
 	r.registerAuthRoutes(api, deps)         // Auth
 	r.registerUserRoutes(api, deps)         // User
 	r.registerOrganizationRoutes(api, deps) // Organization
+	r.registerProjectRoutes(api, deps)      // Projects & API Keys
 }

@@ -16,10 +16,14 @@ type dependencies struct {
 	OrganizationMemCtrl    controller.OrganizationMemberController
 	OrganizationMemInvCtrl controller.OrganizationMemberInvitationController
 	OrganizationRBACCtrl   controller.OrganizationRBACController
+	ProjectCtrl            controller.ProjectController
+	ProjectMemberCtrl      controller.ProjectMemberController
+	ApiKeyCtrl             controller.ApiKeyController
 
 	// Middleware
-	AuthMiddleware *middleware.AuthMiddleware
-	OrgMiddleware  *middleware.OrganizationMiddleware
+	AuthMiddleware    *middleware.AuthMiddleware
+	OrgMiddleware     *middleware.OrganizationMiddleware
+	ProjectMiddleware *middleware.ProjectMiddleware
 }
 
 func (r *routes) buildDependencies() *dependencies {
@@ -41,6 +45,11 @@ func (r *routes) buildDependencies() *dependencies {
 	)
 	orgRBACService := service.NewOrganizationRBACService(repo.OrganizationRBAC)
 
+	// Project services
+	projectService := service.NewProjectService(repo.Project, repo.ProjectMember, repo.Organization, repo.AuditLog)
+	projectMemberService := service.NewProjectMemberService(repo.ProjectMember, repo.Project, repo.AuditLog)
+	apiKeyService := service.NewApiKeyService(repo.ApiKey, repo.ProjectMember, repo.Project)
+
 	// Utility services
 	tokenService := service.NewTokenService(r.cfg.Auth)
 
@@ -52,10 +61,14 @@ func (r *routes) buildDependencies() *dependencies {
 	orgMemCtrl := controller.NewOrganizationMemberController(orgMemberService)
 	orgMemInvCtrl := controller.NewOrganizationMemberInvitationController(orgInvitationService)
 	orgRBACCtrl := controller.NewOrganizationRBACController(orgRBACService)
+	projectCtrl := controller.NewProjectController(projectService)
+	projectMemberCtrl := controller.NewProjectMemberController(projectMemberService)
+	apiKeyCtrl := controller.NewApiKeyController(apiKeyService)
 
 	// Middleware
 	authMiddleware := middleware.NewAuthMiddleware(tokenService)
 	orgMiddleware := middleware.NewOrganizationMiddleware(orgMemberService)
+	projectMiddleware := middleware.NewProjectMiddleware(projectMemberService)
 
 	return &dependencies{
 		// Controllers
@@ -66,8 +79,12 @@ func (r *routes) buildDependencies() *dependencies {
 		OrganizationMemCtrl:    orgMemCtrl,
 		OrganizationMemInvCtrl: orgMemInvCtrl,
 		OrganizationRBACCtrl:   orgRBACCtrl,
+		ProjectCtrl:            projectCtrl,
+		ProjectMemberCtrl:      projectMemberCtrl,
+		ApiKeyCtrl:             apiKeyCtrl,
 		// Middleware
-		AuthMiddleware: &authMiddleware,
-		OrgMiddleware:  &orgMiddleware,
+		AuthMiddleware:    &authMiddleware,
+		OrgMiddleware:     &orgMiddleware,
+		ProjectMiddleware: &projectMiddleware,
 	}
 }

@@ -39,7 +39,7 @@ func NewProjectController(projectService service.ProjectService) ProjectControll
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects [post]
+// @Router /organizations/{orgId}/projects [post]
 func (pc *projectController) CreateProject(ctx *fiber.Ctx) error {
 	// Get user from context
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
@@ -81,7 +81,7 @@ func (pc *projectController) CreateProject(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects [get]
+// @Router /organizations/{orgId}/projects [get]
 func (pc *projectController) ListProjects(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -118,7 +118,7 @@ func (pc *projectController) ListProjects(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId} [get]
+// @Router /organizations/{orgId}/projects/{projectId} [get]
 func (pc *projectController) GetProjectByID(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -149,7 +149,7 @@ func (pc *projectController) GetProjectByID(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId} [put]
+// @Router /organizations/{orgId}/projects/{projectId} [put]
 func (pc *projectController) UpdateProject(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -184,7 +184,7 @@ func (pc *projectController) UpdateProject(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/archive [post]
+// @Router /organizations/{orgId}/projects/{projectId}/archive [post]
 func (pc *projectController) ArchiveProject(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -213,7 +213,7 @@ func (pc *projectController) ArchiveProject(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/restore [post]
+// @Router /organizations/{orgId}/projects/{projectId}/restore [post]
 func (pc *projectController) RestoreProject(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -243,7 +243,7 @@ func (pc *projectController) RestoreProject(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId} [delete]
+// @Router /organizations/{orgId}/projects/{projectId} [delete]
 func (pc *projectController) DeleteProject(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {

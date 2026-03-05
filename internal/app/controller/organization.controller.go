@@ -35,7 +35,7 @@ func NewOrganizationController(orgService service.OrganizationService) Organizat
 // CreateOrganization godoc
 // @Summary Create organization
 // @Description Create a new organization. The authenticated user becomes the owner.
-// @Tags organizations
+// @Tags Organizations
 // @Accept json
 // @Produce json
 // @Param organization body dto.CreateOrganizationRequestDTO true "Organization details"
@@ -67,7 +67,7 @@ func (oc *organizationController) CreateOrganization(ctx *fiber.Ctx) error {
 // OnboardOrganization godoc
 // @Summary Onboard organization
 // @Description Guided onboarding flow for creating a new organization.
-// @Tags organizations
+// @Tags Organizations
 // @Accept json
 // @Produce json
 // @Param organization body dto.CreateOrganizationRequestDTO true "Organization details"
@@ -82,7 +82,7 @@ func (oc *organizationController) OnboardOrganization(ctx *fiber.Ctx) error {
 // GetOrganizationByID godoc
 // @Summary Get organization by ID
 // @Description Retrieve organization details by ID. User must be a member.
-// @Tags organizations
+// @Tags Organizations
 // @Produce json
 // @Param id path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse{data=dto.OrganizationResponseDTO}
@@ -117,7 +117,7 @@ func (oc *organizationController) GetOrganizationByID(ctx *fiber.Ctx) error {
 // GetOrganizationBySlug godoc
 // @Summary Get organization by slug
 // @Description Retrieve organization details by slug. User must be a member.
-// @Tags organizations
+// @Tags Organizations
 // @Produce json
 // @Param slug path string true "Organization slug"
 // @Success 200 {object} response.SuccessResponse{data=dto.OrganizationResponseDTO}
@@ -147,7 +147,7 @@ func (oc *organizationController) GetOrganizationBySlug(ctx *fiber.Ctx) error {
 // ListOrganizations godoc
 // @Summary List organizations
 // @Description List organizations the user is a member of.
-// @Tags organizations
+// @Tags Organizations
 // @Produce json
 // @Success 200 {object} response.SuccessResponse{data=[]dto.OrganizationDTO}
 // @Failure 401 {object} response.ErrorResponse
@@ -176,7 +176,7 @@ func (oc *organizationController) ListOrganizations(ctx *fiber.Ctx) error {
 // UpdateOrganization godoc
 // @Summary Update organization
 // @Description Update organization details (name, description, slug). Requires Admin+ role.
-// @Tags organizations
+// @Tags Organizations
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
@@ -211,7 +211,7 @@ func (oc *organizationController) UpdateOrganization(ctx *fiber.Ctx) error {
 // ArchiveOrganization godoc
 // @Summary Archive organization
 // @Description Deactivate (archive) an organization. Requires Admin+ role.
-// @Tags organizations
+// @Tags Organizations
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse
@@ -238,7 +238,7 @@ func (oc *organizationController) ArchiveOrganization(ctx *fiber.Ctx) error {
 // RestoreOrganization godoc
 // @Summary Restore organization
 // @Description Reactivate a previously archived organization. Requires Admin+ role.
-// @Tags organizations
+// @Tags Organizations
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse
@@ -265,7 +265,7 @@ func (oc *organizationController) RestoreOrganization(ctx *fiber.Ctx) error {
 // DeleteOrganization godoc
 // @Summary Delete organization
 // @Description Permanently delete an organization. Requires Owner role and name confirmation.
-// @Tags organizations
+// @Tags Organizations
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"

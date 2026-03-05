@@ -30,7 +30,7 @@ func NewOrganizationMemberController(orgMemberService service.OrganizationMember
 
 // GetAllMembersByOrgID godoc
 // @Summary Get all members of an organization
-// @Tags organization_member
+// @Tags Organization Member
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse{data=[]dto.OrganizationMemberDTO}
@@ -62,7 +62,7 @@ func (ctrl *organizationMemberController) GetAllMembersByOrgID(ctx *fiber.Ctx) e
 
 // GetMemberByOrgIDAndMemberID godoc
 // @Summary Get a member by ID
-// @Tags organization_member
+// @Tags Organization Member
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Param memberId path string true "Member ID"
@@ -95,7 +95,7 @@ func (ctrl *organizationMemberController) GetMemberByOrgIDAndMemberID(ctx *fiber
 
 // CurrentMember godoc
 // @Summary Get the current member
-// @Tags organization_member
+// @Tags Organization Member
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse{data=dto.OrganizationMemberWithRBACDTO}
@@ -122,7 +122,7 @@ func (ctrl *organizationMemberController) CurrentMember(ctx *fiber.Ctx) error {
 
 // RemoveMember godoc
 // @Summary Remove a member from the organization
-// @Tags organization_member
+// @Tags Organization Member
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Param memberId path string true "Member ID"
@@ -154,7 +154,7 @@ func (ctrl *organizationMemberController) RemoveMember(ctx *fiber.Ctx) error {
 
 // ChangeRole godoc
 // @Summary Change a member's role
-// @Tags organization_member
+// @Tags Organization Member
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
@@ -198,7 +198,7 @@ func (ctrl *organizationMemberController) ChangeRole(ctx *fiber.Ctx) error {
 
 // LeaveOrganization godoc
 // @Summary Leave an organization
-// @Tags organization_member
+// @Tags Organization Member
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Success 200 {object} response.SuccessResponse
@@ -224,7 +224,7 @@ func (ctrl *organizationMemberController) LeaveOrganization(ctx *fiber.Ctx) erro
 
 // TransferOwnership godoc
 // @Summary Transfer ownership to another member
-// @Tags organization_member
+// @Tags Organization Member
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"

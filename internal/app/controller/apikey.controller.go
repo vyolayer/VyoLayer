@@ -37,7 +37,7 @@ func NewApiKeyController(apiKeyService service.ApiKeyService) ApiKeyController {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/api-keys [post]
+// @Router /organizations/{orgId}/projects/{projectId}/api-keys [post]
 func (c *apiKeyController) GenerateKey(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -72,7 +72,7 @@ func (c *apiKeyController) GenerateKey(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/api-keys [get]
+// @Router /organizations/{orgId}/projects/{projectId}/api-keys [get]
 func (c *apiKeyController) ListKeys(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -110,7 +110,7 @@ func (c *apiKeyController) ListKeys(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId} [get]
+// @Router /organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId} [get]
 func (c *apiKeyController) GetKeyByID(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -146,7 +146,7 @@ func (c *apiKeyController) GetKeyByID(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId}/revoke [post]
+// @Router /organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId}/revoke [post]
 func (c *apiKeyController) RevokeKey(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {

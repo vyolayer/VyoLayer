@@ -34,7 +34,7 @@ func NewOrganizationMemberInvitationController(
 // CreateInvitation godoc
 // @Summary Create an organization member invitation
 // @Description Create a new invitation to join an organization
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
@@ -83,7 +83,7 @@ func (ctrl *organizationMemberInvitationController) CreateInvitation(ctx *fiber.
 // ListInvitations godoc
 // @Summary List organization invitations
 // @Description Get all invitations for an organization
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Accept json
 // @Produce json
 // @Param orgId path string true "Organization ID"
@@ -123,7 +123,7 @@ func (ctrl *organizationMemberInvitationController) ListInvitations(ctx *fiber.C
 // GetPendingInvitations godoc
 // @Summary Get pending invitations for current user
 // @Description Get all pending invitations for the authenticated user's email
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Accept json
 // @Produce json
 // @Success 200 {object} response.SuccessResponse{data=[]dto.OrganizationMemberInvitationDTO}
@@ -149,7 +149,7 @@ func (ctrl *organizationMemberInvitationController) GetPendingInvitations(ctx *f
 // AcceptInvitation godoc
 // @Summary Accept an invitation
 // @Description Accept an invitation to join an organization
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Accept json
 // @Produce json
 // @Param org-invite-token query string true "Invitation token"
@@ -185,7 +185,7 @@ func (ctrl *organizationMemberInvitationController) AcceptInvitation(ctx *fiber.
 // CancelInvitation godoc
 // @Summary Cancel an invitation
 // @Description Cancel/delete an invitation
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Accept json
 // @Produce json
 // @Param invitationId path string true "Invitation ID"
@@ -225,7 +225,7 @@ func (ctrl *organizationMemberInvitationController) CancelInvitation(ctx *fiber.
 // ResendInvitation godoc
 // @Summary Resend an invitation
 // @Description Regenerate token and reset expiry for a pending invitation
-// @Tags organization_invitations
+// @Tags Organization Invitations
 // @Produce json
 // @Param orgId path string true "Organization ID"
 // @Param invitationId path string true "Invitation ID"

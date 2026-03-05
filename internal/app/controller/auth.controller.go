@@ -35,7 +35,7 @@ func NewAuthController(authService service.AuthService, tokenService service.Tok
 // RegisterUser godoc
 // @Summary Register a new user
 // @Description Create a new user account with email, password, and full name.
-// @Tags auth
+// @Tags Auth
 // @Accept json
 // @Produce json
 // @Param user body dto.RegisterUserSchema true "Registration details"
@@ -72,7 +72,7 @@ func (ac *authController) RegisterUser(ctx *fiber.Ctx) error {
 // LoginUser godoc
 // @Summary Login a user
 // @Description Authenticate a user and return access and refresh tokens.
-// @Tags auth
+// @Tags Auth
 // @Accept json
 // @Produce json
 // @Param credentials body dto.LoginUserSchema true "Login credentials"
@@ -132,7 +132,7 @@ func (ac *authController) LoginUser(ctx *fiber.Ctx) error {
 // LogoutUser godoc
 // @Summary Logout a user
 // @Description Invalidate the user's session and clear authentication cookies.
-// @Tags auth
+// @Tags Auth
 // @Produce json
 // @Success 204 {object} response.SuccessResponse
 // @Failure 401 {object} response.ErrorResponse
@@ -162,7 +162,7 @@ func (ac *authController) LogoutUser(ctx *fiber.Ctx) error {
 // RefreshSession godoc
 // @Summary Refresh session
 // @Description Get a new access token using a valid refresh token from cookies.
-// @Tags auth
+// @Tags Auth
 // @Produce json
 // @Success 200 {object} response.SuccessResponse{data=dto.RefreshSessionResponseDTO}
 // @Failure 401 {object} response.ErrorResponse
@@ -226,7 +226,7 @@ func (a *authController) RefreshSession(ctx *fiber.Ctx) error {
 // ValidateSession godoc
 // @Summary Validate session
 // @Description Check if the current session (access token) is still valid.
-// @Tags auth
+// @Tags Auth
 // @Produce json
 // @Success 200 {object} response.SuccessResponse
 // @Failure 401 {object} response.ErrorResponse

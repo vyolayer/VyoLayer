@@ -37,7 +37,7 @@ func NewProjectMemberController(memberService service.ProjectMemberService) Proj
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members [get]
+// @Router /organizations/{orgId}/projects/{projectId}/members [get]
 func (c *projectMemberController) ListMembers(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -72,7 +72,7 @@ func (c *projectMemberController) ListMembers(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members/current [get]
+// @Router /organizations/{orgId}/projects/{projectId}/members/current [get]
 func (c *projectMemberController) GetCurrentMember(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -103,7 +103,7 @@ func (c *projectMemberController) GetCurrentMember(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members [post]
+// @Router /organizations/{orgId}/projects/{projectId}/members [post]
 func (c *projectMemberController) AddMember(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -145,7 +145,7 @@ func (c *projectMemberController) AddMember(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members/{memberId}/role [post]
+// @Router /organizations/{orgId}/projects/{projectId}/members/{memberId}/role [post]
 func (c *projectMemberController) ChangeRole(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -185,7 +185,7 @@ func (c *projectMemberController) ChangeRole(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members/{memberId} [delete]
+// @Router /organizations/{orgId}/projects/{projectId}/members/{memberId} [delete]
 func (c *projectMemberController) RemoveMember(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {
@@ -219,7 +219,7 @@ func (c *projectMemberController) RemoveMember(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
-// @Router /api/v1/organizations/{orgId}/projects/{projectId}/members/leave [post]
+// @Router /organizations/{orgId}/projects/{projectId}/members/leave [post]
 func (c *projectMemberController) LeaveProject(ctx *fiber.Ctx) error {
 	localUserID, ok := ctx.Locals("user_id").(types.UserID)
 	if !ok || localUserID.IsNil() {

@@ -25,7 +25,7 @@ func NewUserController(userService service.UserService) UserController {
 // GetMe godoc
 // @Summary Get current user
 // @Description Get the profile information of the currently authenticated user.
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Success 200 {object} response.SuccessResponse{data=dto.MeResponseDTO}

@@ -39,6 +39,15 @@ func main() {
 		models.OrganizationRolePermission{},
 		models.MemberOrganizationRole{},
 
+		// Project models
+		models.Project{},
+		models.ProjectMember{},
+		models.ProjectInvitation{},
+
+		// API Key models
+		models.ApiKey{},
+		models.ApiKeyUsageLog{},
+
 		// Audit log models
 		models.AuditLog{},
 	)

@@ -25,6 +25,14 @@ type (
 
 	// Invitation IDs
 	InvitationID = types.OrganizationMemberInvitationID
+
+	// Project IDs
+	ProjectID           = types.ProjectID
+	ProjectMemberID     = types.ProjectMemberID
+	ProjectInvitationID = types.ProjectInvitationID
+
+	// API Key IDs
+	ApiKeyID = types.ApiKeyID
 )
 
 type (
@@ -46,6 +54,15 @@ type (
 	TMemberOrganizationRole     = models.MemberOrganizationRole
 	TOrganizationPermission     = models.OrganizationPermission
 	TOrganizationRolePermission = models.OrganizationRolePermission
+
+	// Project Management
+	TProject           = models.Project
+	TProjectMember     = models.ProjectMember
+	TProjectInvitation = models.ProjectInvitation
+
+	// API Key Management
+	TApiKey         = models.ApiKey
+	TApiKeyUsageLog = models.ApiKeyUsageLog
 )
 
 type UserRepository interface {

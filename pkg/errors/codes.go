@@ -74,6 +74,28 @@ const (
 	ErrInvitationAlreadyExists   ErrorCode = "ERR_INVITATION_ALREADY_EXISTS"
 	ErrInvitationInvalid         ErrorCode = "ERR_INVITATION_INVALID"
 
+	// Project Errors (PROJECT)
+	ErrProjectNotFound            ErrorCode = "ERR_PROJECT_NOT_FOUND"
+	ErrProjectNotActive           ErrorCode = "ERR_PROJECT_NOT_ACTIVE"
+	ErrProjectFull                ErrorCode = "ERR_PROJECT_FULL"
+	ErrProjectLimitReached        ErrorCode = "ERR_PROJECT_LIMIT_REACHED"
+	ErrProjectMemberAlreadyExists ErrorCode = "ERR_PROJECT_MEMBER_ALREADY_EXISTS"
+	ErrProjectMemberNotFound      ErrorCode = "ERR_PROJECT_MEMBER_NOT_FOUND"
+	ErrProjectMemberNotActive     ErrorCode = "ERR_PROJECT_MEMBER_NOT_ACTIVE"
+	ErrProjectInfoNotLoaded       ErrorCode = "ERR_PROJECT_INFO_NOT_LOADED"
+	ErrProjectInvitationNotFound  ErrorCode = "ERR_PROJECT_INVITATION_NOT_FOUND"
+	ErrProjectInvitationExpired   ErrorCode = "ERR_PROJECT_INVITATION_EXPIRED"
+	ErrProjectInvitationAccepted  ErrorCode = "ERR_PROJECT_INVITATION_ALREADY_ACCEPTED"
+	ErrProjectInvitationExists    ErrorCode = "ERR_PROJECT_INVITATION_ALREADY_EXISTS"
+
+	// API Key Errors (API_KEY)
+	ErrApiKeyNotFound     ErrorCode = "ERR_API_KEY_NOT_FOUND"
+	ErrApiKeyRevoked      ErrorCode = "ERR_API_KEY_REVOKED"
+	ErrApiKeyExpired      ErrorCode = "ERR_API_KEY_EXPIRED"
+	ErrApiKeyInvalid      ErrorCode = "ERR_API_KEY_INVALID"
+	ErrApiKeyLimitReached ErrorCode = "ERR_API_KEY_LIMIT_REACHED"
+	ErrApiKeyRateLimited  ErrorCode = "ERR_API_KEY_RATE_LIMITED"
+
 	// Request Errors (REQUEST)
 	ErrRequestInvalidBody    ErrorCode = "ERR_REQUEST_INVALID_BODY"
 	ErrRequestInvalidParams  ErrorCode = "ERR_REQUEST_INVALID_PARAMS"
@@ -458,6 +480,118 @@ var errorCodeRegistry = map[ErrorCode]ErrorCodeMetadata{
 		Code:           ErrBusinessOperationNotAllowed,
 		DefaultMessage: "Operation not allowed",
 		HTTPStatus:     http.StatusForbidden,
+		Severity:       SeverityWarning,
+	},
+
+	// Project
+	ErrProjectNotFound: {
+		Code:           ErrProjectNotFound,
+		DefaultMessage: "Project not found",
+		HTTPStatus:     http.StatusNotFound,
+		Severity:       SeverityInfo,
+	},
+	ErrProjectNotActive: {
+		Code:           ErrProjectNotActive,
+		DefaultMessage: "Project is not active",
+		HTTPStatus:     http.StatusForbidden,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectFull: {
+		Code:           ErrProjectFull,
+		DefaultMessage: "Project has reached maximum member capacity",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectLimitReached: {
+		Code:           ErrProjectLimitReached,
+		DefaultMessage: "Organization has reached maximum project limit",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectMemberAlreadyExists: {
+		Code:           ErrProjectMemberAlreadyExists,
+		DefaultMessage: "User is already a member of this project",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectMemberNotFound: {
+		Code:           ErrProjectMemberNotFound,
+		DefaultMessage: "Project member not found",
+		HTTPStatus:     http.StatusNotFound,
+		Severity:       SeverityInfo,
+	},
+	ErrProjectMemberNotActive: {
+		Code:           ErrProjectMemberNotActive,
+		DefaultMessage: "Project member is not active",
+		HTTPStatus:     http.StatusForbidden,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectInfoNotLoaded: {
+		Code:           ErrProjectInfoNotLoaded,
+		DefaultMessage: "Project member information not loaded from database",
+		HTTPStatus:     http.StatusInternalServerError,
+		Severity:       SeverityError,
+	},
+	ErrProjectInvitationNotFound: {
+		Code:           ErrProjectInvitationNotFound,
+		DefaultMessage: "Project invitation not found",
+		HTTPStatus:     http.StatusNotFound,
+		Severity:       SeverityInfo,
+	},
+	ErrProjectInvitationExpired: {
+		Code:           ErrProjectInvitationExpired,
+		DefaultMessage: "Project invitation has expired",
+		HTTPStatus:     http.StatusGone,
+		Severity:       SeverityInfo,
+	},
+	ErrProjectInvitationAccepted: {
+		Code:           ErrProjectInvitationAccepted,
+		DefaultMessage: "Project invitation has already been accepted",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+	ErrProjectInvitationExists: {
+		Code:           ErrProjectInvitationExists,
+		DefaultMessage: "A project invitation for this email already exists",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+
+	// API Key
+	ErrApiKeyNotFound: {
+		Code:           ErrApiKeyNotFound,
+		DefaultMessage: "API key not found",
+		HTTPStatus:     http.StatusNotFound,
+		Severity:       SeverityInfo,
+	},
+	ErrApiKeyRevoked: {
+		Code:           ErrApiKeyRevoked,
+		DefaultMessage: "API key has been revoked",
+		HTTPStatus:     http.StatusUnauthorized,
+		Severity:       SeverityWarning,
+	},
+	ErrApiKeyExpired: {
+		Code:           ErrApiKeyExpired,
+		DefaultMessage: "API key has expired",
+		HTTPStatus:     http.StatusUnauthorized,
+		Severity:       SeverityWarning,
+	},
+	ErrApiKeyInvalid: {
+		Code:           ErrApiKeyInvalid,
+		DefaultMessage: "Invalid API key",
+		HTTPStatus:     http.StatusUnauthorized,
+		Severity:       SeverityWarning,
+	},
+	ErrApiKeyLimitReached: {
+		Code:           ErrApiKeyLimitReached,
+		DefaultMessage: "Project has reached maximum API key limit",
+		HTTPStatus:     http.StatusConflict,
+		Severity:       SeverityWarning,
+	},
+	ErrApiKeyRateLimited: {
+		Code:           ErrApiKeyRateLimited,
+		DefaultMessage: "API key rate limit exceeded",
+		HTTPStatus:     http.StatusTooManyRequests,
 		Severity:       SeverityWarning,
 	},
 }

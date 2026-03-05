@@ -2,8 +2,11 @@ package validation
 
 import (
 	"strings"
+	"worklayer/pkg/errors"
+	"worklayer/pkg/response"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 // Global instance to cache regex compilation
@@ -51,4 +54,11 @@ func ValidateStruct(payload interface{}) []*ErrorResponse {
 		return errors
 	}
 	return nil
+}
+
+func ValidationErrorsToResponse(ctx *fiber.Ctx, errs []*ErrorResponse) error {
+	return response.Error(ctx,
+		errors.ValidationFailed("Validation failed").
+			WithMetadata("validation_errors", errs),
+	)
 }

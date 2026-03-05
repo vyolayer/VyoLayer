@@ -191,3 +191,133 @@ func InvitationAlreadyExistsError(email, orgID string) *errors.AppError {
 func InvitationInvalidError(reason string) *errors.AppError {
 	return errors.InvitationInvalid(reason)
 }
+
+// Project errors
+var (
+	ErrProjectNotFound            = errors.ErrProjectNotFound
+	ErrProjectNotActive           = errors.ErrProjectNotActive
+	ErrProjectFull                = errors.ErrProjectFull
+	ErrProjectLimitReached        = errors.ErrProjectLimitReached
+	ErrProjectMemberAlreadyExists = errors.ErrProjectMemberAlreadyExists
+	ErrProjectMemberNotFound      = errors.ErrProjectMemberNotFound
+	ErrProjectMemberNotActive     = errors.ErrProjectMemberNotActive
+	ErrProjectInfoNotLoaded       = errors.ErrProjectInfoNotLoaded
+)
+
+// ProjectNotFoundError creates a project not found error
+func ProjectNotFoundError(projectID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectNotFound, "Project '%s' not found", projectID).
+		WithMetadata("project_id", projectID)
+}
+
+// ProjectNotActiveError creates a project not active error
+func ProjectNotActiveError(projectID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectNotActive, "Project '%s' is not active", projectID).
+		WithMetadata("project_id", projectID)
+}
+
+// ProjectFullError creates a project full error
+func ProjectFullError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectFull, "Project has reached maximum member capacity")
+}
+
+// ProjectLimitReachedError creates a project limit reached error
+func ProjectLimitReachedError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectLimitReached, "Organization has reached maximum project limit")
+}
+
+// ProjectMemberAlreadyExistsError creates a project member already exists error
+func ProjectMemberAlreadyExistsError(userID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectMemberAlreadyExists, "User '%s' is already a member of this project", userID).
+		WithMetadata("user_id", userID)
+}
+
+// ProjectMemberNotFoundError creates a project member not found error
+func ProjectMemberNotFoundError(memberID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectMemberNotFound, "Project member '%s' not found", memberID).
+		WithMetadata("member_id", memberID)
+}
+
+// ProjectMemberNotActiveError creates a project member not active error
+func ProjectMemberNotActiveError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectMemberNotActive, "Project member is not active")
+}
+
+// ProjectMembersNotLoadedError creates an error for when project members are not loaded
+func ProjectMembersNotLoadedError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectInfoNotLoaded, "Project member information not loaded from database")
+}
+
+// ProjectSlugConflictError creates a project slug conflict error
+func ProjectSlugConflictError(slug string) *errors.AppError {
+	return errors.Conflict("Slug '%s' is already taken in this organization", slug)
+}
+
+// ProjectDeleteConfirmationError creates a project delete confirmation error
+func ProjectDeleteConfirmationError() *errors.AppError {
+	return errors.BadRequest("Project name does not match. Please type the exact project name to confirm deletion.")
+}
+
+// Project invitation errors
+func ProjectInvitationNotFoundError(invitationID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectInvitationNotFound, "Project invitation '%s' not found", invitationID).
+		WithMetadata("invitation_id", invitationID)
+}
+
+func ProjectInvitationExpiredError() *errors.AppError {
+	return errors.New(errors.ErrProjectInvitationExpired)
+}
+
+func ProjectInvitationAlreadyAcceptedError(invitationID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectInvitationAccepted, "Project invitation '%s' has already been accepted", invitationID).
+		WithMetadata("invitation_id", invitationID)
+}
+
+func ProjectInvitationAlreadyExistsError(email, projectID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrProjectInvitationExists, "An invitation for '%s' to project '%s' already exists", email, projectID).
+		WithMetadata("email", email).
+		WithMetadata("project_id", projectID)
+}
+
+// API Key errors
+var (
+	ErrApiKeyNotFound     = errors.ErrApiKeyNotFound
+	ErrApiKeyRevoked      = errors.ErrApiKeyRevoked
+	ErrApiKeyExpired      = errors.ErrApiKeyExpired
+	ErrApiKeyInvalid      = errors.ErrApiKeyInvalid
+	ErrApiKeyLimitReached = errors.ErrApiKeyLimitReached
+	ErrApiKeyRateLimited  = errors.ErrApiKeyRateLimited
+)
+
+// ApiKeyNotFoundError creates an API key not found error
+func ApiKeyNotFoundError(apiKeyID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrApiKeyNotFound, "API key '%s' not found", apiKeyID).
+		WithMetadata("api_key_id", apiKeyID)
+}
+
+// ApiKeyRevokedError creates an API key revoked error
+func ApiKeyRevokedError(apiKeyID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrApiKeyRevoked, "API key '%s' has been revoked", apiKeyID).
+		WithMetadata("api_key_id", apiKeyID)
+}
+
+// ApiKeyExpiredError creates an API key expired error
+func ApiKeyExpiredError(apiKeyID string) *errors.AppError {
+	return errors.NewWithMessage(errors.ErrApiKeyExpired, "API key '%s' has expired", apiKeyID).
+		WithMetadata("api_key_id", apiKeyID)
+}
+
+// ApiKeyInvalidError creates an invalid API key error
+func ApiKeyInvalidError() *errors.AppError {
+	return errors.New(errors.ErrApiKeyInvalid)
+}
+
+// ApiKeyLimitReachedError creates an API key limit reached error
+func ApiKeyLimitReachedError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrApiKeyLimitReached, "Project has reached maximum API key limit")
+}
+
+// ApiKeyRateLimitedError creates an API key rate limited error
+func ApiKeyRateLimitedError() *errors.AppError {
+	return errors.NewWithMessage(errors.ErrApiKeyRateLimited, "API key rate limit exceeded")
+}

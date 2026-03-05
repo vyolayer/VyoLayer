@@ -16,7 +16,7 @@ type TimeStamps struct {
 type BaseModel struct {
 	ID uuid.UUID `gorm:"<-:create;type:uuid;primaryKey"`
 	TimeStamps
-	DeletedAt *time.Time `gorm:"index"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {

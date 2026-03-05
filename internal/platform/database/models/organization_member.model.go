@@ -33,7 +33,7 @@ func (OrganizationMember) TableName() string {
 func (om *OrganizationMember) IsActive() bool {
 	return om.JoinedAt != nil && // joined
 		om.RemovedAt == nil && // not removed
-		om.DeletedAt == nil
+		!om.DeletedAt.Valid
 }
 
 func (om *OrganizationMember) IsOwner() bool {
@@ -114,5 +114,5 @@ func (omi *OrganizationMemberInvitation) IsExpired() bool {
 
 // IsPending checks if the invitation is still pending (not accepted and not expired)
 func (omi *OrganizationMemberInvitation) IsPending() bool {
-	return !omi.IsAccepted && !omi.IsExpired() && omi.DeletedAt == nil
+	return !omi.IsAccepted && !omi.IsExpired() && !omi.DeletedAt.Valid
 }

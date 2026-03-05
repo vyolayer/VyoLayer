@@ -25,6 +25,8 @@ const (
 	ProjectMemberPrefix     IDPrefix = "project_member"
 	ProjectRolePrefix       IDPrefix = "project_role"
 	ProjectPermissionPrefix IDPrefix = "project_permission"
+	ProjectInvitationPrefix IDPrefix = "project_invitation"
+	ApiKeyPrefix            IDPrefix = "api_key"
 )
 
 var validPrefixes = map[IDPrefix]bool{
@@ -38,6 +40,8 @@ var validPrefixes = map[IDPrefix]bool{
 	ProjectMemberPrefix:     true,
 	ProjectRolePrefix:       true,
 	ProjectPermissionPrefix: true,
+	ProjectInvitationPrefix: true,
+	ApiKeyPrefix:            true,
 }
 
 func (p IDPrefix) IsValid() bool {
@@ -390,4 +394,88 @@ func ReconstructOrganizationMemberInvitationID(s string) (OrganizationMemberInvi
 		return nil, err
 	}
 	return organizationMemberInvitationID{PublicID: public}, nil
+}
+
+// --- Project ID ---
+type projectID struct {
+	PublicID[IDPrefix]
+}
+
+type ProjectID interface {
+	WorkLayerPublicID
+}
+
+func NewProjectID() ProjectID {
+	return projectID{PublicID: NewPublicID(ProjectPrefix)}
+}
+
+func ReconstructProjectID(s string) (ProjectID, error) {
+	public, err := ReconstructPublicID(ProjectPrefix, s)
+	if err != nil {
+		return nil, err
+	}
+	return projectID{PublicID: public}, nil
+}
+
+// --- Project Member ID ---
+type projectMemberID struct {
+	PublicID[IDPrefix]
+}
+
+type ProjectMemberID interface {
+	WorkLayerPublicID
+}
+
+func NewProjectMemberID() ProjectMemberID {
+	return projectMemberID{PublicID: NewPublicID(ProjectMemberPrefix)}
+}
+
+func ReconstructProjectMemberID(s string) (ProjectMemberID, error) {
+	public, err := ReconstructPublicID(ProjectMemberPrefix, s)
+	if err != nil {
+		return nil, err
+	}
+	return projectMemberID{PublicID: public}, nil
+}
+
+// --- Project Invitation ID ---
+type projectInvitationID struct {
+	PublicID[IDPrefix]
+}
+
+type ProjectInvitationID interface {
+	WorkLayerPublicID
+}
+
+func NewProjectInvitationID() ProjectInvitationID {
+	return projectInvitationID{PublicID: NewPublicID(ProjectInvitationPrefix)}
+}
+
+func ReconstructProjectInvitationID(s string) (ProjectInvitationID, error) {
+	public, err := ReconstructPublicID(ProjectInvitationPrefix, s)
+	if err != nil {
+		return nil, err
+	}
+	return projectInvitationID{PublicID: public}, nil
+}
+
+// --- API Key ID ---
+type apiKeyID struct {
+	PublicID[IDPrefix]
+}
+
+type ApiKeyID interface {
+	WorkLayerPublicID
+}
+
+func NewApiKeyID() ApiKeyID {
+	return apiKeyID{PublicID: NewPublicID(ApiKeyPrefix)}
+}
+
+func ReconstructApiKeyID(s string) (ApiKeyID, error) {
+	public, err := ReconstructPublicID(ApiKeyPrefix, s)
+	if err != nil {
+		return nil, err
+	}
+	return apiKeyID{PublicID: public}, nil
 }

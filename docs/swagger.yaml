@@ -1,5 +1,124 @@
 basePath: /api/v1
 definitions:
+  dto.AddProjectMemberRequestDTO:
+    properties:
+      role:
+        enum:
+        - admin
+        - member
+        - viewer
+        example: member
+        type: string
+      userId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    required:
+    - role
+    - userId
+    type: object
+  dto.ApiKeyCreatedDTO:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      expiresAt:
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      id:
+        example: api_key_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isRevoked:
+        example: false
+        type: boolean
+      keyPrefix:
+        example: wl_live_ab3f1234
+        type: string
+      lastUsedAt:
+        type: string
+      mode:
+        example: live
+        type: string
+      name:
+        example: My API Key
+        type: string
+      projectId:
+        example: project_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      rateLimit:
+        example: 60
+        type: integer
+      rawKey:
+        example: wl_live_a1b2c3d4e5f6...
+        type: string
+      requestLimit:
+        example: 1000
+        type: integer
+      revokedAt:
+        type: string
+    type: object
+  dto.ApiKeyDTO:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      expiresAt:
+        example: "2024-01-01T00:00:00Z"
+        type: string
+      id:
+        example: api_key_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isRevoked:
+        example: false
+        type: boolean
+      keyPrefix:
+        example: wl_live_ab3f1234
+        type: string
+      lastUsedAt:
+        type: string
+      mode:
+        example: live
+        type: string
+      name:
+        example: My API Key
+        type: string
+      projectId:
+        example: project_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      rateLimit:
+        example: 60
+        type: integer
+      requestLimit:
+        example: 1000
+        type: integer
+      revokedAt:
+        type: string
+    type: object
+  dto.ChangeMemberRoleRequestDTO:
+    properties:
+      roleId:
+        example: orgrole_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    required:
+    - roleId
+    type: object
+  dto.ChangeProjectMemberRoleRequestDTO:
+    properties:
+      role:
+        enum:
+        - admin
+        - member
+        - viewer
+        example: admin
+        type: string
+    required:
+    - role
+    type: object
   dto.CreateInvitationRequestDTO:
     properties:
       email:
@@ -27,6 +146,36 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  dto.CreateProjectRequestDTO:
+    properties:
+      description:
+        example: A cool project
+        maxLength: 500
+        type: string
+      name:
+        example: My Project
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+  dto.DeleteOrganizationRequestDTO:
+    properties:
+      confirmName:
+        example: Acme Corp
+        type: string
+    required:
+    - confirmName
+    type: object
+  dto.DeleteProjectRequestDTO:
+    properties:
+      confirmName:
+        example: My Project
+        type: string
+    required:
+    - confirmName
     type: object
   dto.LoginUserResponseDTO:
     properties:
@@ -159,6 +308,66 @@ definitions:
           type: string
         type: array
     type: object
+  dto.OrganizationMemberWithRBACDTO:
+    properties:
+      deactivatedAt:
+        type: string
+      deactivatedBy:
+        type: string
+      email:
+        example: john@example.com
+        type: string
+      fullName:
+        example: John Doe
+        type: string
+      id:
+        example: orgmem_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      invitedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      invitedBy:
+        example: orgmem_550e8400-e29b-41d4-a716-446655440001
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      joinedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/dto.OrganizationPermissionDTO'
+        type: array
+      roles:
+        items:
+          $ref: '#/definitions/dto.OrganizationRoleDTO'
+        type: array
+      userId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    type: object
+  dto.OrganizationPermissionDTO:
+    properties:
+      action:
+        example: create
+        type: string
+      code:
+        example: project.create
+        type: string
+      group:
+        example: project
+        type: string
+      id:
+        example: orgperm_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isSystem:
+        example: true
+        type: boolean
+      resource:
+        example: project
+        type: string
+    type: object
   dto.OrganizationResponseDTO:
     properties:
       createdAt:
@@ -200,6 +409,86 @@ definitions:
         example: acme-corp
         type: string
     type: object
+  dto.OrganizationRoleDTO:
+    properties:
+      description:
+        example: Administrator role
+        type: string
+      id:
+        example: orgrole_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isDefault:
+        example: true
+        type: boolean
+      isSystemRole:
+        example: true
+        type: boolean
+      name:
+        example: Admin
+        type: string
+    type: object
+  dto.ProjectDTO:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      description:
+        example: A cool project
+        type: string
+      id:
+        example: project_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      maxApiKeys:
+        example: 5
+        type: integer
+      maxMembers:
+        example: 10
+        type: integer
+      memberCount:
+        example: 3
+        type: integer
+      name:
+        example: My Project
+        type: string
+      organizationId:
+        example: org_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      slug:
+        example: my-project
+        type: string
+    type: object
+  dto.ProjectMemberDTO:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      fullName:
+        example: John Doe
+        type: string
+      id:
+        example: project_member_550e8400-e29b-41d4-a716-446655440000
+        type: string
+      isActive:
+        example: true
+        type: boolean
+      joinedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      removedAt:
+        type: string
+      role:
+        example: admin
+        type: string
+      userId:
+        example: user_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    type: object
   dto.RefreshSessionResponseDTO:
     properties:
       accessToken:
@@ -227,6 +516,43 @@ definitions:
     - email
     - fullName
     - password
+    type: object
+  dto.TransferOwnershipRequestDTO:
+    properties:
+      newOwnerMemberId:
+        example: orgmem_550e8400-e29b-41d4-a716-446655440000
+        type: string
+    required:
+    - newOwnerMemberId
+    type: object
+  dto.UpdateOrganizationRequestDTO:
+    properties:
+      description:
+        example: Building amazing products
+        maxLength: 500
+        type: string
+      name:
+        example: Acme Corp
+        maxLength: 100
+        minLength: 3
+        type: string
+      slug:
+        example: acme-corp
+        maxLength: 100
+        minLength: 3
+        type: string
+    type: object
+  dto.UpdateProjectRequestDTO:
+    properties:
+      description:
+        example: Updated description
+        maxLength: 500
+        type: string
+      name:
+        example: My Project
+        maxLength: 100
+        minLength: 3
+        type: string
     type: object
   dto.UserDTO:
     properties:
@@ -362,7 +688,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Login a user
       tags:
-      - auth
+      - Auth
   /auth/logout:
     post:
       description: Invalidate the user's session and clear authentication cookies.
@@ -379,7 +705,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Logout a user
       tags:
-      - auth
+      - Auth
   /auth/refresh:
     post:
       description: Get a new access token using a valid refresh token from cookies.
@@ -401,7 +727,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Refresh session
       tags:
-      - auth
+      - Auth
   /auth/register:
     post:
       consumes:
@@ -436,7 +762,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Register a new user
       tags:
-      - auth
+      - Auth
   /auth/validate:
     post:
       description: Check if the current session (access token) is still valid.
@@ -453,7 +779,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Validate session
       tags:
-      - auth
+      - Auth
   /health:
     get:
       description: Check the status of the API.
@@ -469,8 +795,6 @@ paths:
       - health
   /organizations:
     get:
-      consumes:
-      - application/json
       description: List organizations the user is a member of.
       produces:
       - application/json
@@ -492,7 +816,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: List organizations
       tags:
-      - organizations
+      - Organizations
     post:
       consumes:
       - application/json
@@ -526,11 +850,9 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Create organization
       tags:
-      - organizations
+      - Organizations
   /organizations/{id}:
     get:
-      consumes:
-      - application/json
       description: Retrieve organization details by ID. User must be a member.
       parameters:
       - description: Organization ID
@@ -568,7 +890,138 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get organization by ID
       tags:
-      - organizations
+      - Organizations
+  /organizations/{orgId}:
+    delete:
+      consumes:
+      - application/json
+      description: Permanently delete an organization. Requires Owner role and name
+        confirmation.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Deletion confirmation
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteOrganizationRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Delete organization
+      tags:
+      - Organizations
+    patch:
+      consumes:
+      - application/json
+      description: Update organization details (name, description, slug). Requires
+        Admin+ role.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Updated fields
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOrganizationRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationResponseDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Update organization
+      tags:
+      - Organizations
+  /organizations/{orgId}/archive:
+    post:
+      description: Deactivate (archive) an organization. Requires Admin+ role.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Archive organization
+      tags:
+      - Organizations
   /organizations/{orgId}/invitations:
     get:
       consumes:
@@ -612,7 +1065,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: List organization invitations
       tags:
-      - organization_invitations
+      - Organization Invitations
     post:
       consumes:
       - application/json
@@ -663,12 +1116,54 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Create an organization member invitation
       tags:
-      - organization_invitations
+      - Organization Invitations
+  /organizations/{orgId}/invitations/{invitationId}/resend:
+    post:
+      description: Regenerate token and reset expiry for a pending invitation
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Invitation ID
+        in: path
+        name: invitationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrganizationMemberInvitationDTO'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Resend an invitation
+      tags:
+      - Organization Invitations
   /organizations/{orgId}/members:
     get:
-      consumes:
-      - application/json
-      description: Get all members of an organization
       parameters:
       - description: Organization ID
         in: path
@@ -707,12 +1202,47 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get all members of an organization
       tags:
-      - organization_member
+      - Organization Member
   /organizations/{orgId}/members/{memberId}:
-    get:
-      consumes:
+    delete:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      produces:
       - application/json
-      description: Get a member of an organization by member id
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Remove a member from the organization
+      tags:
+      - Organization Member
+    get:
       parameters:
       - description: Organization ID
         in: path
@@ -752,14 +1282,88 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get a member of an organization by member id
+      summary: Get a member by ID
       tags:
-      - organization_member
-  /organizations/{orgId}/members/me:
-    get:
+      - Organization Member
+  /organizations/{orgId}/members/{memberId}/role:
+    patch:
       consumes:
       - application/json
-      description: Get the current member of an organization
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      - description: New role
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChangeMemberRoleRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Change a member's role
+      tags:
+      - Organization Member
+  /organizations/{orgId}/members/leave:
+    post:
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Leave an organization
+      tags:
+      - Organization Member
+  /organizations/{orgId}/members/me:
+    get:
       parameters:
       - description: Organization ID
         in: path
@@ -776,7 +1380,7 @@ paths:
             - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.OrganizationMemberDTO'
+                  $ref: '#/definitions/dto.OrganizationMemberWithRBACDTO'
               type: object
         "400":
           description: Bad Request
@@ -794,9 +1398,769 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get the current member of an organization
+      summary: Get the current member
       tags:
-      - organization_member
+      - Organization Member
+  /organizations/{orgId}/members/transfer-ownership:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: New owner details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransferOwnershipRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Transfer ownership to another member
+      tags:
+      - Organization Member
+  /organizations/{orgId}/projects:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProjectDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: List all projects of an organization
+      tags:
+      - Projects
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project to create
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProjectRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ProjectDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Create a new project
+      tags:
+      - Projects
+  /organizations/{orgId}/projects/{projectId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Project to delete
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteProjectRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Delete a specific project by ID
+      tags:
+      - Projects
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProjectDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get a specific project by ID
+      tags:
+      - Projects
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Project to update
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateProjectRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProjectDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Update a specific project by ID
+      tags:
+      - Projects
+  /organizations/{orgId}/projects/{projectId}/api-keys:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ApiKeyDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: List all API keys for a project
+      tags:
+      - API Keys
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: API key name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: API key mode
+        in: body
+        name: mode
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ApiKeyCreatedDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Generate a new API key
+      tags:
+      - API Keys
+  /organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: API key ID
+        in: path
+        name: apiKeyId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ApiKeyDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get a specific API key by ID
+      tags:
+      - API Keys
+  /organizations/{orgId}/projects/{projectId}/api-keys/{apiKeyId}/revoke:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: API key ID
+        in: path
+        name: apiKeyId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Revoke an API key
+      tags:
+      - API Keys
+  /organizations/{orgId}/projects/{projectId}/archive:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Archive a specific project by ID
+      tags:
+      - Projects
+  /organizations/{orgId}/projects/{projectId}/members:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProjectMemberDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: List all members of a project
+      tags:
+      - Project Members
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Member to add
+        in: body
+        name: member
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddProjectMemberRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ProjectMemberDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Add a new member to a project
+      tags:
+      - Project Members
+  /organizations/{orgId}/projects/{projectId}/members/{memberId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Member ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Remove a member from a project
+      tags:
+      - Project Members
+  /organizations/{orgId}/projects/{projectId}/members/{memberId}/role:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Member ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      - description: New role for the member
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChangeProjectMemberRoleRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Change the role of a member in a project
+      tags:
+      - Project Members
+  /organizations/{orgId}/projects/{projectId}/members/current:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProjectMemberDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get the current member of a project
+      tags:
+      - Project Members
+  /organizations/{orgId}/projects/{projectId}/members/leave:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Leave a project
+      tags:
+      - Project Members
+  /organizations/{orgId}/projects/{projectId}/restore:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Restore a specific project by ID
+      tags:
+      - Projects
+  /organizations/{orgId}/restore:
+    post:
+      description: Reactivate a previously archived organization. Requires Admin+
+        role.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Restore organization
+      tags:
+      - Organizations
   /organizations/invitations/{invitationId}:
     delete:
       consumes:
@@ -837,7 +2201,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Cancel an invitation
       tags:
-      - organization_invitations
+      - Organization Invitations
   /organizations/invitations/accept:
     post:
       consumes:
@@ -882,7 +2246,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Accept an invitation
       tags:
-      - organization_invitations
+      - Organization Invitations
   /organizations/invitations/pending:
     get:
       consumes:
@@ -912,13 +2276,12 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get pending invitations for current user
       tags:
-      - organization_invitations
+      - Organization Invitations
   /organizations/onboarding:
     post:
       consumes:
       - application/json
-      description: Guided onboarding flow for creating a new organization. Similar
-        to create but may include additional steps.
+      description: Guided onboarding flow for creating a new organization.
       parameters:
       - description: Organization details
         in: body
@@ -948,11 +2311,9 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Onboard organization
       tags:
-      - organizations
+      - Organizations
   /organizations/slug/{slug}:
     get:
-      consumes:
-      - application/json
       description: Retrieve organization details by slug. User must be a member.
       parameters:
       - description: Organization slug
@@ -990,7 +2351,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get organization by slug
       tags:
-      - organizations
+      - Organizations
   /users/me:
     get:
       consumes:
@@ -1014,5 +2375,5 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get current user
       tags:
-      - users
+      - Users
 swagger: "2.0"

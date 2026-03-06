@@ -1,6 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import { useOrganization } from '@/contexts/OrganizationContext'
-import { Building2, Users, UserCircle, Settings, Archive, AlertTriangle, ScrollText } from 'lucide-react'
+import { Building2, Users, UserCircle, Settings, Archive, AlertTriangle, ScrollText, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { OrganizationBreadcrumb } from './OrganizationBreadcrumb'
 
@@ -21,6 +21,7 @@ export function OrganizationHeader() {
 
     const navItems: NavItem[] = [
         { label: 'Overview', to: basePath, icon: Building2 },
+        { label: 'Projects', to: `${basePath}/projects`, icon: FolderOpen },
         { label: 'Members', to: `${basePath}/members`, icon: Users },
         { label: 'My Membership', to: `${basePath}/me`, icon: UserCircle },
         { label: 'Settings', to: `${basePath}/settings`, icon: Settings, requireAdmin: true },
@@ -61,7 +62,10 @@ function OrgHeaderItem({
     currentPath,
 }: NavItem & { basePath: string; currentPath: string }) {
     const Icon = icon
-    const isActive = to === basePath ? currentPath === basePath || currentPath === basePath + '/' : currentPath === to
+    const isActive =
+        to === basePath
+            ? currentPath === basePath || currentPath === basePath + '/'
+            : currentPath === to || currentPath.startsWith(to + '/')
 
     return (
         <Link

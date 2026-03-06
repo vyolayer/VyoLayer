@@ -27,11 +27,17 @@ import { Route as AuthenticatedOrgSlugLayoutMeRouteImport } from './routes/_auth
 import { Route as AuthenticatedOrgSlugLayoutDangerRouteImport } from './routes/_authenticated/org.$slug/_layout/danger'
 import { Route as AuthenticatedOrgSlugLayoutArchiveRouteImport } from './routes/_authenticated/org.$slug/_layout/archive'
 import { Route as AuthenticatedOrgSlugLayoutAuditRouteRouteImport } from './routes/_authenticated/org.$slug/_layout/audit/route'
+import { Route as AuthenticatedOrgSlugLayoutProjectsIndexRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/index'
 import { Route as AuthenticatedOrgSlugLayoutMembersIndexRouteImport } from './routes/_authenticated/org.$slug/_layout/members.index'
 import { Route as AuthenticatedOrgSlugLayoutAuditIndexRouteImport } from './routes/_authenticated/org.$slug/_layout/audit/index'
 import { Route as AuthenticatedOrgSlugLayoutMembersIdRouteImport } from './routes/_authenticated/org.$slug/_layout/members.$id'
 import { Route as AuthenticatedOrgSlugLayoutAuditSecurityRouteImport } from './routes/_authenticated/org.$slug/_layout/audit/security'
 import { Route as AuthenticatedOrgSlugLayoutAuditInvitationsRouteImport } from './routes/_authenticated/org.$slug/_layout/audit/invitations'
+import { Route as AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/$projectId/_layout'
+import { Route as AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/$projectId/_layout/index'
+import { Route as AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/$projectId/_layout/settings'
+import { Route as AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/$projectId/_layout/members'
+import { Route as AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRouteImport } from './routes/_authenticated/org.$slug/_layout/projects/$projectId/_layout/api-keys'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -128,6 +134,12 @@ const AuthenticatedOrgSlugLayoutAuditRouteRoute =
     path: '/audit',
     getParentRoute: () => AuthenticatedOrgSlugLayoutRouteRoute,
   } as any)
+const AuthenticatedOrgSlugLayoutProjectsIndexRoute =
+  AuthenticatedOrgSlugLayoutProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedOrgSlugLayoutRouteRoute,
+  } as any)
 const AuthenticatedOrgSlugLayoutMembersIndexRoute =
   AuthenticatedOrgSlugLayoutMembersIndexRouteImport.update({
     id: '/members/',
@@ -158,6 +170,40 @@ const AuthenticatedOrgSlugLayoutAuditInvitationsRoute =
     path: '/invitations',
     getParentRoute: () => AuthenticatedOrgSlugLayoutAuditRouteRoute,
   } as any)
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteImport.update({
+    id: '/projects/$projectId/_layout',
+    path: '/projects/$projectId',
+    getParentRoute: () => AuthenticatedOrgSlugLayoutRouteRoute,
+  } as any)
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () =>
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute,
+  } as any)
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () =>
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute,
+  } as any)
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () =>
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute,
+  } as any)
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRouteImport.update({
+    id: '/api-keys',
+    path: '/api-keys',
+    getParentRoute: () =>
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LandingIndexRoute
@@ -181,6 +227,12 @@ export interface FileRoutesByFullPath {
   '/org/$slug/members/$id': typeof AuthenticatedOrgSlugLayoutMembersIdRoute
   '/org/$slug/audit/': typeof AuthenticatedOrgSlugLayoutAuditIndexRoute
   '/org/$slug/members/': typeof AuthenticatedOrgSlugLayoutMembersIndexRoute
+  '/org/$slug/projects/': typeof AuthenticatedOrgSlugLayoutProjectsIndexRoute
+  '/org/$slug/projects/$projectId': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteWithChildren
+  '/org/$slug/projects/$projectId/api-keys': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute
+  '/org/$slug/projects/$projectId/members': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute
+  '/org/$slug/projects/$projectId/settings': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute
+  '/org/$slug/projects/$projectId/': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LandingIndexRoute
@@ -202,6 +254,11 @@ export interface FileRoutesByTo {
   '/org/$slug/members/$id': typeof AuthenticatedOrgSlugLayoutMembersIdRoute
   '/org/$slug/audit': typeof AuthenticatedOrgSlugLayoutAuditIndexRoute
   '/org/$slug/members': typeof AuthenticatedOrgSlugLayoutMembersIndexRoute
+  '/org/$slug/projects': typeof AuthenticatedOrgSlugLayoutProjectsIndexRoute
+  '/org/$slug/projects/$projectId/api-keys': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute
+  '/org/$slug/projects/$projectId/members': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute
+  '/org/$slug/projects/$projectId/settings': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute
+  '/org/$slug/projects/$projectId': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -228,6 +285,12 @@ export interface FileRoutesById {
   '/_authenticated/org/$slug/_layout/members/$id': typeof AuthenticatedOrgSlugLayoutMembersIdRoute
   '/_authenticated/org/$slug/_layout/audit/': typeof AuthenticatedOrgSlugLayoutAuditIndexRoute
   '/_authenticated/org/$slug/_layout/members/': typeof AuthenticatedOrgSlugLayoutMembersIndexRoute
+  '/_authenticated/org/$slug/_layout/projects/': typeof AuthenticatedOrgSlugLayoutProjectsIndexRoute
+  '/_authenticated/org/$slug/_layout/projects/$projectId/_layout': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteWithChildren
+  '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/api-keys': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute
+  '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/members': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute
+  '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/settings': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute
+  '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/': typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +316,12 @@ export interface FileRouteTypes {
     | '/org/$slug/members/$id'
     | '/org/$slug/audit/'
     | '/org/$slug/members/'
+    | '/org/$slug/projects/'
+    | '/org/$slug/projects/$projectId'
+    | '/org/$slug/projects/$projectId/api-keys'
+    | '/org/$slug/projects/$projectId/members'
+    | '/org/$slug/projects/$projectId/settings'
+    | '/org/$slug/projects/$projectId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -274,6 +343,11 @@ export interface FileRouteTypes {
     | '/org/$slug/members/$id'
     | '/org/$slug/audit'
     | '/org/$slug/members'
+    | '/org/$slug/projects'
+    | '/org/$slug/projects/$projectId/api-keys'
+    | '/org/$slug/projects/$projectId/members'
+    | '/org/$slug/projects/$projectId/settings'
+    | '/org/$slug/projects/$projectId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -299,6 +373,12 @@ export interface FileRouteTypes {
     | '/_authenticated/org/$slug/_layout/members/$id'
     | '/_authenticated/org/$slug/_layout/audit/'
     | '/_authenticated/org/$slug/_layout/members/'
+    | '/_authenticated/org/$slug/_layout/projects/'
+    | '/_authenticated/org/$slug/_layout/projects/$projectId/_layout'
+    | '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/api-keys'
+    | '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/members'
+    | '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/settings'
+    | '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -436,6 +516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgSlugLayoutAuditRouteRouteImport
       parentRoute: typeof AuthenticatedOrgSlugLayoutRouteRoute
     }
+    '/_authenticated/org/$slug/_layout/projects/': {
+      id: '/_authenticated/org/$slug/_layout/projects/'
+      path: '/projects'
+      fullPath: '/org/$slug/projects/'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutRouteRoute
+    }
     '/_authenticated/org/$slug/_layout/members/': {
       id: '/_authenticated/org/$slug/_layout/members/'
       path: '/members'
@@ -471,6 +558,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgSlugLayoutAuditInvitationsRouteImport
       parentRoute: typeof AuthenticatedOrgSlugLayoutAuditRouteRoute
     }
+    '/_authenticated/org/$slug/_layout/projects/$projectId/_layout': {
+      id: '/_authenticated/org/$slug/_layout/projects/$projectId/_layout'
+      path: '/projects/$projectId'
+      fullPath: '/org/$slug/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutRouteRoute
+    }
+    '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/': {
+      id: '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/'
+      path: '/'
+      fullPath: '/org/$slug/projects/$projectId/'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute
+    }
+    '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/settings': {
+      id: '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/settings'
+      path: '/settings'
+      fullPath: '/org/$slug/projects/$projectId/settings'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute
+    }
+    '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/members': {
+      id: '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/members'
+      path: '/members'
+      fullPath: '/org/$slug/projects/$projectId/members'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute
+    }
+    '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/api-keys': {
+      id: '/_authenticated/org/$slug/_layout/projects/$projectId/_layout/api-keys'
+      path: '/api-keys'
+      fullPath: '/org/$slug/projects/$projectId/api-keys'
+      preLoaderRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRouteImport
+      parentRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute
+    }
   }
 }
 
@@ -495,6 +617,30 @@ const AuthenticatedOrgSlugLayoutAuditRouteRouteWithChildren =
     AuthenticatedOrgSlugLayoutAuditRouteRouteChildren,
   )
 
+interface AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteChildren {
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute
+}
+
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteChildren: AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteChildren =
+  {
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute:
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutApiKeysRoute,
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute:
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutMembersRoute,
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute:
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutSettingsRoute,
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute:
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutIndexRoute,
+  }
+
+const AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteWithChildren =
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute._addFileChildren(
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteChildren,
+  )
+
 interface AuthenticatedOrgSlugLayoutRouteRouteChildren {
   AuthenticatedOrgSlugLayoutAuditRouteRoute: typeof AuthenticatedOrgSlugLayoutAuditRouteRouteWithChildren
   AuthenticatedOrgSlugLayoutArchiveRoute: typeof AuthenticatedOrgSlugLayoutArchiveRoute
@@ -504,6 +650,8 @@ interface AuthenticatedOrgSlugLayoutRouteRouteChildren {
   AuthenticatedOrgSlugLayoutIndexRoute: typeof AuthenticatedOrgSlugLayoutIndexRoute
   AuthenticatedOrgSlugLayoutMembersIdRoute: typeof AuthenticatedOrgSlugLayoutMembersIdRoute
   AuthenticatedOrgSlugLayoutMembersIndexRoute: typeof AuthenticatedOrgSlugLayoutMembersIndexRoute
+  AuthenticatedOrgSlugLayoutProjectsIndexRoute: typeof AuthenticatedOrgSlugLayoutProjectsIndexRoute
+  AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute: typeof AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteWithChildren
 }
 
 const AuthenticatedOrgSlugLayoutRouteRouteChildren: AuthenticatedOrgSlugLayoutRouteRouteChildren =
@@ -522,6 +670,10 @@ const AuthenticatedOrgSlugLayoutRouteRouteChildren: AuthenticatedOrgSlugLayoutRo
       AuthenticatedOrgSlugLayoutMembersIdRoute,
     AuthenticatedOrgSlugLayoutMembersIndexRoute:
       AuthenticatedOrgSlugLayoutMembersIndexRoute,
+    AuthenticatedOrgSlugLayoutProjectsIndexRoute:
+      AuthenticatedOrgSlugLayoutProjectsIndexRoute,
+    AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRoute:
+      AuthenticatedOrgSlugLayoutProjectsProjectIdLayoutRouteWithChildren,
   }
 
 const AuthenticatedOrgSlugLayoutRouteRouteWithChildren =

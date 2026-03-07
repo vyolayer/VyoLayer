@@ -18,3 +18,15 @@ Worklayer is an backend platform for building internal tools. It provides authen
 - PostgreSQL
 - Fiber
 - GORM
+
+## System Architecture
+
+See [SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md) for detailed system design.
+
+## Development
+
+See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for detailed development guide.
+
+## License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.

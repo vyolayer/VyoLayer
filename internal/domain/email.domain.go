@@ -2,7 +2,8 @@ package domain
 
 import (
 	"strings"
-	"vyolayer/pkg/errors"
+
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 type Email struct {

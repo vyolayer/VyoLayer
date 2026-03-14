@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"vyolayer/pkg/errors"
-	"vyolayer/pkg/logger"
+
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/logger"
 )
 
 // This file demonstrates various error creation patterns
@@ -89,6 +90,7 @@ func demonstrateErrorWrapping() {
 		map[string]interface{}{
 			"host":     "localhost",
 			"port":     5432,
+			"database": "vyolayer",
 			"database": "vyolayer",
 		},
 	)

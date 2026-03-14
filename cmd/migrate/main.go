@@ -1,9 +1,9 @@
 package main
 
 import (
-	"vyolayer/internal/config"
-	"vyolayer/internal/platform/database"
-	"vyolayer/internal/platform/database/models"
+	"github.com/vyolayer/vyolayer/internal/config"
+	"github.com/vyolayer/vyolayer/internal/platform/database"
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
 )
 
 func main() {

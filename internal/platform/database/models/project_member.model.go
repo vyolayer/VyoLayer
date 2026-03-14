@@ -2,9 +2,9 @@ package models
 
 import (
 	"time"
-	"vyolayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
 )
 
 // ProjectMember represents a user's membership in a project with a minimal RBAC role.

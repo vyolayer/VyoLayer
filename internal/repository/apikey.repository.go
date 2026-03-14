@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/mapper"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/pkg/errors"
 
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/mapper"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/gorm"
 )
 

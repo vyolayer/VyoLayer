@@ -4,8 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"time"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/pkg/errors"
+
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 type OrganizationMemberInvitation struct {

@@ -3,8 +3,8 @@ package repository
 import (
 	"database/sql"
 	"strings"
-	"vyolayer/pkg/errors"
 
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/gorm"
 )
 

@@ -2,7 +2,8 @@ package domain_test
 
 import (
 	"testing"
-	"vyolayer/internal/domain"
+
+	"github.com/vyolayer/vyolayer/internal/domain"
 )
 
 var domainUser, _ = domain.NewUser(

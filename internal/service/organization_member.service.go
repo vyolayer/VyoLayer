@@ -3,14 +3,14 @@ package service
 import (
 	"fmt"
 	"time"
-	"vyolayer/internal/app/dto"
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/repository"
-	"vyolayer/pkg/cache"
-	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/app/dto"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/repository"
+	"github.com/vyolayer/vyolayer/pkg/cache"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // currentMemberCacheKey returns a unique cache key scoped to an org+user pair.

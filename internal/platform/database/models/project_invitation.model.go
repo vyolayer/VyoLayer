@@ -2,9 +2,9 @@ package models
 
 import (
 	"time"
-	"vyolayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
 )
 
 // ProjectInvitation tracks pending invitations to join a project.

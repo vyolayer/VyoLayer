@@ -1,14 +1,13 @@
 package controller
 
 import (
-	"vyolayer/internal/app/dto"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/service"
-	"vyolayer/internal/utils/validation"
-	"vyolayer/pkg/errors"
-	"vyolayer/pkg/response"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/app/dto"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/service"
+	"github.com/vyolayer/vyolayer/internal/utils/validation"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 type ProjectController interface {

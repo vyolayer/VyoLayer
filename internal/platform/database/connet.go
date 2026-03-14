@@ -1,8 +1,7 @@
 package database
 
 import (
-	"vyolayer/internal/config"
-
+	"github.com/vyolayer/vyolayer/internal/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

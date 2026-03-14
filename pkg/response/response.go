@@ -2,9 +2,9 @@ package response
 
 import (
 	"time"
-	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // SuccessResponse represents a successful API response

@@ -6,12 +6,12 @@ import (
 	"encoding/hex"
 	"fmt"
 	"time"
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/repository"
-	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/repository"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // ApiKeyService defines the interface for API key management.

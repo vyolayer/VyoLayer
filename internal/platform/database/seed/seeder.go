@@ -2,9 +2,9 @@ package seed
 
 import (
 	"fmt"
-	"vyolayer/internal/platform/database/models"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

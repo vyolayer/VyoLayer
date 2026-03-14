@@ -1,13 +1,12 @@
 package service
 
 import (
-	"vyolayer/internal/app/dto"
-	"vyolayer/internal/domain"
-	"vyolayer/internal/repository"
-	"vyolayer/internal/utils/hash"
-	"vyolayer/pkg/errors"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/app/dto"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/repository"
+	"github.com/vyolayer/vyolayer/internal/utils/hash"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 type AuthService interface {

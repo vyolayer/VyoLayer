@@ -3,14 +3,14 @@ package service
 import (
 	"log"
 	"time"
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/models"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/repository"
-	"vyolayer/internal/utils/hash"
-	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/repository"
+	"github.com/vyolayer/vyolayer/internal/utils/hash"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 type SessionService interface {

@@ -1,8 +1,7 @@
 package domain
 
 import (
-	"vyolayer/pkg/errors"
-
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 

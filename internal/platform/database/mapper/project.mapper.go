@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/models"
-	"vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
 )
 
 // ToDomainProject converts a Project model to a Project domain object.

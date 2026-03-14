@@ -2,7 +2,8 @@ package dto
 
 import (
 	"time"
-	"vyolayer/internal/domain"
+
+	"github.com/vyolayer/vyolayer/internal/domain"
 )
 
 // CreateInvitationRequestDTO represents the request to create an invitation

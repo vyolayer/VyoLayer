@@ -1,4 +1,4 @@
-module vyolayer
+module github.com/vyolayer/vyolayer
 
 go 1.25.6
 

@@ -1,12 +1,11 @@
 package service
 
 import (
-	"vyolayer/internal/domain"
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/repository"
-	"vyolayer/pkg/errors"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/repository"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // OrganizationService defines the interface for organization-related business logic.

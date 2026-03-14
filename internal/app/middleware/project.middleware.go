@@ -1,12 +1,11 @@
 package middleware
 
 import (
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/internal/service"
-	"vyolayer/pkg/errors"
-	"vyolayer/pkg/response"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/service"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 type ProjectMiddleware struct {

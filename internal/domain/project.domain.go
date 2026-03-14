@@ -3,9 +3,9 @@ package domain
 import (
 	"time"
 
-	"vyolayer/internal/platform/database/types"
-	"vyolayer/pkg/errors"
-	"vyolayer/pkg/utils"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/utils"
 )
 
 // Project RBAC role constants (minimal)

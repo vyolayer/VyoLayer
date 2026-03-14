@@ -2,9 +2,13 @@ package token
 
 import (
 	"time"
+<<<<<<< HEAD
 	"vyolayer/internal/config"
+=======
+>>>>>>> bc09bb9 (refactor: update module and struct names to vyolayer)
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/vyolayer/vyolayer/internal/config"
 )
 
 func NewTokenManager(authConfig config.AuthConfig) TokenManager {

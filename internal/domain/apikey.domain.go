@@ -3,8 +3,8 @@ package domain
 import (
 	"time"
 
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // API Key mode constants

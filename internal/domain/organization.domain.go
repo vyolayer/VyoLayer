@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/utils"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/utils"
 )
 
 var (

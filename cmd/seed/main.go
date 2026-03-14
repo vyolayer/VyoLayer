@@ -2,9 +2,10 @@ package main
 
 import (
 	"log"
-	"worklayer/internal/config"
-	"worklayer/internal/platform/database"
-	"worklayer/internal/platform/database/seed"
+
+	"github.com/vyolayer/vyolayer/internal/config"
+	"github.com/vyolayer/vyolayer/internal/platform/database"
+	"github.com/vyolayer/vyolayer/internal/platform/database/seed"
 )
 
 func main() {

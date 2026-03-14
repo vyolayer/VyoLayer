@@ -2,10 +2,10 @@ package repository
 
 import (
 	"log"
-	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
 
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/gorm"
 )
 

@@ -4,10 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"worklayer/internal/platform/database/models"
-	"worklayer/pkg/errors"
-
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/models"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )

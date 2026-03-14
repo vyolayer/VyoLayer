@@ -189,7 +189,7 @@ definitions:
   dto.LoginUserSchema:
     properties:
       email:
-        example: subhajit@worklayer.com
+        example: subhajit@vyolayer.com
         maxLength: 255
         type: string
       password:
@@ -499,7 +499,7 @@ definitions:
   dto.RegisterUserSchema:
     properties:
       email:
-        example: subhajit@worklayer.com
+        example: subhajit@vyolayer.com
         maxLength: 255
         type: string
       fullName:
@@ -557,7 +557,7 @@ definitions:
   dto.UserDTO:
     properties:
       email:
-        example: subhajit@worklayer.com
+        example: subhajit@vyolayer.com
         type: string
       fullName:
         example: Subhajit Pramanik
@@ -650,12 +650,12 @@ info:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
-  description: This is the WorkLayer API documentation.
+  description: This is the VyoLayer API documentation.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: WorkLayer API
+  title: VyoLayer API
   version: "1.0"
 paths:
   /auth/login:

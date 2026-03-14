@@ -1,6 +1,6 @@
 package domain
 
-import "worklayer/pkg/errors"
+import "github.com/vyolayer/vyolayer/pkg/errors"
 
 // Domain-specific error helpers
 // These provide convenient constructors for domain layer errors

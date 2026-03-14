@@ -1,8 +1,6 @@
 package main
 
-import (
-	"worklayer/internal/app"
-)
+import "github.com/vyolayer/vyolayer/internal/app"
 
 func main() {
 	server := app.New()

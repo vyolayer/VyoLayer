@@ -2,7 +2,8 @@ package dto
 
 import (
 	"time"
-	"worklayer/internal/domain"
+
+	"github.com/vyolayer/vyolayer/internal/domain"
 )
 
 // ── Request DTOs ─────────────────────────────────────────────────────────────

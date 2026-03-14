@@ -1,6 +1,6 @@
 package seed
 
-import "worklayer/internal/platform/database/models"
+import "github.com/vyolayer/vyolayer/internal/platform/database/models"
 
 const (
 	// Resources

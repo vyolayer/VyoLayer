@@ -1,5 +1,5 @@
 app:
-  name: worklayer
+  name: vyolayer
   environment: dev
   cors: "http://localhost:3000,http://localhost:8080"
 
@@ -11,7 +11,7 @@ server:
 
 database:
   driver: postgres
-  dsn: postgres://worklayer_user:worklayer_password@localhost:4444/worklayer_db?sslmode=disable
+  dsn: postgres://vyolayer_user:vyolayer_password@localhost:4444/vyolayer_db?sslmode=disable
   max_open_conns: 25
   max_idle_conns: 5
   conn_max_lifetime: 30m

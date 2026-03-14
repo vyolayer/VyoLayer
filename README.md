@@ -1,8 +1,8 @@
-# Worklayer
+# VyoLayer
 
 ---
 
-Worklayer is an backend platform for building internal tools. It provides authentication, RBAC, project-scoped data APIs, audit logs, and API keys — so teams don’t have to rebuild the same backend infrastructure for every internal app.
+VyoLayer is an backend platform for building internal tools. It provides authentication, RBAC, project-scoped data APIs, audit logs, and API keys — so teams don’t have to rebuild the same backend infrastructure for every internal app.
 
 ## Features
 

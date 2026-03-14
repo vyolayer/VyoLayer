@@ -2,9 +2,9 @@ package token
 
 import (
 	"time"
-	"worklayer/internal/config"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/vyolayer/vyolayer/internal/config"
 )
 
 func NewTokenManager(authConfig config.AuthConfig) TokenManager {
@@ -23,7 +23,7 @@ func (tm *tokenManager) GenerateAccessToken(user UserJwtDTO) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tm.access.expiry)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "WorkLayer",
+			Issuer:    "VyoLayer",
 		},
 	}
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(tm.access.secret)
@@ -36,7 +36,7 @@ func (tm *tokenManager) GenerateRefreshToken(user UserJwtDTO) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tm.refresh.expiry)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "WorkLayer",
+			Issuer:    "VyoLayer",
 		},
 	}
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(tm.refresh.secret)

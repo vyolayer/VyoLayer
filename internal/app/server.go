@@ -9,10 +9,6 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-	"worklayer/internal/app/middleware"
-	v1 "worklayer/internal/app/routes/v1"
-	"worklayer/internal/config"
-	"worklayer/internal/platform/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -20,15 +16,18 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
+	"github.com/vyolayer/vyolayer/internal/app/middleware"
+	v1 "github.com/vyolayer/vyolayer/internal/app/routes/v1"
+	"github.com/vyolayer/vyolayer/internal/config"
+	"github.com/vyolayer/vyolayer/internal/platform/database"
 	"gorm.io/gorm"
 
-	_ "worklayer/docs"
-	appLogger "worklayer/pkg/logger"
+	_ "github.com/vyolayer/vyolayer/docs"
 )
 
-// @title WorkLayer API
+// @title VyoLayer API
 // @version 1.0
-// @description This is the WorkLayer API documentation.
+// @description This is the VyoLayer API documentation.
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support
@@ -81,7 +80,7 @@ func (a *App) SetupMiddleware() {
 	}))
 	a.app.Use(logger.New())
 	a.app.Use(recover.New())
-	appLogger.InitLogger(true)
+	// appLogger.InitLogger(true)
 
 	a.app.Get("/metrics", monitor.New())
 

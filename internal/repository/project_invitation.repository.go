@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
 
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/gorm"
 )
 

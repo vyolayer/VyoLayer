@@ -1,6 +1,6 @@
-# WorkLayer System Design
+# VyoLayer System Design
 
-WorkLayer is a **Backend-as-a-Service (BaaS) platform** for internal engineering teams. It provides out-of-the-box authentication, multi-tenant organizations, project-scoped isolation, role-based access control, API key management, and an audit trail — removing the need to rebuild this infrastructure for every internal tool.
+VyoLayer is a **Backend-as-a-Service (BaaS) platform** for internal engineering teams. It provides out-of-the-box authentication, multi-tenant organizations, project-scoped isolation, role-based access control, API key management, and an audit trail — removing the need to rebuild this infrastructure for every internal tool.
 
 ---
 
@@ -47,7 +47,7 @@ The **domain layer** at the bottom never imports from layers above it. This ensu
 
 ## 2. Scope Model (4 Layers)
 
-WorkLayer organizes data across four nested scopes. Each scope is a strict permission boundary.
+VyoLayer organizes data across four nested scopes. Each scope is a strict permission boundary.
 
 ```mermaid
 graph TD
@@ -362,7 +362,7 @@ Source: `ids.go` provides `NewXxx()`, `ReconstructXxx(string)`, and `ParseXxx(st
 
 ### 5.1 Session Architecture
 
-WorkLayer uses **short-lived JWTs** (access tokens) + **long-lived refresh tokens** stored in `UserSession`.
+VyoLayer uses **short-lived JWTs** (access tokens) + **long-lived refresh tokens** stored in `UserSession`.
 
 ```
 Login/Register

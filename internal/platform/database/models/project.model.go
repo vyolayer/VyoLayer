@@ -1,9 +1,8 @@
 package models
 
 import (
-	"worklayer/internal/platform/database/types"
-
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
 )
 
 type Project struct {

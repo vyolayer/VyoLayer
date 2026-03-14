@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"worklayer/pkg/response"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 // Success sends a successful response with data

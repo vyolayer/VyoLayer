@@ -2968,7 +2968,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "maxLength": 255,
-                    "example": "subhajit@worklayer.com"
+                    "example": "subhajit@vyolayer.com"
                 },
                 "password": {
                     "type": "string",
@@ -3401,7 +3401,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "maxLength": 255,
-                    "example": "subhajit@worklayer.com"
+                    "example": "subhajit@vyolayer.com"
                 },
                 "fullName": {
                     "type": "string",
@@ -3472,7 +3472,7 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "example": "subhajit@worklayer.com"
+                    "example": "subhajit@vyolayer.com"
                 },
                 "fullName": {
                     "type": "string",
@@ -3601,8 +3601,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:6999",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "WorkLayer API",
-	Description:      "This is the WorkLayer API documentation.",
+	Title:            "VyoLayer API",
+	Description:      "This is the VyoLayer API documentation.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

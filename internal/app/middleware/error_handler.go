@@ -3,11 +3,11 @@ package middleware
 import (
 	"fmt"
 	"runtime/debug"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/logger"
-	"worklayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/logger"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 // ErrorHandler is a global error handler middleware

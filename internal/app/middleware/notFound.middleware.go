@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 func NotFoundMiddleware(c *fiber.Ctx) error {

@@ -53,32 +53,32 @@ func (p IDPrefix) String() string {
 }
 
 // Interface for all InternalID
-type WorkLayerInternalID interface {
+type VyoLayerInternalID interface {
 	ID() uuid.UUID
 	String() string
 	IsNil() bool
 }
 
 // Interface for all the ID types
-type WorkLayerPublicID interface {
+type VyoLayerPublicID interface {
 	String() string
 	IsNil() bool
-	InternalID() WorkLayerInternalID
-	Compare(other WorkLayerPublicID) bool
+	InternalID() VyoLayerInternalID
+	Compare(other VyoLayerPublicID) bool
 }
 
 // Internal id for database
 type InternalID uuid.UUID
 
-func NewInternalID() WorkLayerInternalID {
+func NewInternalID() VyoLayerInternalID {
 	return InternalID(uuid.New())
 }
 
-func ReconstructInternalID(uuid uuid.UUID) WorkLayerInternalID {
+func ReconstructInternalID(uuid uuid.UUID) VyoLayerInternalID {
 	return InternalID(uuid)
 }
 
-func ParseInternalID(s string) (WorkLayerInternalID, error) {
+func ParseInternalID(s string) (VyoLayerInternalID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
 		return nil, err
@@ -150,7 +150,7 @@ func (id *InternalID) Scan(value any) error {
 // Public id for API/external use
 type PublicID[T IDPrefix] struct {
 	prefix T
-	uuid   WorkLayerInternalID
+	uuid   VyoLayerInternalID
 }
 
 func NewPublicID[T IDPrefix](prefix T) PublicID[T] {
@@ -160,7 +160,7 @@ func NewPublicID[T IDPrefix](prefix T) PublicID[T] {
 	}
 }
 
-func NewPublicIDFromInternalID[T IDPrefix](prefix T, id WorkLayerInternalID) PublicID[T] {
+func NewPublicIDFromInternalID[T IDPrefix](prefix T, id VyoLayerInternalID) PublicID[T] {
 	return PublicID[T]{
 		prefix: prefix,
 		uuid:   id,
@@ -229,11 +229,11 @@ func (id PublicID[T]) IsNil() bool {
 	return id.prefix == "" && id.uuid.IsNil()
 }
 
-func (id PublicID[T]) Compare(other WorkLayerPublicID) bool {
+func (id PublicID[T]) Compare(other VyoLayerPublicID) bool {
 	return id.uuid.String() == other.InternalID().String()
 }
 
-func (id PublicID[T]) InternalID() WorkLayerInternalID {
+func (id PublicID[T]) InternalID() VyoLayerInternalID {
 	return id.uuid
 }
 
@@ -274,7 +274,7 @@ type organizationID struct {
 }
 
 type OrganizationID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 // NewOrganizationID creates a new organization ID
@@ -297,7 +297,7 @@ type organizationMemberID struct {
 }
 
 type OrganizationMemberID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewOrganizationMemberID() OrganizationMemberID {
@@ -318,7 +318,7 @@ type organizationRoleID struct {
 }
 
 type OrganizationRoleID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewOrganizationRoleID() OrganizationRoleID {
@@ -339,7 +339,7 @@ type organizationPermissionID struct {
 }
 
 type OrganizationPermissionID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewOrganizationPermissionID() OrganizationPermissionID {
@@ -360,7 +360,7 @@ type memberOrganizationRoleID struct {
 }
 
 type MemberOrganizationRoleID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewMemberOrganizationRoleID() MemberOrganizationRoleID {
@@ -381,7 +381,7 @@ type organizationMemberInvitationID struct {
 }
 
 type OrganizationMemberInvitationID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewOrganizationMemberInvitationID() OrganizationMemberInvitationID {
@@ -402,7 +402,7 @@ type projectID struct {
 }
 
 type ProjectID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewProjectID() ProjectID {
@@ -423,7 +423,7 @@ type projectMemberID struct {
 }
 
 type ProjectMemberID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewProjectMemberID() ProjectMemberID {
@@ -444,7 +444,7 @@ type projectInvitationID struct {
 }
 
 type ProjectInvitationID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewProjectInvitationID() ProjectInvitationID {
@@ -465,7 +465,7 @@ type apiKeyID struct {
 }
 
 type ApiKeyID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 func NewApiKeyID() ApiKeyID {

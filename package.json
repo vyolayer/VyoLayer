@@ -1,35 +1,35 @@
 {
-    "name": "worklayer",
-    "version": "1.0.0",
-    "description": "WorkLayer is a platform for building internal tools and services. It provides authentication, RBAC, project-scoped data APIs, audit logs, and API keys so teams don't have to rebuild the same backend infrastructure for every internal app.",
-    "license": "Apache-2.0",
-    "author": {
-        "name": "Subhajit Pramanik",
-        "url": "https://github.com/Subhajit-Pramanik",
-        "email": "subhop.me@gmail.com"
-    },
-    "scripts": {
-        "dev-console": "pnpm --filter=console-app dev",
-        "dev-api": "make run",
-        "predev": "make docker-up",
-        "dev": "concurrently -n \"API,CONSOLE\" -c \"blue,magenta\" \"pnpm dev-api\" \"pnpm dev-console\"",
-        "docker-up": "make docker-up",
-        "docker-down": "make docker-down",
-        "docker-start": "make docker-start",
-        "docker-stop": "make docker-stop"
-    },
-    "keywords": [
-        "worklayer",
-        "baas",
-        "backend",
-        "authentication",
-        "rbac",
-        "project-scoped data APIs",
-        "audit logs",
-        "api keys"
-    ],
-    "packageManager": "pnpm@10.30.0",
-    "devDependencies": {
-        "concurrently": "^9.2.1"
-    }
+  "name": "vyolayer",
+  "version": "1.0.0",
+  "description": "VyoLayer is a platform for building internal tools and services. It provides authentication, RBAC, project-scoped data APIs, audit logs, and API keys so teams don't have to rebuild the same backend infrastructure for every internal app.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Subhajit Pramanik",
+    "url": "https://github.com/Subhajit-Pramanik",
+    "email": "subhop.me@gmail.com"
+  },
+  "scripts": {
+    "dev-console": "pnpm --filter=console-app dev",
+    "dev-api": "make run",
+    "predev": "make docker-up",
+    "dev": "concurrently -n \"API,CONSOLE\" -c \"blue,magenta\" \"pnpm dev-api\" \"pnpm dev-console\"",
+    "docker-up": "make docker-up",
+    "docker-down": "make docker-down",
+    "docker-start": "make docker-start",
+    "docker-stop": "make docker-stop"
+  },
+  "keywords": [
+    "vyolayer",
+    "baas",
+    "backend",
+    "authentication",
+    "rbac",
+    "project-scoped data APIs",
+    "audit logs",
+    "api keys"
+  ],
+  "packageManager": "pnpm@10.30.0",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }

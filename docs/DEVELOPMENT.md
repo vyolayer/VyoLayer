@@ -1,10 +1,10 @@
-# WorkLayer Project Context (Engineer Onboarding)
+# VyoLayer Project Context (Engineer Onboarding)
 
 ---
 
 ## Summary
 
-`worklayer` is a monorepo with:
+`vyolayer` is a monorepo with:
 
 - A Go API (`cmd`, `internal`, `pkg`)
 - A TanStack Start React console app (`apps/console-app`)
@@ -34,7 +34,7 @@ Frontend architecture follows:
 
 ## System Architecture
 
-WorkLayer organizes data across four nested scopes. Each scope is a strict permission boundary.
+VyoLayer organizes data across four nested scopes. Each scope is a strict permission boundary.
 
 ```mermaid
 graph TD
@@ -122,7 +122,7 @@ Other key entrypoints:
 Filtered view (excluding `.git`, `node_modules`, build artifacts):
 
 ```text
-worklayer/
+vyolayer/
 ├── apps/
 │   └── console-app/
 │       ├── public/
@@ -323,11 +323,11 @@ Middleware order (important):
 Auth middleware behavior:
 
 - Access token source priority:
-    - `access_token` cookie
-    - `Authorization: Bearer <token>` header
+  - `access_token` cookie
+  - `Authorization: Bearer <token>` header
 - Valid claims are stored into locals:
-    - `user_id`
-    - `user_email`
+  - `user_id`
+  - `user_email`
 
 Response contract:
 
@@ -407,16 +407,16 @@ Role hierarchy: Viewer ⊂ Member ⊂ Admin (each higher role inherits lower che
 Seed scripts create system roles/permissions and mappings:
 
 - Permission resources include:
-    - organization
-    - member
-    - role
-    - project
-    - audit
+  - organization
+  - member
+  - role
+  - project
+  - audit
 - System roles include:
-    - Owner
-    - Admin
-    - Member (default)
-    - Viewer
+  - Owner
+  - Admin
+  - Member (default)
+  - Viewer
 
 Sources:
 
@@ -431,14 +431,14 @@ All dependencies are constructed in `internal/app/routes/v1/dependencies.go`:
 
 1. **Repository Registry** (`repository.NewRegistry`) creates all repository implementations.
 2. **Services** are built from repositories:
-    - IAM: `auth`, `session`, `user`, `token`
-    - Organization: `organization`, `organizationMember`, `organizationMemberInvitation`, `organizationRBAC`
-    - Project: `project`, `projectMember`, `apiKey`
+   - IAM: `auth`, `session`, `user`, `token`
+   - Organization: `organization`, `organizationMember`, `organizationMemberInvitation`, `organizationRBAC`
+   - Project: `project`, `projectMember`, `apiKey`
 3. **Controllers** wrap services.
 4. **Middleware** instances:
-    - `AuthMiddleware` (JWT validation)
-    - `OrganizationMiddleware` (org membership check, stores `org_member` in locals)
-    - `ProjectMiddleware` (project membership check, stores `project_member` in locals)
+   - `AuthMiddleware` (JWT validation)
+   - `OrganizationMiddleware` (org membership check, stores `org_member` in locals)
+   - `ProjectMiddleware` (project membership check, stores `project_member` in locals)
 
 ---
 
@@ -587,19 +587,19 @@ Main app routes:
 - `/account`
 - `/settings`
 - `/org/$slug/*` with nested:
-    - overview
-    - members list/details
-    - my membership
+  - overview
+  - members list/details
+  - my membership
+  - settings
+  - archive
+  - audit tabs
+  - danger zone (owner only)
+  - **projects list** (`/org/$slug/projects`)
+  - **project detail** (`/org/$slug/projects/$projectId/*`) with nested:
+    - overview (index)
+    - members
+    - API keys
     - settings
-    - archive
-    - audit tabs
-    - danger zone (owner only)
-    - **projects list** (`/org/$slug/projects`)
-    - **project detail** (`/org/$slug/projects/$projectId/*`) with nested:
-        - overview (index)
-        - members
-        - API keys
-        - settings
 
 ### Organization workspace state
 

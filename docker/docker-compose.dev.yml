@@ -1,25 +1,25 @@
 services:
   database:
     image: postgres:16-alpine
-    container_name: worklayer_db
+    container_name: vyolayer_db
     environment:
-      POSTGRES_DB: ${DB_NAME:-worklayer_db}
-      POSTGRES_USER: ${DB_USER:-worklayer_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-worklayer_password}
+      POSTGRES_DB: ${DB_NAME:-vyolayer_db}
+      POSTGRES_USER: ${DB_USER:-vyolayer_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
     ports:
       - "${DB_PORT:-4444}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-worklayer_user} -d ${DB_NAME:-worklayer_db}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-vyolayer_user} -d ${DB_NAME:-vyolayer_db}" ]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - worklayer_network
+      - vyolayer_network
 
 networks:
-  worklayer_network:
+  vyolayer_network:
 
 
 volumes:

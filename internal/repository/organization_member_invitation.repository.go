@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"time"
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/mapper"
-	"worklayer/pkg/errors"
 
+	"github.com/vyolayer/vyolayer/internal/domain"
+	"github.com/vyolayer/vyolayer/internal/platform/database/mapper"
+	"github.com/vyolayer/vyolayer/pkg/errors"
 	"gorm.io/gorm"
 )
 

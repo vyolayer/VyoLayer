@@ -1,6 +1,6 @@
 package service
 
-import "worklayer/pkg/errors"
+import "github.com/vyolayer/vyolayer/pkg/errors"
 
 // Service-specific error helpers
 // These provide convenient constructors for service layer errors

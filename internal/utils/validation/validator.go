@@ -2,11 +2,11 @@ package validation
 
 import (
 	"strings"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/pkg/errors"
+	"github.com/vyolayer/vyolayer/pkg/response"
 )
 
 // Global instance to cache regex compilation

@@ -2,10 +2,10 @@ package service
 
 import (
 	"fmt"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/repository"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
+	"github.com/vyolayer/vyolayer/internal/repository"
 )
 
 type OrganizationPermission struct {

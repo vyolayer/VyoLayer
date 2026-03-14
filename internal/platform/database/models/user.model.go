@@ -2,9 +2,9 @@ package models
 
 import (
 	"time"
-	"worklayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/platform/database/types"
 	"gorm.io/gorm"
 )
 

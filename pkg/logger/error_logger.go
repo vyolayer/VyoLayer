@@ -6,7 +6,8 @@ import (
 	"log"
 	"os"
 	"time"
-	"worklayer/pkg/errors"
+
+	"github.com/vyolayer/vyolayer/pkg/errors"
 )
 
 // Logger interface for error logging

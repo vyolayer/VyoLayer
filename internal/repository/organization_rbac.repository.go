@@ -2,9 +2,9 @@ package repository
 
 import (
 	"sync"
-	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/platform/database/models"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/pkg/errors"
 
 	"gorm.io/gorm"
 )

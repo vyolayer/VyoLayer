@@ -1,7 +1,7 @@
 package models
 
 import (
-	"worklayer/internal/platform/database/types"
+	"vyolayer/internal/platform/database/types"
 
 	"github.com/google/uuid"
 )

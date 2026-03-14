@@ -3,8 +3,8 @@ package domain
 import (
 	"log"
 	"time"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/pkg/errors"
 )
 
 var (

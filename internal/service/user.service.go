@@ -1,10 +1,10 @@
 package service
 
 import (
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/repository"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/repository"
+	"vyolayer/pkg/errors"
 )
 
 type UserService interface {

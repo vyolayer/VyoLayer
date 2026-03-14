@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/models"
+	"vyolayer/internal/platform/database/types"
 )
 
 // ToDomainOrganization converts an Organization model to an Organization domain object.

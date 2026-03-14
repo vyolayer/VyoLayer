@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"time"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/pkg/errors"
 
 	"gorm.io/gorm"
 )

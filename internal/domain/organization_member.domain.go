@@ -3,8 +3,8 @@ package domain
 import (
 	"strings"
 	"time"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/pkg/errors"
 )
 
 type OrganizationMember struct {

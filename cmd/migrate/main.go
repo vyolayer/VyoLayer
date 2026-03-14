@@ -1,9 +1,9 @@
 package main
 
 import (
-	"worklayer/internal/config"
-	"worklayer/internal/platform/database"
-	"worklayer/internal/platform/database/models"
+	"vyolayer/internal/config"
+	"vyolayer/internal/platform/database"
+	"vyolayer/internal/platform/database/models"
 )
 
 func main() {

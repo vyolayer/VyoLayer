@@ -10,7 +10,7 @@ type userID struct {
 }
 
 type UserID interface {
-	WorkLayerPublicID
+	VyoLayerPublicID
 }
 
 // NewUserID creates a new UserID.

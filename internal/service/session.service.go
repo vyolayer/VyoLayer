@@ -3,12 +3,12 @@ package service
 import (
 	"log"
 	"time"
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/repository"
-	"worklayer/internal/utils/hash"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/models"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/repository"
+	"vyolayer/internal/utils/hash"
+	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
 )

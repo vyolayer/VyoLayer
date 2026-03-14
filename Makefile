@@ -1,6 +1,6 @@
 # Simple variables
-APP_NAME=worklayer
-DB_URL=postgres://worklayer_user:worklayer_password@localhost:4444/worklayer_db?sslmode=disable
+APP_NAME=vyolayer
+DB_URL=postgres://vyolayer_user:vyolayer_password@localhost:4444/vyolayer_db?sslmode=disable
 
 .PHONY: run build docs docker-up docker-start docker-stop docker-down migrate seed
 

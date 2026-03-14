@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"worklayer/internal/config"
+	"vyolayer/internal/config"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"

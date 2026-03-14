@@ -87,8 +87,8 @@ logs/
 # Temporary files
 tmp/
 
-# If you compile your main app to a specific name (e.g., 'worklayer'), add it here:
-worklayer
+# If you compile your main app to a specific name (e.g., 'vyolayer'), add it here:
+vyolayer
 main
 playground
 .gemini/

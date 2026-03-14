@@ -2,7 +2,7 @@ package seed
 
 import (
 	"fmt"
-	"worklayer/internal/platform/database/models"
+	"vyolayer/internal/platform/database/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

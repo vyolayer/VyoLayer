@@ -2,20 +2,20 @@ package domain_test
 
 import (
 	"testing"
-	"worklayer/internal/domain"
+	"vyolayer/internal/domain"
 )
 
 var domainUser, _ = domain.NewUser(
-	"worklayer@test.com",
-	"worklayer_password",
-	"worklayer fullName",
+	"vyolayer@test.com",
+	"vyolayer_password",
+	"vyolayer fullName",
 )
 
 func TestNewOrganization(t *testing.T) {
 	org := domain.NewOrganization(
 		domainUser,
-		"worklayer organization",
-		"worklayer organization description",
+		"vyolayer organization",
+		"vyolayer organization description",
 		nil,
 		nil,
 	)

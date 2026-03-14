@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/models"
-	"worklayer/internal/platform/database/types"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/models"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/pkg/errors"
 )
 
 // IDs type

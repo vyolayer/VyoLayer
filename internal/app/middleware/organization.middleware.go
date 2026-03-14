@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/service"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/service"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

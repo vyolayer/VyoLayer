@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"worklayer/internal/domain"
-	"worklayer/internal/platform/database/models"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/platform/database/models"
 )
 
 // ToDomainUser converts a User model to a User domain object.

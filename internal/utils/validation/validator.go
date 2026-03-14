@@ -2,8 +2,8 @@ package validation
 
 import (
 	"strings"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"

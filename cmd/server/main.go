@@ -1,7 +1,7 @@
 package main
 
 import (
-	"worklayer/internal/app"
+	"vyolayer/internal/app"
 )
 
 func main() {

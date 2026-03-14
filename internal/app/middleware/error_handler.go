@@ -3,9 +3,9 @@ package middleware
 import (
 	"fmt"
 	"runtime/debug"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/logger"
-	"worklayer/pkg/response"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/logger"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

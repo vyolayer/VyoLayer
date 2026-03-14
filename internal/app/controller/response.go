@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"worklayer/pkg/response"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

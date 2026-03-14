@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/logger"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/logger"
 )
 
 // This file demonstrates various error creation patterns
@@ -89,7 +89,7 @@ func demonstrateErrorWrapping() {
 		map[string]interface{}{
 			"host":     "localhost",
 			"port":     5432,
-			"database": "worklayer",
+			"database": "vyolayer",
 		},
 	)
 	fmt.Printf("\nWrapped with Context: %v\n", wrappedErr2)

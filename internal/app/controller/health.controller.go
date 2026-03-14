@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"worklayer/pkg/response"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,7 +24,7 @@ func (h *HealthController) HealthCheck(c *fiber.Ctx) error {
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
-		"Welcome to WorkLayer",
+		"Welcome to VyoLayer",
 		map[string]string{
 			"version": "1.0.0",
 			"status":  "healthy",

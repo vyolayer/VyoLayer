@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"fmt"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

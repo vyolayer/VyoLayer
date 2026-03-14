@@ -3,10 +3,10 @@ package service
 import (
 	"log"
 	"time"
-	"worklayer/internal/config"
-	"worklayer/internal/domain"
-	"worklayer/internal/utils/token"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/config"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/utils/token"
+	"vyolayer/pkg/errors"
 )
 
 type TokenService interface {

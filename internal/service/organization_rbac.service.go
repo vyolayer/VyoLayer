@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/repository"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/repository"
 
 	"github.com/gofiber/fiber/v2"
 )

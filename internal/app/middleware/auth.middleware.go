@@ -3,11 +3,11 @@ package middleware
 import (
 	"log"
 	"strings"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/service"
-	"worklayer/internal/utils/constant"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/service"
+	"vyolayer/internal/utils/constant"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

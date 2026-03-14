@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"worklayer/internal/app/dto"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/service"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/internal/app/dto"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/service"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -3,12 +3,12 @@ package controller
 import (
 	"log"
 	"time"
-	"worklayer/internal/app/dto"
-	"worklayer/internal/platform/database/types"
-	"worklayer/internal/service"
-	"worklayer/internal/utils/validation"
-	"worklayer/pkg/errors"
-	"worklayer/pkg/response"
+	"vyolayer/internal/app/dto"
+	"vyolayer/internal/platform/database/types"
+	"vyolayer/internal/service"
+	"vyolayer/internal/utils/validation"
+	"vyolayer/pkg/errors"
+	"vyolayer/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

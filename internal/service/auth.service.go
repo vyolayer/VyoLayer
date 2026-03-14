@@ -1,11 +1,11 @@
 package service
 
 import (
-	"worklayer/internal/app/dto"
-	"worklayer/internal/domain"
-	"worklayer/internal/repository"
-	"worklayer/internal/utils/hash"
-	"worklayer/pkg/errors"
+	"vyolayer/internal/app/dto"
+	"vyolayer/internal/domain"
+	"vyolayer/internal/repository"
+	"vyolayer/internal/utils/hash"
+	"vyolayer/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
 )

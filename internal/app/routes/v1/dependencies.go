@@ -1,10 +1,10 @@
 package v1
 
 import (
-	"worklayer/internal/app/controller"
-	"worklayer/internal/app/middleware"
-	"worklayer/internal/repository"
-	"worklayer/internal/service"
+	"vyolayer/internal/app/controller"
+	"vyolayer/internal/app/middleware"
+	"vyolayer/internal/repository"
+	"vyolayer/internal/service"
 )
 
 type dependencies struct {

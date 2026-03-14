@@ -1,7 +1,7 @@
 package database
 
 import (
-	"worklayer/internal/config"
+	"vyolayer/internal/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

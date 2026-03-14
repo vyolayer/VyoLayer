@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-	"worklayer/internal/app/middleware"
-	v1 "worklayer/internal/app/routes/v1"
-	"worklayer/internal/config"
-	"worklayer/internal/platform/database"
+	"vyolayer/internal/app/middleware"
+	v1 "vyolayer/internal/app/routes/v1"
+	"vyolayer/internal/config"
+	"vyolayer/internal/platform/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -22,13 +22,13 @@ import (
 	"github.com/gofiber/swagger"
 	"gorm.io/gorm"
 
-	_ "worklayer/docs"
-	appLogger "worklayer/pkg/logger"
+	_ "vyolayer/docs"
+	appLogger "vyolayer/pkg/logger"
 )
 
-// @title WorkLayer API
+// @title VyoLayer API
 // @version 1.0
-// @description This is the WorkLayer API documentation.
+// @description This is the VyoLayer API documentation.
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support

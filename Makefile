@@ -2,11 +2,17 @@
 APP_NAME=vyolayer
 DB_URL=postgres://vyolayer_user:vyolayer_password@localhost:4444/vyolayer_db?sslmode=disable
 
-.PHONY: run build docs docker-up docker-start docker-stop docker-down migrate seed
+.PHONY: run run-all build docs docker-up docker-start docker-stop docker-down migrate seed
 
 # Run the API locally
 run:
 	go run cmd/server/main.go	
+
+# Run contionusly
+run-all:
+	@echo "Starting services..."
+	@go run cmd/account-service/main.go &
+	@go run cmd/gateway/main.go
 
 # Build the binary
 build:

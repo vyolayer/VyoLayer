@@ -25,12 +25,13 @@ type ErrorResponse struct {
 
 // ErrorDetail contains detailed error information
 type ErrorDetail struct {
-	Code      string                 `json:"code" example:"ERR_VALIDATION_FAILED"`
-	Message   string                 `json:"message" example:"Validation failed"`
-	Details   interface{}            `json:"details,omitempty"`
-	RequestID string                 `json:"requestId,omitempty" example:"req-123456"`
-	Timestamp time.Time              `json:"timestamp" example:"2026-02-08T18:30:00Z"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	Code             string                 `json:"code" example:"ERR_VALIDATION_FAILED"`
+	Message          string                 `json:"message" example:"Validation failed"`
+	Details          interface{}            `json:"details,omitempty"`
+	ValidationErrors any                    `json:"validation_errors,omitempty"`
+	RequestID        string                 `json:"requestId,omitempty" example:"req-123456"`
+	Timestamp        time.Time              `json:"timestamp" example:"2026-02-08T18:30:00Z"`
+	Metadata         map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Meta contains metadata about the response
@@ -176,7 +177,15 @@ func sendAppError(ctx *fiber.Ctx, err *errors.AppError) error {
 
 	// If there are validation errors in metadata, move them to details
 	if validationErrors, ok := err.Metadata["validation_errors"]; ok {
-		response.Error.Details = validationErrors
+		response.Error.ValidationErrors = validationErrors
+		// delete from metadata
+		delete(response.Error.Metadata, "validation_errors")
+	}
+
+	// if grpc code response
+	if _, ok := err.Metadata["grpc_code"]; ok {
+		// delete from metadata
+		delete(response.Error.Metadata, "grpc_code")
 	}
 
 	return ctx.Status(err.HTTPStatus).JSON(response)

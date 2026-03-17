@@ -1,3 +1,13 @@
 {
-  "cSpell.words": ["vyolayer"]
+  "cSpell.words": [
+    "gorm",
+    "protovalidate",
+    "servicemodel",
+    "servicemodelv",
+    "sharedmodel",
+    "usecase",
+    "varchar",
+    "vyolayer"
+  ],
+  "protoc.options": ["--proto_path=./proto"]
 }

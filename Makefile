@@ -1,8 +1,9 @@
 # Simple variables
 APP_NAME=vyolayer
 DB_URL=postgres://vyolayer_user:vyolayer_password@localhost:4444/vyolayer_db?sslmode=disable
+AIR_BIN?=air
 
-.PHONY: run run-all build docs docker-up docker-start docker-stop docker-down migrate seed
+.PHONY: run run-all air-install dev-gateway dev-account dev-all build docs docker-up docker-start docker-stop docker-down migrate seed
 
 # Run the API locally
 run:
@@ -13,6 +14,26 @@ run-all:
 	@echo "Starting services..."
 	@go run cmd/account-service/main.go &
 	@go run cmd/gateway/main.go
+
+# Install air for live reload
+air-install:
+	@go install github.com/air-verse/air@latest
+
+# Run gateway with live reload
+dev-gateway:
+	@$(AIR_BIN) -c .air.gateway.toml
+
+# Run account service with live reload
+dev-account:
+	@$(AIR_BIN) -c .air.account.toml
+
+# Run gateway + account service with live reload
+dev-all:
+	@echo "Starting services with Air..."
+	@trap 'kill 0' INT TERM EXIT; \
+	$(AIR_BIN) -c .air.account.toml & \
+	$(AIR_BIN) -c .air.gateway.toml & \
+	wait
 
 # Build the binary
 build:

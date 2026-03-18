@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/vyolayer/vyolayer/pkg/errors"
@@ -21,6 +22,15 @@ type Logger interface {
 type DefaultLogger struct {
 	isDevelopment bool
 }
+
+const (
+	colorReset  = "\033[0m"
+	colorRed    = "\033[31m"
+	colorGreen  = "\033[32m"
+	colorYellow = "\033[33m"
+	colorBlue   = "\033[34m"
+	colorCyan   = "\033[36m"
+)
 
 // NewDefaultLogger creates a new default logger
 func NewDefaultLogger(isDevelopment bool) *DefaultLogger {
@@ -97,13 +107,41 @@ func (l *DefaultLogger) LogWarning(message string, fields map[string]interface{}
 // logJSON outputs a log entry as JSON
 func (l *DefaultLogger) logJSON(entry map[string]interface{}) {
 	if l.isDevelopment {
+		level := fmt.Sprint(entry["level"])
+		message := fmt.Sprint(entry["message"])
+
+		prefix := fmt.Sprintf("[%s] %s", level, message)
+		if isColorEnabled() {
+			prefix = fmt.Sprintf("%s[%s]%s %s%s%s",
+				levelColor(level), level, colorReset,
+				colorBlue, message, colorReset,
+			)
+		}
+
 		// Pretty print in development
 		jsonBytes, _ := json.MarshalIndent(entry, "", "  ")
-		fmt.Println(string(jsonBytes))
+		fmt.Printf("%s\n%s\n", prefix, string(jsonBytes))
 	} else {
 		// Single line JSON in production
 		jsonBytes, _ := json.Marshal(entry)
 		fmt.Println(string(jsonBytes))
+	}
+}
+
+func isColorEnabled() bool {
+	return os.Getenv("NO_COLOR") == "" && os.Getenv("TERM") != "dumb"
+}
+
+func levelColor(level string) string {
+	switch strings.ToUpper(level) {
+	case "INFO":
+		return colorGreen
+	case "WARNING":
+		return colorYellow
+	case "ERROR", "CRITICAL":
+		return colorRed
+	default:
+		return colorCyan
 	}
 }
 

@@ -9,10 +9,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
-	globalMiddleware "github.com/vyolayer/vyolayer/internal/shared/middleware"
+	m "github.com/vyolayer/vyolayer/internal/gateway/middleware"
+	gm "github.com/vyolayer/vyolayer/internal/shared/middleware"
 )
 
 // Server represents the API Gateway instance
@@ -30,15 +28,16 @@ type RouteRegistrar interface {
 func New(port string) *Server {
 	app := fiber.New(fiber.Config{AppName: "VyoLayer Gateway"})
 
-	app.Use(recover.New())
-	app.Use(logger.New())
+	app.Use(m.RequestContext())
+	app.Use(m.ErrorHandler())
+	app.Use(m.RequestLogger())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization, X-Workspace-ID, X-Vyo-Key",
 	}))
 
 	// Inject custom middleware to propagate headers to gRPC requests
-	app.Use(middleware.GRPCMetadataMiddleware())
+	app.Use(m.GRPCMetadataMiddleware())
 
 	return &Server{
 		app:  app,
@@ -53,7 +52,7 @@ func (s *Server) RegisterRegistrars(registrars ...RouteRegistrar) {
 		registrar.RegisterRoutes(v1)
 	}
 
-	v1.Use(globalMiddleware.NotFoundMiddleware)
+	v1.Use(gm.NotFoundMiddleware)
 }
 
 // Start runs the HTTP server with graceful shutdown handling

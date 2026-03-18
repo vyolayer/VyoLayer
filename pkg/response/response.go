@@ -71,6 +71,10 @@ func Success(ctx *fiber.Ctx, data interface{}) error {
 
 // SuccessWithMessage sends a successful response with a custom message
 func SuccessWithMessage(ctx *fiber.Ctx, statusCode int, message string, data interface{}) error {
+	ctx.Locals("response_success", true)
+	ctx.Locals("response_message", message)
+	ctx.Locals("response_error_code", "")
+
 	response := SuccessResponse{
 		Success:    true,
 		StatusCode: statusCode,
@@ -87,6 +91,10 @@ func SuccessWithMessage(ctx *fiber.Ctx, statusCode int, message string, data int
 
 // SuccessMessage sends a successful response with only a message (no data)
 func SuccessMessage(ctx *fiber.Ctx, message string) error {
+	ctx.Locals("response_success", true)
+	ctx.Locals("response_message", message)
+	ctx.Locals("response_error_code", "")
+
 	response := SuccessResponse{
 		Success:    true,
 		StatusCode: fiber.StatusOK,
@@ -107,11 +115,18 @@ func Created(ctx *fiber.Ctx, data interface{}) error {
 
 // NoContent sends a 204 No Content response
 func NoContent(ctx *fiber.Ctx) error {
+	ctx.Locals("response_success", true)
+	ctx.Locals("response_message", "No Content")
+	ctx.Locals("response_error_code", "")
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
 // Paginated sends a successful response with pagination metadata
 func Paginated(ctx *fiber.Ctx, data interface{}, pagination PaginationMeta) error {
+	ctx.Locals("response_success", true)
+	ctx.Locals("response_message", "Success")
+	ctx.Locals("response_error_code", "")
+
 	response := SuccessResponse{
 		Success:    true,
 		StatusCode: fiber.StatusOK,
@@ -149,6 +164,10 @@ func Error(ctx *fiber.Ctx, err error) error {
 
 // sendAppError sends an AppError as an HTTP response
 func sendAppError(ctx *fiber.Ctx, err *errors.AppError) error {
+	ctx.Locals("response_success", false)
+	ctx.Locals("response_message", err.Message)
+	ctx.Locals("response_error_code", string(err.Code))
+
 	// Determine if we should include stack trace (only in development)
 	// You might want to check an environment variable here
 	var metadata map[string]interface{}

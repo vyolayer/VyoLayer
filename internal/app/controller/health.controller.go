@@ -24,7 +24,6 @@ func (h *HealthController) HealthCheck(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"Welcome to VyoLayer",
-		"Welcome to VyoLayer",
 		map[string]string{
 			"version": "1.0.0",
 			"status":  "healthy",

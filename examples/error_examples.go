@@ -91,7 +91,7 @@ func demonstrateErrorWrapping() {
 			"host":     "localhost",
 			"port":     5432,
 			"database": "vyolayer",
-			"database": "vyolayer",
+			// "database": "vyolayer",
 		},
 	)
 	fmt.Printf("\nWrapped with Context: %v\n", wrappedErr2)

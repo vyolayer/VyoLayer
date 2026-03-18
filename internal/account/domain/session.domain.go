@@ -23,6 +23,7 @@ type Session struct {
 	RevokedAt     *time.Time
 	RevokedReason string
 	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 func NewSession(
@@ -44,7 +45,20 @@ func NewSession(
 		RevokedAt:     nil,
 		ExpiresAt:     time.Now().Add(SessionTTL),
 		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
 	}
+}
+
+// verify same device
+func (s *Session) VerifySameDevice(ipAddress, userAgent string) bool {
+	return s.IPAddress == ipAddress && s.UserAgent == userAgent
+}
+
+// Rotate token
+func (s *Session) RotateToken(newToken string) {
+	s.TokenHash = sessionTokenHash(newToken)
+	s.ExpiresAt = time.Now().Add(SessionTTL)
+	s.UpdatedAt = time.Now()
 }
 
 func (s *Session) IsExpired() bool {

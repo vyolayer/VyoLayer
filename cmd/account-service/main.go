@@ -66,9 +66,13 @@ func run() error {
 		mailer,
 		accountJWT,
 	)
+	sessionUsecase := usecase.NewSessionUsecase(
+		sessionRepo,
+		accountJWT,
+	)
 
 	// Handlers
-	accountHandler := accountGrpc.NewAccountHandler(accountUsecase)
+	accountHandler := accountGrpc.NewAccountHandler(accountUsecase, sessionUsecase)
 
 	// Setup and Start Server
 	grpcSrv := server.NewGRPCServer(cfg.GRPCPort, apiKeyVerifier)

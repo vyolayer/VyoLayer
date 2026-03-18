@@ -38,6 +38,8 @@ type SessionRepository interface {
 	FindByUserID(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) ([]*domain.Session, *RepoError)
 	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError
 	DeleteExpired(ctx context.Context) *RepoError
+	DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) *RepoError
+	RotateToken(ctx context.Context, session *domain.Session) *RepoError
 }
 
 type VerificationTokenRepository interface {

@@ -36,20 +36,25 @@ func NewAccountHandler(
 
 // RegisterRoutes registers the account routes on the provided router
 func (h *AccountHandler) RegisterRoutes(router fiber.Router) {
-	accountMiddleware := middleware.NewAccountMiddleware(h.accountJWT)
-
-	accountGroup := router.Group("/account")
+	r := router.Group("/account")
 	log.Println("Account routes registered")
 
-	accountGroup.Post("/sign-up", h.register)
-	accountGroup.Post("/verify-email", h.verifyEmail)
-	accountGroup.Post("/resend-verification-email", h.resendVerificationEmail)
-	accountGroup.Post("/sign-in", h.login)
+	r.Post("/sign-up", h.register)
+	r.Post("/verify-email", h.verifyEmail)
+	r.Post("/resend-verification-email", h.resendVerificationEmail)
+	r.Post("/sign-in", h.login)
 
-	// accountGroup.Use(accountMiddleware.VerifyAccessToken())
+	r.Post("/sessions/refresh", h.refreshToken)
 
-	accountGroup.Post("/sign-out", accountMiddleware.VerifyAccessToken(), h.logout)
-	accountGroup.Post("/validate", h.validateSession)
+	ra := r.Group("/")
+	ra.Use(middleware.AccountJWTVerify(h.accountJWT))
+
+	ra.Post("/sign-out", h.logout)
+	ra.Post("/validate", h.validateSession)
+
+	ra.Get("/sessions", h.listSessions)
+	ra.Post("/sessions/revoke", h.revokeSession)
+	ra.Post("/sessions/revoke-all", h.revokeAllSessions)
 }
 
 // register handles user registration
@@ -192,5 +197,123 @@ func (h *AccountHandler) validateSession(c *fiber.Ctx) error {
 	return response.SuccessMessage(
 		c,
 		"true",
+	)
+}
+
+func (h *AccountHandler) refreshToken(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	t, err := h.cookieSv.GetRefreshToken(c)
+	if err != nil || t == "" {
+		return response.Error(c, errors.TokenInvalid("Not found"))
+	}
+
+	log.Println("Refreshing session")
+	resp, e := h.client.RefreshSession(
+		ctx,
+		&accountV1.RefreshSessionRequest{RefreshToken: t},
+	)
+	if e != nil {
+		log.Printf("Failed to refresh session: %v", e)
+		return response.Error(c, errors.FromGRPC(e))
+	}
+
+	if err := h.cookieSv.Set(
+		c,
+		resp.AccessToken,
+		resp.RefreshToken,
+	); err != nil {
+		return response.Error(c, errors.Internal("Failed to set cookies"))
+	}
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"Session refreshed successfully",
+		resp,
+	)
+}
+
+func (h *AccountHandler) listSessions(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	rt, err := h.cookieSv.GetRefreshToken(c)
+	if err != nil || rt == "" {
+		return response.Error(c, errors.TokenInvalid("Not found"))
+	}
+
+	req := &accountV1.AllSessionsRequest{RefreshToken: rt}
+
+	resp, e := h.client.AllSessions(ctx, req)
+	if e != nil {
+		return response.Error(c, errors.FromGRPC(e))
+	}
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"Sessions listed successfully",
+		resp,
+	)
+}
+
+func (h *AccountHandler) revokeSession(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	// Session id from params
+	sessionID := c.Query("session_id")
+	if sessionID == "" {
+		return response.Error(c, errors.BadRequest("Session id is required"))
+	}
+
+	refreshToken, err := h.cookieSv.GetRefreshToken(c)
+	if err != nil {
+		return response.Error(c, errors.BadRequest("Refresh token not found"))
+	}
+
+	_, e := h.client.RevokeSession(ctx, &accountV1.RevokeSessionRequest{
+		RefreshToken: refreshToken,
+		SessionId:    sessionID,
+	})
+	if e != nil {
+		return response.Error(c, errors.FromGRPC(e))
+	}
+
+	if err := h.cookieSv.Clear(c); err != nil {
+		log.Printf("Failed to delete refresh token cookie: %v", err)
+	}
+
+	return response.SuccessMessage(
+		c,
+		"Session revoked successfully",
+	)
+}
+
+func (h *AccountHandler) revokeAllSessions(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	refreshToken, err := h.cookieSv.GetRefreshToken(c)
+	if err != nil || refreshToken == "" {
+		return response.Error(c, errors.BadRequest("Refresh token not found"))
+	}
+
+	_, e := h.client.RevokeAllSessions(ctx, &accountV1.RevokeAllSessionsRequest{
+		RefreshToken: refreshToken,
+	})
+	if e != nil {
+		return response.Error(c, errors.FromGRPC(e))
+	}
+
+	if err := h.cookieSv.Clear(c); err != nil {
+		log.Printf("Failed to delete refresh token cookie: %v", err)
+	}
+
+	return response.SuccessMessage(
+		c,
+		"All sessions revoked successfully",
 	)
 }

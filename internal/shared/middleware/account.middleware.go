@@ -18,7 +18,7 @@ func NewAccountMiddleware(accountJWT jwt.AccountJWT) *accountMiddleware {
 	}
 }
 
-func (m *accountMiddleware) VerifyAccessToken() fiber.Handler {
+func AccountJWTVerify(aJWT jwt.AccountJWT) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		// Cookie or Header
 		token := c.Cookies("vyo_session")
@@ -30,16 +30,16 @@ func (m *accountMiddleware) VerifyAccessToken() fiber.Handler {
 			return errors.Unauthorized("Authorization token is required")
 		}
 
-		userID, projectID, err := m.accountJWT.VerifyAccessToken(token)
+		userID, projectID, err := aJWT.VerifyAccessToken(token)
 		if err != nil {
 			return err
 		}
 
 		ctx := ctxutil.InjectVyoServiceAccountDetails(c.UserContext(), userID, projectID)
-		
+
 		// Ensure user ID is passed to gRPC backends by appending to outgoing context metadata
 		ctx = metadata.AppendToOutgoingContext(ctx, "vyo_user_id", userID.String())
-		
+
 		c.SetUserContext(ctx)
 
 		return c.Next()

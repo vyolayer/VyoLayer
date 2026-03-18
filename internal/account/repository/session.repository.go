@@ -94,6 +94,30 @@ func (r *sessionRepository) DeleteExpired(ctx context.Context) *RepoError {
 	return errors.NotImplemented("DeleteExpired not implemented")
 }
 
+func (r *sessionRepository) RotateToken(ctx context.Context, s *domain.Session) *RepoError {
+	err := r.client.Model(&SessionModel{}).
+		Where("project_id = ? AND id = ?", s.ProjectID, s.ID).
+		Updates(SessionModel{
+			TokenHash:  s.TokenHash,
+			ExpiresAt:  s.ExpiresAt,
+			TimeStamps: TimeStamps{UpdatedAt: s.UpdatedAt},
+		}).Error
+	if err != nil {
+		return ConvertDBError(err, "Failed to rotate token")
+	}
+	return nil
+}
+
+func (r *sessionRepository) DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) *RepoError {
+	if err := r.client.
+		Where("project_id = ? AND user_id = ?", projectID, userID).
+		Delete(&SessionModel{}).
+		Error; err != nil {
+		return ConvertDBError(err, "Failed to delete sessions")
+	}
+	return nil
+}
+
 func MapToDomainSession(s *SessionModel) *domain.Session {
 	return &domain.Session{
 		ID:            s.UUID.ID,
@@ -106,5 +130,6 @@ func MapToDomainSession(s *SessionModel) *domain.Session {
 		RevokedAt:     &s.CreatedAt,
 		RevokedReason: s.Reason,
 		CreatedAt:     s.TimeStamps.CreatedAt,
+		UpdatedAt:     s.TimeStamps.UpdatedAt,
 	}
 }

@@ -8,6 +8,7 @@ package accountV1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -24,6 +25,10 @@ const (
 	AccountService_ResendVerificationEmail_FullMethodName = "/account.v1.AccountService/ResendVerificationEmail"
 	AccountService_Login_FullMethodName                   = "/account.v1.AccountService/Login"
 	AccountService_Logout_FullMethodName                  = "/account.v1.AccountService/Logout"
+	AccountService_AllSessions_FullMethodName             = "/account.v1.AccountService/AllSessions"
+	AccountService_RevokeSession_FullMethodName           = "/account.v1.AccountService/RevokeSession"
+	AccountService_RevokeAllSessions_FullMethodName       = "/account.v1.AccountService/RevokeAllSessions"
+	AccountService_RefreshSession_FullMethodName          = "/account.v1.AccountService/RefreshSession"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -35,6 +40,11 @@ type AccountServiceClient interface {
 	ResendVerificationEmail(ctx context.Context, in *ResendVerificationEmailRequest, opts ...grpc.CallOption) (*ResendVerificationEmailResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	// Sessions
+	AllSessions(ctx context.Context, in *AllSessionsRequest, opts ...grpc.CallOption) (*AllSessionsResponse, error)
+	RevokeSession(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*RevokeSessionResponse, error)
+	RevokeAllSessions(ctx context.Context, in *RevokeAllSessionsRequest, opts ...grpc.CallOption) (*RevokeAllSessionsResponse, error)
+	RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*RefreshSessionResponse, error)
 }
 
 type accountServiceClient struct {
@@ -95,6 +105,46 @@ func (c *accountServiceClient) Logout(ctx context.Context, in *LogoutRequest, op
 	return out, nil
 }
 
+func (c *accountServiceClient) AllSessions(ctx context.Context, in *AllSessionsRequest, opts ...grpc.CallOption) (*AllSessionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AllSessionsResponse)
+	err := c.cc.Invoke(ctx, AccountService_AllSessions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) RevokeSession(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*RevokeSessionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RevokeSessionResponse)
+	err := c.cc.Invoke(ctx, AccountService_RevokeSession_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) RevokeAllSessions(ctx context.Context, in *RevokeAllSessionsRequest, opts ...grpc.CallOption) (*RevokeAllSessionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RevokeAllSessionsResponse)
+	err := c.cc.Invoke(ctx, AccountService_RevokeAllSessions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*RefreshSessionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RefreshSessionResponse)
+	err := c.cc.Invoke(ctx, AccountService_RefreshSession_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
@@ -104,6 +154,11 @@ type AccountServiceServer interface {
 	ResendVerificationEmail(context.Context, *ResendVerificationEmailRequest) (*ResendVerificationEmailResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	// Sessions
+	AllSessions(context.Context, *AllSessionsRequest) (*AllSessionsResponse, error)
+	RevokeSession(context.Context, *RevokeSessionRequest) (*RevokeSessionResponse, error)
+	RevokeAllSessions(context.Context, *RevokeAllSessionsRequest) (*RevokeAllSessionsResponse, error)
+	RefreshSession(context.Context, *RefreshSessionRequest) (*RefreshSessionResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -128,6 +183,18 @@ func (UnimplementedAccountServiceServer) Login(context.Context, *LoginRequest) (
 }
 func (UnimplementedAccountServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAccountServiceServer) AllSessions(context.Context, *AllSessionsRequest) (*AllSessionsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AllSessions not implemented")
+}
+func (UnimplementedAccountServiceServer) RevokeSession(context.Context, *RevokeSessionRequest) (*RevokeSessionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeSession not implemented")
+}
+func (UnimplementedAccountServiceServer) RevokeAllSessions(context.Context, *RevokeAllSessionsRequest) (*RevokeAllSessionsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeAllSessions not implemented")
+}
+func (UnimplementedAccountServiceServer) RefreshSession(context.Context, *RefreshSessionRequest) (*RefreshSessionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RefreshSession not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -240,6 +307,78 @@ func _AccountService_Logout_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_AllSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).AllSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_AllSessions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).AllSessions(ctx, req.(*AllSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_RevokeSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).RevokeSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_RevokeSession_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).RevokeSession(ctx, req.(*RevokeSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_RevokeAllSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeAllSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).RevokeAllSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_RevokeAllSessions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).RevokeAllSessions(ctx, req.(*RevokeAllSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_RefreshSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).RefreshSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_RefreshSession_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).RefreshSession(ctx, req.(*RefreshSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +405,22 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _AccountService_Logout_Handler,
+		},
+		{
+			MethodName: "AllSessions",
+			Handler:    _AccountService_AllSessions_Handler,
+		},
+		{
+			MethodName: "RevokeSession",
+			Handler:    _AccountService_RevokeSession_Handler,
+		},
+		{
+			MethodName: "RevokeAllSessions",
+			Handler:    _AccountService_RevokeAllSessions_Handler,
+		},
+		{
+			MethodName: "RefreshSession",
+			Handler:    _AccountService_RefreshSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

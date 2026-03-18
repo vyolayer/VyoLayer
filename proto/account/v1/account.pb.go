@@ -491,6 +491,446 @@ func (*LogoutResponse) Descriptor() ([]byte, []int) {
 	return file_account_v1_account_proto_rawDescGZIP(), []int{9}
 }
 
+// AllSessions
+type AllSessionsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AllSessionsRequest) Reset() {
+	*x = AllSessionsRequest{}
+	mi := &file_account_v1_account_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AllSessionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AllSessionsRequest) ProtoMessage() {}
+
+func (x *AllSessionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AllSessionsRequest.ProtoReflect.Descriptor instead.
+func (*AllSessionsRequest) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *AllSessionsRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+type SessionData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SessionId     string                 `protobuf:"bytes,1,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	IpAddress     string                 `protobuf:"bytes,3,opt,name=ip_address,json=ipAddress,proto3" json:"ip_address,omitempty"`
+	UserAgent     string                 `protobuf:"bytes,4,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     string                 `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SessionData) Reset() {
+	*x = SessionData{}
+	mi := &file_account_v1_account_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SessionData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SessionData) ProtoMessage() {}
+
+func (x *SessionData) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SessionData.ProtoReflect.Descriptor instead.
+func (*SessionData) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SessionData) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *SessionData) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *SessionData) GetIpAddress() string {
+	if x != nil {
+		return x.IpAddress
+	}
+	return ""
+}
+
+func (x *SessionData) GetUserAgent() string {
+	if x != nil {
+		return x.UserAgent
+	}
+	return ""
+}
+
+func (x *SessionData) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *SessionData) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
+type AllSessionsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Sessions      []*SessionData         `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AllSessionsResponse) Reset() {
+	*x = AllSessionsResponse{}
+	mi := &file_account_v1_account_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AllSessionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AllSessionsResponse) ProtoMessage() {}
+
+func (x *AllSessionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AllSessionsResponse.ProtoReflect.Descriptor instead.
+func (*AllSessionsResponse) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *AllSessionsResponse) GetSessions() []*SessionData {
+	if x != nil {
+		return x.Sessions
+	}
+	return nil
+}
+
+// RevokeSession
+type RevokeSessionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RevokeSessionRequest) Reset() {
+	*x = RevokeSessionRequest{}
+	mi := &file_account_v1_account_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RevokeSessionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RevokeSessionRequest) ProtoMessage() {}
+
+func (x *RevokeSessionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RevokeSessionRequest.ProtoReflect.Descriptor instead.
+func (*RevokeSessionRequest) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *RevokeSessionRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *RevokeSessionRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+type RevokeSessionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RevokeSessionResponse) Reset() {
+	*x = RevokeSessionResponse{}
+	mi := &file_account_v1_account_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RevokeSessionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RevokeSessionResponse) ProtoMessage() {}
+
+func (x *RevokeSessionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RevokeSessionResponse.ProtoReflect.Descriptor instead.
+func (*RevokeSessionResponse) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{14}
+}
+
+// RevokeAllSessions
+type RevokeAllSessionsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RevokeAllSessionsRequest) Reset() {
+	*x = RevokeAllSessionsRequest{}
+	mi := &file_account_v1_account_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RevokeAllSessionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RevokeAllSessionsRequest) ProtoMessage() {}
+
+func (x *RevokeAllSessionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RevokeAllSessionsRequest.ProtoReflect.Descriptor instead.
+func (*RevokeAllSessionsRequest) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *RevokeAllSessionsRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+type RevokeAllSessionsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RevokeAllSessionsResponse) Reset() {
+	*x = RevokeAllSessionsResponse{}
+	mi := &file_account_v1_account_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RevokeAllSessionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RevokeAllSessionsResponse) ProtoMessage() {}
+
+func (x *RevokeAllSessionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RevokeAllSessionsResponse.ProtoReflect.Descriptor instead.
+func (*RevokeAllSessionsResponse) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{16}
+}
+
+// RefreshSession
+type RefreshSessionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshSessionRequest) Reset() {
+	*x = RefreshSessionRequest{}
+	mi := &file_account_v1_account_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshSessionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshSessionRequest) ProtoMessage() {}
+
+func (x *RefreshSessionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshSessionRequest.ProtoReflect.Descriptor instead.
+func (*RefreshSessionRequest) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *RefreshSessionRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+type RefreshSessionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshSessionResponse) Reset() {
+	*x = RefreshSessionResponse{}
+	mi := &file_account_v1_account_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshSessionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshSessionResponse) ProtoMessage() {}
+
+func (x *RefreshSessionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_v1_account_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshSessionResponse.ProtoReflect.Descriptor instead.
+func (*RefreshSessionResponse) Descriptor() ([]byte, []int) {
+	return file_account_v1_account_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *RefreshSessionResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *RefreshSessionResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
 var File_account_v1_account_proto protoreflect.FileDescriptor
 
 const file_account_v1_account_proto_rawDesc = "" +
@@ -520,13 +960,46 @@ const file_account_v1_account_proto_rawDesc = "" +
 	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"=\n" +
 	"\rLogoutRequest\x12,\n" +
 	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\"\x10\n" +
-	"\x0eLogoutResponse2\x9a\x03\n" +
+	"\x0eLogoutResponse\"B\n" +
+	"\x12AllSessionsRequest\x12,\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\"\xc1\x01\n" +
+	"\vSessionData\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1d\n" +
+	"\n" +
+	"ip_address\x18\x03 \x01(\tR\tipAddress\x12\x1d\n" +
+	"\n" +
+	"user_agent\x18\x04 \x01(\tR\tuserAgent\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x05 \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\x06 \x01(\tR\tupdatedAt\"J\n" +
+	"\x13AllSessionsResponse\x123\n" +
+	"\bsessions\x18\x01 \x03(\v2\x17.account.v1.SessionDataR\bsessions\"l\n" +
+	"\x14RevokeSessionRequest\x12,\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\x12&\n" +
+	"\n" +
+	"session_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tsessionId\"\x17\n" +
+	"\x15RevokeSessionResponse\"H\n" +
+	"\x18RevokeAllSessionsRequest\x12,\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\"\x1b\n" +
+	"\x19RevokeAllSessionsResponse\"E\n" +
+	"\x15RefreshSessionRequest\x12,\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\"`\n" +
+	"\x16RefreshSessionResponse\x12!\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken2\xfb\x05\n" +
 	"\x0eAccountService\x12E\n" +
 	"\bRegister\x12\x1b.account.v1.RegisterRequest\x1a\x1c.account.v1.RegisterResponse\x12N\n" +
 	"\vVerifyEmail\x12\x1e.account.v1.VerifyEmailRequest\x1a\x1f.account.v1.VerifyEmailResponse\x12r\n" +
 	"\x17ResendVerificationEmail\x12*.account.v1.ResendVerificationEmailRequest\x1a+.account.v1.ResendVerificationEmailResponse\x12<\n" +
 	"\x05Login\x12\x18.account.v1.LoginRequest\x1a\x19.account.v1.LoginResponse\x12?\n" +
-	"\x06Logout\x12\x19.account.v1.LogoutRequest\x1a\x1a.account.v1.LogoutResponseB9Z7github.com/vyolayer/vyolayer/proto/account/v1;accountV1b\x06proto3"
+	"\x06Logout\x12\x19.account.v1.LogoutRequest\x1a\x1a.account.v1.LogoutResponse\x12N\n" +
+	"\vAllSessions\x12\x1e.account.v1.AllSessionsRequest\x1a\x1f.account.v1.AllSessionsResponse\x12T\n" +
+	"\rRevokeSession\x12 .account.v1.RevokeSessionRequest\x1a!.account.v1.RevokeSessionResponse\x12`\n" +
+	"\x11RevokeAllSessions\x12$.account.v1.RevokeAllSessionsRequest\x1a%.account.v1.RevokeAllSessionsResponse\x12W\n" +
+	"\x0eRefreshSession\x12!.account.v1.RefreshSessionRequest\x1a\".account.v1.RefreshSessionResponseB9Z7github.com/vyolayer/vyolayer/proto/account/v1;accountV1b\x06proto3"
 
 var (
 	file_account_v1_account_proto_rawDescOnce sync.Once
@@ -540,7 +1013,7 @@ func file_account_v1_account_proto_rawDescGZIP() []byte {
 	return file_account_v1_account_proto_rawDescData
 }
 
-var file_account_v1_account_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_account_v1_account_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_account_v1_account_proto_goTypes = []any{
 	(*RegisterRequest)(nil),                 // 0: account.v1.RegisterRequest
 	(*RegisterResponse)(nil),                // 1: account.v1.RegisterResponse
@@ -552,23 +1025,41 @@ var file_account_v1_account_proto_goTypes = []any{
 	(*LoginResponse)(nil),                   // 7: account.v1.LoginResponse
 	(*LogoutRequest)(nil),                   // 8: account.v1.LogoutRequest
 	(*LogoutResponse)(nil),                  // 9: account.v1.LogoutResponse
+	(*AllSessionsRequest)(nil),              // 10: account.v1.AllSessionsRequest
+	(*SessionData)(nil),                     // 11: account.v1.SessionData
+	(*AllSessionsResponse)(nil),             // 12: account.v1.AllSessionsResponse
+	(*RevokeSessionRequest)(nil),            // 13: account.v1.RevokeSessionRequest
+	(*RevokeSessionResponse)(nil),           // 14: account.v1.RevokeSessionResponse
+	(*RevokeAllSessionsRequest)(nil),        // 15: account.v1.RevokeAllSessionsRequest
+	(*RevokeAllSessionsResponse)(nil),       // 16: account.v1.RevokeAllSessionsResponse
+	(*RefreshSessionRequest)(nil),           // 17: account.v1.RefreshSessionRequest
+	(*RefreshSessionResponse)(nil),          // 18: account.v1.RefreshSessionResponse
 }
 var file_account_v1_account_proto_depIdxs = []int32{
-	0, // 0: account.v1.AccountService.Register:input_type -> account.v1.RegisterRequest
-	2, // 1: account.v1.AccountService.VerifyEmail:input_type -> account.v1.VerifyEmailRequest
-	4, // 2: account.v1.AccountService.ResendVerificationEmail:input_type -> account.v1.ResendVerificationEmailRequest
-	6, // 3: account.v1.AccountService.Login:input_type -> account.v1.LoginRequest
-	8, // 4: account.v1.AccountService.Logout:input_type -> account.v1.LogoutRequest
-	1, // 5: account.v1.AccountService.Register:output_type -> account.v1.RegisterResponse
-	3, // 6: account.v1.AccountService.VerifyEmail:output_type -> account.v1.VerifyEmailResponse
-	5, // 7: account.v1.AccountService.ResendVerificationEmail:output_type -> account.v1.ResendVerificationEmailResponse
-	7, // 8: account.v1.AccountService.Login:output_type -> account.v1.LoginResponse
-	9, // 9: account.v1.AccountService.Logout:output_type -> account.v1.LogoutResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	11, // 0: account.v1.AllSessionsResponse.sessions:type_name -> account.v1.SessionData
+	0,  // 1: account.v1.AccountService.Register:input_type -> account.v1.RegisterRequest
+	2,  // 2: account.v1.AccountService.VerifyEmail:input_type -> account.v1.VerifyEmailRequest
+	4,  // 3: account.v1.AccountService.ResendVerificationEmail:input_type -> account.v1.ResendVerificationEmailRequest
+	6,  // 4: account.v1.AccountService.Login:input_type -> account.v1.LoginRequest
+	8,  // 5: account.v1.AccountService.Logout:input_type -> account.v1.LogoutRequest
+	10, // 6: account.v1.AccountService.AllSessions:input_type -> account.v1.AllSessionsRequest
+	13, // 7: account.v1.AccountService.RevokeSession:input_type -> account.v1.RevokeSessionRequest
+	15, // 8: account.v1.AccountService.RevokeAllSessions:input_type -> account.v1.RevokeAllSessionsRequest
+	17, // 9: account.v1.AccountService.RefreshSession:input_type -> account.v1.RefreshSessionRequest
+	1,  // 10: account.v1.AccountService.Register:output_type -> account.v1.RegisterResponse
+	3,  // 11: account.v1.AccountService.VerifyEmail:output_type -> account.v1.VerifyEmailResponse
+	5,  // 12: account.v1.AccountService.ResendVerificationEmail:output_type -> account.v1.ResendVerificationEmailResponse
+	7,  // 13: account.v1.AccountService.Login:output_type -> account.v1.LoginResponse
+	9,  // 14: account.v1.AccountService.Logout:output_type -> account.v1.LogoutResponse
+	12, // 15: account.v1.AccountService.AllSessions:output_type -> account.v1.AllSessionsResponse
+	14, // 16: account.v1.AccountService.RevokeSession:output_type -> account.v1.RevokeSessionResponse
+	16, // 17: account.v1.AccountService.RevokeAllSessions:output_type -> account.v1.RevokeAllSessionsResponse
+	18, // 18: account.v1.AccountService.RefreshSession:output_type -> account.v1.RefreshSessionResponse
+	10, // [10:19] is the sub-list for method output_type
+	1,  // [1:10] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_account_v1_account_proto_init() }
@@ -582,7 +1073,7 @@ func file_account_v1_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_v1_account_proto_rawDesc), len(file_account_v1_account_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -11,6 +11,12 @@ service AccountService {
   rpc ResendVerificationEmail (ResendVerificationEmailRequest) returns (ResendVerificationEmailResponse);
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc Logout (LogoutRequest) returns (LogoutResponse);
+
+  // Sessions
+  rpc AllSessions (AllSessionsRequest) returns (AllSessionsResponse);
+  rpc RevokeSession (RevokeSessionRequest) returns (RevokeSessionResponse);
+  rpc RevokeAllSessions (RevokeAllSessionsRequest) returns (RevokeAllSessionsResponse);
+  rpc RefreshSession (RefreshSessionRequest) returns (RefreshSessionResponse);
 }
 
 // RegisterRequest is the request for the Register RPC.
@@ -57,3 +63,46 @@ message LogoutRequest {
 }
 
 message LogoutResponse {}
+
+// AllSessions
+message AllSessionsRequest {
+  string refresh_token = 1 [(buf.validate.field).string = {min_len: 1}];
+}
+
+message SessionData {
+  string session_id = 1;
+  string user_id = 2;
+  string ip_address = 3;
+  string user_agent = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message AllSessionsResponse {
+  repeated SessionData sessions = 1;
+}
+
+// RevokeSession
+message RevokeSessionRequest {
+  string refresh_token = 1 [(buf.validate.field).string = {min_len: 1}];
+  string session_id = 2 [(buf.validate.field).string = {min_len: 1}];
+}
+
+message RevokeSessionResponse {}
+
+// RevokeAllSessions
+message RevokeAllSessionsRequest {
+  string refresh_token = 1 [(buf.validate.field).string = {min_len: 1}];
+}
+
+message RevokeAllSessionsResponse {}
+
+// RefreshSession
+message RefreshSessionRequest {
+  string refresh_token = 1 [(buf.validate.field).string = {min_len: 1}];
+}
+
+message RefreshSessionResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}

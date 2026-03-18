@@ -72,7 +72,11 @@ func run() error {
 	)
 
 	// Initialize Handlers
-	accountHandler := handlers.NewAccountHandler(accountClient, cookieSrv, accountJWT)
+	accountHandler := handlers.NewAccountHandler(
+		accountClient,
+		cookieSrv,
+		accountJWT,
+	)
 
 	// Setup and Start Server
 	srv := server.New(cfg.HTTPPort)

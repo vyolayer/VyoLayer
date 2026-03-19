@@ -86,7 +86,7 @@ func (uc *accountRecoverUsecase) ForgotPassword(
 
 	resetLink := strings.Join([]string{
 		uc.cfg.AppURL,
-		"reset-password?token=",
+		"/reset-password?token=",
 		rawToken,
 	}, "")
 	mailerErr := uc.mailer.Send(&mail.Message{

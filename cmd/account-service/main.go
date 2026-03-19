@@ -51,7 +51,19 @@ func run() error {
 		cfg.JWT.AccessTokenSecret,
 		cfg.JWT.AccessTokenExpiry,
 	)
-	mailer := mail.NewMockMailer() // TODO: Read environment/config to determine if real mailer should be built
+
+	var mailer mail.Mailer
+	if cfg.Mail.UseMock {
+		mailer = mail.NewMockMailer()
+	} else {
+		mailer = mail.NewSMTPMailer(mail.SMTPConfig{
+			Host:     cfg.Mail.Host,
+			Port:     cfg.Mail.Port,
+			Username: cfg.Mail.Username,
+			Password: cfg.Mail.Password,
+			From:     cfg.Mail.From,
+		})
+	}
 
 	//   Repositories
 	userRepo := repository.NewUserRepository(db)
@@ -60,6 +72,7 @@ func run() error {
 
 	//   Usecases
 	accountUsecase := usecase.NewAccountUsecase(
+		cfg,
 		userRepo,
 		sessionRepo,
 		tokenRepo,

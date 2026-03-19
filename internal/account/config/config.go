@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/vyolayer/vyolayer/pkg/postgres"
@@ -12,7 +13,17 @@ type Config struct {
 	GRPCPort string
 	Database postgres.Config
 	AppURL   string
+	Mail     MailConfig
 	JWT      JWTConfig
+}
+
+type MailConfig struct {
+	Host     string
+	Port     int
+	Username string
+	Password string
+	From     string
+	UseMock  bool
 }
 
 type JWTConfig struct {
@@ -35,6 +46,14 @@ func Load() *Config {
 			SSLMode:  getEnv("DB_SSLMODE", "disable"),
 		},
 		AppURL: getEnv("APP_URL", "http://localhost:3000"),
+		Mail: MailConfig{
+			Host:     getEnv("MAIL_HOST", "localhost"),
+			Port:     getEnvInt("MAIL_PORT", "1025"),
+			Username: getEnv("MAIL_USERNAME", ""),
+			Password: getEnv("MAIL_PASSWORD", ""),
+			From:     getEnv("MAIL_FROM", "noreply@vyolayer.local"),
+			UseMock:  getEnvBool("MAIL_USE_MOCK", "true"),
+		},
 		JWT: JWTConfig{
 			AccessTokenSecret:  getEnv("ACCESS_TOKEN_SECRET", "access_token_secret"),
 			RefreshTokenSecret: getEnv("REFRESH_TOKEN_SECRET", "refresh_token_secret"),
@@ -59,4 +78,31 @@ func getEnvDuration(key, fallback string) time.Duration {
 	}
 	d, _ := time.ParseDuration(fallback)
 	return d
+}
+
+func getEnvInt(key, fallback string) int {
+	if value := os.Getenv(key); value != "" {
+		if i, err := strconv.Atoi(value); err == nil {
+			return i
+		}
+	}
+	i, _ := strconv.Atoi(fallback)
+	return i
+}
+
+func getEnvBool(key, fallback string) bool {
+	if value := os.Getenv(key); value != "" {
+		switch value {
+		case "1", "true", "TRUE", "True", "yes", "YES", "Yes":
+			return true
+		case "0", "false", "FALSE", "False", "no", "NO", "No":
+			return false
+		}
+	}
+	switch fallback {
+	case "1", "true", "TRUE", "True", "yes", "YES", "Yes":
+		return true
+	default:
+		return false
+	}
 }

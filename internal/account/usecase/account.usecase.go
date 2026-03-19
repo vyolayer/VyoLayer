@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/account/config"
 	"github.com/vyolayer/vyolayer/internal/account/domain"
 	"github.com/vyolayer/vyolayer/internal/account/repository"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
@@ -12,8 +14,16 @@ import (
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
 )
 
-func NewAccountUsecase(userRepo repository.UserRepository, sessionRepo repository.SessionRepository, tokenRepo repository.VerificationTokenRepository, mailer mail.Mailer, accountJWT jwt.AccountJWT) AccountUsecase {
+func NewAccountUsecase(
+	cfg *config.Config,
+	userRepo repository.UserRepository,
+	sessionRepo repository.SessionRepository,
+	tokenRepo repository.VerificationTokenRepository,
+	mailer mail.Mailer,
+	accountJWT jwt.AccountJWT,
+) AccountUsecase {
 	return &accountUsecase{
+		cfg: 		 cfg,	
 		userRepo:    userRepo,
 		sessionRepo: sessionRepo,
 		tokenRepo:   tokenRepo,
@@ -69,10 +79,15 @@ func (uc *accountUsecase) Register(
 		return "", err
 	}
 
+	resetLink := strings.Join([]string{
+		uc.cfg.AppURL,
+		"/verify-email?token=",
+		rawToken,
+	}, "")
 	uc.mailer.Send(&mail.Message{
 		To:      []string{email},
 		Subject: "Verify your email address",
-		Body:    "Please click on the link below to verify your email address: " + rawToken,
+		Body:    "Please click on the link below to verify your email address: " + resetLink,
 		IsHTML:  false,
 	})
 

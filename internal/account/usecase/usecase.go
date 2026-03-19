@@ -21,6 +21,7 @@ type AccountUsecase interface {
 }
 
 type accountUsecase struct {
+	cfg 		*config.Config
 	userRepo    repository.UserRepository
 	sessionRepo repository.SessionRepository
 	tokenRepo   repository.VerificationTokenRepository

@@ -90,3 +90,19 @@ func (u *User) VerifyEmail() {
 	u.UpdatedAt = time.Now()
 	u.Status = UserStatusActive
 }
+
+// Is same password
+func (u *User) IsSamePassword(password string) bool {
+	return auth.CheckHash(password, u.HashedPassword)
+}
+
+// Set new password
+func (u *User) ChangePassword(password string) error {
+	newHash, e := auth.GenerateHash(password)
+	if e != nil {
+		return e
+	}
+	u.HashedPassword = newHash
+	u.UpdatedAt = time.Now()
+	return nil
+}

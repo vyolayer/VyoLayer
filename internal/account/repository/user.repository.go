@@ -105,20 +105,20 @@ func (r *userRepository) FindByEmail(ctx context.Context, projectID uuid.UUID, e
 }
 
 func (r *userRepository) Update(ctx context.Context, projectID uuid.UUID, user *domain.User) *RepoError {
-	updateData := &UserModel{
-		Email:         user.Email,
-		FirstName:     user.FirstName,
-		LastName:      user.LastName,
-		EmailVerified: user.IsEmailVerified,
-		LastLoginAt:   user.LastLoginAt,
-		Status:        user.Status.String(),
+	updates := map[string]interface{}{
+		"email":          user.Email,
+		"first_name":     user.FirstName,
+		"last_name":      user.LastName,
+		"email_verified": user.IsEmailVerified,
+		"last_login_at":  user.LastLoginAt,
+		"status":         user.Status.String(),
+		"password":       user.HashedPassword,
+		"updated_at":     time.Now(),
 	}
-
 	err := r.client.
 		Model(&UserModel{}).
 		Where("project_id = ? AND id = ?", projectID, user.ID).
-		Select("Email", "FirstName", "LastName", "EmailVerified", "LastLoginAt", "UpdatedAt", "Status").
-		Updates(updateData).Error
+		Updates(updates).Error
 	if err != nil {
 		return ConvertDBError(err, "Failed to update user")
 	}

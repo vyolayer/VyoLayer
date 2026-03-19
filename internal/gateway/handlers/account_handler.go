@@ -46,6 +46,9 @@ func (h *AccountHandler) RegisterRoutes(router fiber.Router) {
 
 	r.Post("/sessions/refresh", h.refreshToken)
 
+	r.Post("/forgot-password", h.forgotPassword)
+	r.Post("/reset-password", h.resetPassword)
+
 	ra := r.Group("/")
 	ra.Use(middleware.AccountJWTVerify(h.accountJWT))
 
@@ -55,6 +58,8 @@ func (h *AccountHandler) RegisterRoutes(router fiber.Router) {
 	ra.Get("/sessions", h.listSessions)
 	ra.Post("/sessions/revoke", h.revokeSession)
 	ra.Post("/sessions/revoke-all", h.revokeAllSessions)
+
+	ra.Post("change-password", h.changePassword)
 }
 
 // register handles user registration
@@ -315,5 +320,83 @@ func (h *AccountHandler) revokeAllSessions(c *fiber.Ctx) error {
 	return response.SuccessMessage(
 		c,
 		"All sessions revoked successfully",
+	)
+}
+
+// Account recover - Change Password, Forgot Password, Reset Password
+func (h *AccountHandler) changePassword(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	var req accountV1.ChangePasswordRequest
+	if e := c.BodyParser(&req); e != nil {
+		return response.Error(c, errors.BadRequest("Invalid Request Body"))
+	}
+
+	_, err := h.client.ChangePassword(ctx, &req)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	// clear cookies
+	h.cookieSv.Clear(c)
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"Password changed successfully",
+		nil,
+	)
+
+}
+
+func (h *AccountHandler) forgotPassword(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	var req accountV1.ForgotPasswordRequest
+	if e := c.BodyParser(&req); e != nil {
+		return response.Error(c, errors.BadRequest("Invalid Request Body"))
+	}
+
+	_, err := h.client.ForgotPassword(ctx, &req)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"Email sent successfully",
+		nil,
+	)
+}
+
+func (h *AccountHandler) resetPassword(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.UserContext(), 10*time.Second)
+	defer cancel()
+
+	token := c.Query("token")
+	if token == "" {
+		return response.Error(c, errors.BadRequest("Token is required"))
+	}
+
+	var req accountV1.ResetPasswordRequest
+	if e := c.BodyParser(&req); e != nil {
+		return response.Error(c, errors.BadRequest("Invalid Request Body"))
+	}
+
+	_, err := h.client.ResetPassword(ctx, &req)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	h.cookieSv.Clear(c)
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"Password reset successfully",
+		nil,
 	)
 }

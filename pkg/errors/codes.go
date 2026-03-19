@@ -16,6 +16,7 @@ const (
 	ErrAuthSessionExpired     ErrorCode = "ERR_AUTH_SESSION_EXPIRED"
 	ErrAuthForbidden          ErrorCode = "ERR_AUTH_FORBIDDEN"
 	ErrAuthPasswordMismatch   ErrorCode = "ERR_AUTH_PASSWORD_MISMATCH"
+	ErrAuthSamePassword       ErrorCode = "ERR_AUTH_SAME_PASSWORD"
 	ErrAuthAccountLocked      ErrorCode = "ERR_AUTH_ACCOUNT_LOCKED"
 	ErrAuthAccountNotVerified ErrorCode = "ERR_AUTH_ACCOUNT_NOT_VERIFIED"
 

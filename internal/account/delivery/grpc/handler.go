@@ -9,18 +9,27 @@ import (
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AccountHandler struct {
 	accountV1.UnimplementedAccountServiceServer
 	usecase   usecase.AccountUsecase
 	sessionuc usecase.SessionUsecase
+	// account recover
+	recoverUC usecase.AccountRecoverUsecase
 }
 
-func NewAccountHandler(usecase usecase.AccountUsecase, sessionUsecase usecase.SessionUsecase) *AccountHandler {
+func NewAccountHandler(
+	usecase usecase.AccountUsecase,
+	sessionUsecase usecase.SessionUsecase,
+	recoverUC usecase.AccountRecoverUsecase,
+) *AccountHandler {
 	return &AccountHandler{
 		usecase:   usecase,
 		sessionuc: sessionUsecase,
+		recoverUC: recoverUC,
 	}
 }
 
@@ -234,4 +243,78 @@ func (h *AccountHandler) RevokeAllSessions(
 	}
 
 	return &accountV1.RevokeAllSessionsResponse{}, nil
+}
+
+func (h *AccountHandler) ChangePassword(
+	ctx context.Context,
+	req *accountV1.ChangePasswordRequest,
+) (*accountV1.ChangePasswordResponse, error) {
+	log.Println("Change password")
+	projectID, userID, err := h.validateRequest(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	appErr := h.recoverUC.ChangePassword(ctx, projectID, userID, req.OldPassword, req.NewPassword)
+	if appErr != nil {
+		return nil, appErr
+	}
+
+	return &accountV1.ChangePasswordResponse{
+		Message: "Password changed successfully",
+	}, nil
+}
+
+func (h *AccountHandler) ForgotPassword(
+	ctx context.Context,
+	req *accountV1.ForgotPasswordRequest,
+) (*accountV1.ForgotPasswordResponse, error) {
+	apiKeyInfo, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	appErr := h.recoverUC.ForgotPassword(ctx, apiKeyInfo.ProjectID, req.Email)
+	if appErr != nil {
+		return nil, appErr
+	}
+
+	return &accountV1.ForgotPasswordResponse{
+		Message: "Email sent successfully",
+	}, nil
+}
+
+func (h *AccountHandler) ResetPassword(
+	ctx context.Context,
+	req *accountV1.ResetPasswordRequest,
+) (*accountV1.ResetPasswordResponse, error) {
+	apiKeyInfo, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	ucErr := h.recoverUC.ResetPassword(ctx, apiKeyInfo.ProjectID, req.Token, req.NewPassword)
+	if ucErr != nil {
+		return nil, ucErr
+	}
+
+	return &accountV1.ResetPasswordResponse{
+		Message: "Password reset successfully",
+	}, nil
+}
+
+// validateRequest - gets the projectID and userID from the context
+func (h *AccountHandler) validateRequest(ctx context.Context) (uuid.UUID, uuid.UUID, error) {
+	aki, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	projectID, userID, err := ctxutil.ExtractVyoServiceAccountDetails(ctx)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	if aki.ProjectID != projectID {
+		return uuid.Nil, uuid.Nil, status.Error(codes.PermissionDenied, "invalid project id")
+	}
+	return projectID, userID, nil
 }

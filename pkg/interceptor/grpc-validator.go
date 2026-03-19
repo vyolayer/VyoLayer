@@ -3,6 +3,7 @@ package interceptor
 import (
 	"context"
 	"errors"
+	"log"
 
 	"buf.build/go/protovalidate"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -28,6 +29,7 @@ func GRPCValidationInterceptor(v protovalidate.Validator) grpc.UnaryServerInterc
 
 			// 2. Run the Buf validation rules
 			if err := v.Validate(msg); err != nil {
+				log.Print(err)
 
 				var valErr *protovalidate.ValidationError
 				if errors.As(err, &valErr) {

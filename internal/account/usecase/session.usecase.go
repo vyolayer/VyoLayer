@@ -13,34 +13,6 @@ import (
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
 )
 
-type SessionUsecase interface {
-	RefreshToken(
-		ctx context.Context,
-		projectID uuid.UUID,
-		refreshToken string,
-	) (*accountV1.RefreshSessionResponse, *errors.AppError)
-
-	ListSessions(
-		ctx context.Context,
-		projectID, userID uuid.UUID,
-	) (*accountV1.AllSessionsResponse, *errors.AppError)
-
-	RevokeSession(
-		ctx context.Context,
-		projectID, userID, sessionID uuid.UUID,
-	) *errors.AppError
-
-	RevokeAllSessions(
-		ctx context.Context,
-		projectID, userID uuid.UUID,
-	) *errors.AppError
-}
-
-type sessionUsecase struct {
-	sessionRepo repository.SessionRepository
-	accountJWT  jwt.AccountJWT
-}
-
 func NewSessionUsecase(
 	sessionRepo repository.SessionRepository,
 	accountJWT jwt.AccountJWT,

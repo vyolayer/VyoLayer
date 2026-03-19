@@ -13,22 +13,6 @@ import (
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
 )
 
-type AccountUsecase interface {
-	Register(ctx context.Context, projectID uuid.UUID, email, username, password, firstName, lastName string) (string, *errors.AppError)
-	VerifyEmail(ctx context.Context, projectID uuid.UUID, token string) *errors.AppError
-	ResendVerificationEmail(ctx context.Context, projectID uuid.UUID, email string) *errors.AppError
-	Login(ctx context.Context, projectID uuid.UUID, email, password string) (*accountV1.LoginResponse, *errors.AppError)
-	Logout(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, refreshToken string) *errors.AppError
-}
-
-type accountUsecase struct {
-	userRepo    repository.UserRepository
-	sessionRepo repository.SessionRepository
-	tokenRepo   repository.VerificationTokenRepository
-	mailer      mail.Mailer
-	accountJWT  jwt.AccountJWT
-}
-
 func NewAccountUsecase(userRepo repository.UserRepository, sessionRepo repository.SessionRepository, tokenRepo repository.VerificationTokenRepository, mailer mail.Mailer, accountJWT jwt.AccountJWT) AccountUsecase {
 	return &accountUsecase{
 		userRepo:    userRepo,

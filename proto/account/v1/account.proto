@@ -17,6 +17,11 @@ service AccountService {
   rpc RevokeSession (RevokeSessionRequest) returns (RevokeSessionResponse);
   rpc RevokeAllSessions (RevokeAllSessionsRequest) returns (RevokeAllSessionsResponse);
   rpc RefreshSession (RefreshSessionRequest) returns (RefreshSessionResponse);
+
+  // Account recovery
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse);
 }
 
 // RegisterRequest is the request for the Register RPC.
@@ -105,4 +110,43 @@ message RefreshSessionRequest {
 message RefreshSessionResponse {
   string access_token = 1;
   string refresh_token = 2;
+}
+
+// ChangePasswordRequest 
+message ChangePasswordRequest {
+  string old_password = 1 [(buf.validate.field).string.min_len = 1];
+  
+  string new_password = 2 [(buf.validate.field).string = {
+    min_len: 8, 
+    max_len: 20
+  }];
+  
+  string confirm_password = 3 [(buf.validate.field).string.min_len = 1];
+}
+
+message ChangePasswordResponse {
+  string message = 1;
+}
+
+message ResetPasswordRequest {
+  string token = 2 [(buf.validate.field).string.min_len = 1];
+  
+  string new_password = 3 [(buf.validate.field).string = {
+    min_len: 8, 
+    max_len: 20
+  }];
+  
+  string confirm_password = 4 [(buf.validate.field).string.min_len = 1];
+}
+
+message ResetPasswordResponse {
+  string message = 1;
+}
+
+message ForgotPasswordRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+}
+
+message ForgotPasswordResponse {
+  string message = 1;
 }

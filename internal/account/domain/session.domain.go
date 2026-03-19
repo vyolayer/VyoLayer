@@ -50,8 +50,8 @@ func NewSession(
 }
 
 // verify same device
-func (s *Session) VerifySameDevice(ipAddress, userAgent string) bool {
-	return s.IPAddress == ipAddress && s.UserAgent == userAgent
+func (s *Session) VerifySameDevice(userAgent string) bool {
+	return s.UserAgent == userAgent
 }
 
 // Rotate token

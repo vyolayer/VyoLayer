@@ -19,7 +19,7 @@ func NewSessionRepository(client *gorm.DB) SessionRepository {
 	}
 }
 
-func (r *sessionRepository) Create(ctx context.Context, session *domain.Session) *RepoError {
+func (r *sessionRepository) Create(ctx context.Context, session *domain.Session) error {
 	s := SessionModel{
 		UUID:      ModelID{ID: session.ID},
 		ProjectID: session.ProjectID,
@@ -41,7 +41,7 @@ func (r *sessionRepository) Create(ctx context.Context, session *domain.Session)
 	return nil
 }
 
-func (r *sessionRepository) FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.Session, *RepoError) {
+func (r *sessionRepository) FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.Session, error) {
 	var s SessionModel
 	if err := r.client.
 		Where("project_id = ? AND id = ?", projectID, id).
@@ -52,7 +52,7 @@ func (r *sessionRepository) FindByID(ctx context.Context, projectID uuid.UUID, i
 	return MapToDomainSession(&s), nil
 }
 
-func (r *sessionRepository) FindByUserID(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) ([]*domain.Session, *RepoError) {
+func (r *sessionRepository) FindByUserID(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) ([]*domain.Session, error) {
 	var ss []SessionModel
 
 	if err := r.client.
@@ -69,7 +69,7 @@ func (r *sessionRepository) FindByUserID(ctx context.Context, projectID uuid.UUI
 	return sessions, nil
 }
 
-func (r *sessionRepository) FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.Session, *RepoError) {
+func (r *sessionRepository) FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.Session, error) {
 	var s SessionModel
 	if err := r.client.
 		Where("project_id = ? AND token_hash = ?", projectID, tokenHash).
@@ -80,7 +80,7 @@ func (r *sessionRepository) FindByTokenHash(ctx context.Context, projectID uuid.
 	return MapToDomainSession(&s), nil
 }
 
-func (r *sessionRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError {
+func (r *sessionRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error {
 	if err := r.client.
 		Where("project_id = ? AND id = ?", projectID, id).
 		Delete(&SessionModel{}).
@@ -90,11 +90,11 @@ func (r *sessionRepository) Delete(ctx context.Context, projectID uuid.UUID, id 
 	return nil
 }
 
-func (r *sessionRepository) DeleteExpired(ctx context.Context) *RepoError {
+func (r *sessionRepository) DeleteExpired(ctx context.Context) error {
 	return errors.NotImplemented("DeleteExpired not implemented")
 }
 
-func (r *sessionRepository) RotateToken(ctx context.Context, s *domain.Session) *RepoError {
+func (r *sessionRepository) RotateToken(ctx context.Context, s *domain.Session) error {
 	err := r.client.Model(&SessionModel{}).
 		Where("project_id = ? AND id = ?", s.ProjectID, s.ID).
 		Updates(SessionModel{
@@ -108,7 +108,7 @@ func (r *sessionRepository) RotateToken(ctx context.Context, s *domain.Session) 
 	return nil
 }
 
-func (r *sessionRepository) DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) *RepoError {
+func (r *sessionRepository) DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) error {
 	if err := r.client.
 		Where("project_id = ? AND user_id = ?", projectID, userID).
 		Delete(&SessionModel{}).

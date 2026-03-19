@@ -19,7 +19,7 @@ func NewVerificationTokenRepository(client *gorm.DB) VerificationTokenRepository
 	}
 }
 
-func (r *verificationTokenRepository) Create(ctx context.Context, token *domain.VerificationToken) *RepoError {
+func (r *verificationTokenRepository) Create(ctx context.Context, token *domain.VerificationToken) error {
 	tokenModel := VerificationTokenModel{
 		UUID:      ModelID{ID: token.ID},
 		ProjectID: token.ProjectID,
@@ -39,7 +39,7 @@ func (r *verificationTokenRepository) FindByTokenHash(
 	ctx context.Context,
 	projectID uuid.UUID,
 	tokenHash string,
-) (*domain.VerificationToken, *RepoError) {
+) (*domain.VerificationToken, error) {
 	var tokenModel VerificationTokenModel
 	err := r.client.
 		Where("token_hash = ? AND project_id = ?", tokenHash, projectID).
@@ -61,7 +61,7 @@ func (r *verificationTokenRepository) FindByTokenHash(
 	}, nil
 }
 
-func (r *verificationTokenRepository) FindByUserIDAndType(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, tokenType string) ([]*domain.VerificationToken, *RepoError) {
+func (r *verificationTokenRepository) FindByUserIDAndType(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, tokenType string) ([]*domain.VerificationToken, error) {
 	var tokens []*VerificationTokenModel
 	err := r.client.
 		Where("user_id = ? AND project_id = ? AND token_type = ?", userID, projectID, tokenType).
@@ -88,7 +88,7 @@ func (r *verificationTokenRepository) FindByUserIDAndType(ctx context.Context, p
 	return verificationTokens, nil
 }
 
-func (r *verificationTokenRepository) Update(ctx context.Context, projectID uuid.UUID, token *domain.VerificationToken) *RepoError {
+func (r *verificationTokenRepository) Update(ctx context.Context, projectID uuid.UUID, token *domain.VerificationToken) error {
 	tokenModel := VerificationTokenModel{
 		UUID:      ModelID{ID: token.ID},
 		ProjectID: token.ProjectID,
@@ -106,7 +106,7 @@ func (r *verificationTokenRepository) Update(ctx context.Context, projectID uuid
 	return nil
 }
 
-func (r *verificationTokenRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError {
+func (r *verificationTokenRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error {
 	if err := r.client.
 		Where("id = ? AND project_id = ?", id, projectID).
 		Delete(&VerificationTokenModel{}).
@@ -117,7 +117,7 @@ func (r *verificationTokenRepository) Delete(ctx context.Context, projectID uuid
 	return nil
 }
 
-func (r *verificationTokenRepository) DeleteExpired(ctx context.Context) *RepoError {
+func (r *verificationTokenRepository) DeleteExpired(ctx context.Context) error {
 	if err := r.client.
 		Where("expires_at < ?", time.Now()).
 		Delete(&VerificationTokenModel{}).

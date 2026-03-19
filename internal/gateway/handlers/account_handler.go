@@ -385,6 +385,7 @@ func (h *AccountHandler) resetPassword(c *fiber.Ctx) error {
 	if e := c.BodyParser(&req); e != nil {
 		return response.Error(c, errors.BadRequest("Invalid Request Body"))
 	}
+	req.Token = token
 
 	_, err := h.client.ResetPassword(ctx, &req)
 	if err != nil {

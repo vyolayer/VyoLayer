@@ -8,7 +8,6 @@ import (
 	"github.com/vyolayer/vyolayer/internal/account/config"
 	"github.com/vyolayer/vyolayer/internal/account/domain"
 	"github.com/vyolayer/vyolayer/internal/account/repository"
-	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/mail"
 )
@@ -35,23 +34,23 @@ func (uc *accountRecoverUsecase) ChangePassword(
 	ctx context.Context,
 	projectID, userID uuid.UUID,
 	oldPassword, newPassword string,
-) *errors.AppError {
+) error {
 	u, err := uc.ur.FindByID(ctx, projectID, userID)
 	if err != nil {
 		return err
 	}
 
 	if !u.VerifyPassword(oldPassword) {
-		return errors.New(errors.ErrAuthPasswordMismatch)
+		return ErrInvalidPassword
 	}
 
 	if u.IsSamePassword(newPassword) {
-		return errors.New(errors.ErrAuthSamePassword)
+		return ErrSamePassword
 	}
 
 	e := u.ChangePassword(newPassword)
 	if e != nil {
-		return errors.Wrap(e, errors.ErrInternalHashing, "Failed to hash password")
+		return e
 	}
 
 	err = uc.ur.Update(ctx, projectID, u)
@@ -68,7 +67,7 @@ func (uc *accountRecoverUsecase) ForgotPassword(
 	ctx context.Context,
 	projectID uuid.UUID,
 	email string,
-) *errors.AppError {
+) error {
 	// Find user
 	u, err := uc.ur.FindByEmail(ctx, projectID, email)
 	if err != nil {
@@ -76,7 +75,7 @@ func (uc *accountRecoverUsecase) ForgotPassword(
 	}
 	rawToken, hashToken, e := domain.GenerateVerificationToken()
 	if e != nil {
-		return errors.Internal("Failed to generate verification token", e)
+		return ErrJwtTokenGeneration
 	}
 	s := domain.NewVerificationToken(
 		projectID,
@@ -96,7 +95,7 @@ func (uc *accountRecoverUsecase) ForgotPassword(
 		Body:    "Please click the link below to reset your password: " + resetLink,
 	})
 	if mailerErr != nil {
-		return errors.Internal("Failed to send password reset email", mailerErr)
+		return ErrFailedToSendEmail
 	}
 
 	err = uc.tr.Create(ctx, s)
@@ -110,7 +109,7 @@ func (uc *accountRecoverUsecase) ResetPassword(
 	ctx context.Context,
 	projectID uuid.UUID,
 	token, newPassword string,
-) *errors.AppError {
+) error {
 	// find verification token
 	t, err := uc.tr.FindByTokenHash(
 		ctx,
@@ -118,10 +117,10 @@ func (uc *accountRecoverUsecase) ResetPassword(
 		domain.HashToken(token),
 	)
 	if err != nil {
-		return err
+		return ErrInvalidResetPasswordToken
 	}
-	if t.IsExpired() || !t.IsPasswordResetToken() {
-		return errors.BadRequest("Token is expired or invalid")
+	if t.IsExpired() || !t.IsPasswordResetToken() || t.IsUsed() {
+		return ErrInvalidVerificationToken
 	}
 
 	// find user
@@ -130,10 +129,14 @@ func (uc *accountRecoverUsecase) ResetPassword(
 		return err
 	}
 
+	if u.IsSamePassword(newPassword) {
+		return ErrSamePassword
+	}
+
 	// change password
 	e := u.ChangePassword(newPassword)
 	if e != nil {
-		return errors.Wrap(e, errors.ErrInternalHashing, "Failed to hash password")
+		return e
 	}
 
 	err = uc.ur.Update(ctx, projectID, u)

@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/vyolayer/vyolayer/internal/account/config"
 	"github.com/vyolayer/vyolayer/internal/account/repository"
-	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/mail"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
@@ -14,11 +13,11 @@ import (
 
 // --- Account Usecase
 type AccountUsecase interface {
-	Register(ctx context.Context, projectID uuid.UUID, email, username, password, firstName, lastName string) (string, *errors.AppError)
-	VerifyEmail(ctx context.Context, projectID uuid.UUID, token string) *errors.AppError
-	ResendVerificationEmail(ctx context.Context, projectID uuid.UUID, email string) *errors.AppError
-	Login(ctx context.Context, projectID uuid.UUID, email, password string) (*accountV1.LoginResponse, *errors.AppError)
-	Logout(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, refreshToken string) *errors.AppError
+	Register(ctx context.Context, projectID uuid.UUID, email, username, password, firstName, lastName string) (string, error)
+	VerifyEmail(ctx context.Context, projectID uuid.UUID, token string) error
+	ResendVerificationEmail(ctx context.Context, projectID uuid.UUID, email string) error
+	Login(ctx context.Context, projectID uuid.UUID, email, password string) (*accountV1.LoginResponse, error)
+	Logout(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, refreshToken string) error
 }
 
 type accountUsecase struct {
@@ -35,22 +34,22 @@ type SessionUsecase interface {
 		ctx context.Context,
 		projectID uuid.UUID,
 		refreshToken string,
-	) (*accountV1.RefreshSessionResponse, *errors.AppError)
+	) (*accountV1.RefreshSessionResponse, error)
 
 	ListSessions(
 		ctx context.Context,
 		projectID, userID uuid.UUID,
-	) (*accountV1.AllSessionsResponse, *errors.AppError)
+	) (*accountV1.AllSessionsResponse, error)
 
 	RevokeSession(
 		ctx context.Context,
 		projectID, userID, sessionID uuid.UUID,
-	) *errors.AppError
+	) error
 
 	RevokeAllSessions(
 		ctx context.Context,
 		projectID, userID uuid.UUID,
-	) *errors.AppError
+	) error
 }
 
 type sessionUsecase struct {
@@ -67,7 +66,7 @@ type AccountRecoverUsecase interface {
 		projectID uuid.UUID,
 		userID uuid.UUID,
 		oldPassword, newPassword string,
-	) *errors.AppError
+	) error
 
 	// ForgotPassword initiates the recovery flow by generating a token
 	// and potentially sending an email via a provider.
@@ -75,7 +74,7 @@ type AccountRecoverUsecase interface {
 		ctx context.Context,
 		projectID uuid.UUID,
 		email string,
-	) *errors.AppError
+	) error
 
 	// ResetPassword completes the recovery flow using the token
 	// received in the forgot password step.
@@ -83,7 +82,7 @@ type AccountRecoverUsecase interface {
 		ctx context.Context,
 		projectID uuid.UUID,
 		token, newPassword string,
-	) *errors.AppError
+	) error
 }
 
 type accountRecoverUsecase struct {

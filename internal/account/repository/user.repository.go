@@ -19,7 +19,7 @@ func NewUserRepository(client *gorm.DB) UserRepository {
 	}
 }
 
-func (r *userRepository) Create(ctx context.Context, projectID uuid.UUID, user *domain.User) *RepoError {
+func (r *userRepository) Create(ctx context.Context, projectID uuid.UUID, user *domain.User) error {
 	avatar := AvatarModel{
 		UUID:          ModelID{ID: user.Avatar.ID},
 		URL:           user.Avatar.URL,
@@ -66,7 +66,7 @@ func (r *userRepository) Create(ctx context.Context, projectID uuid.UUID, user *
 	return nil
 }
 
-func (r *userRepository) FindByUsername(ctx context.Context, projectID uuid.UUID, username string) (*domain.User, *RepoError) {
+func (r *userRepository) FindByUsername(ctx context.Context, projectID uuid.UUID, username string) (*domain.User, error) {
 	var um UserModel
 
 	if err := r.client.
@@ -79,7 +79,7 @@ func (r *userRepository) FindByUsername(ctx context.Context, projectID uuid.UUID
 	return MapToDomainUser(&um), nil
 }
 
-func (r *userRepository) FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.User, *RepoError) {
+func (r *userRepository) FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.User, error) {
 	var um UserModel
 	if err := r.client.
 		Preload("Avatar").
@@ -92,7 +92,7 @@ func (r *userRepository) FindByID(ctx context.Context, projectID uuid.UUID, id u
 	return MapToDomainUser(&um), nil
 }
 
-func (r *userRepository) FindByEmail(ctx context.Context, projectID uuid.UUID, email string) (*domain.User, *RepoError) {
+func (r *userRepository) FindByEmail(ctx context.Context, projectID uuid.UUID, email string) (*domain.User, error) {
 	var um UserModel
 	if err := r.client.
 		Where("project_id = ? AND email = ?", projectID, email).
@@ -104,7 +104,7 @@ func (r *userRepository) FindByEmail(ctx context.Context, projectID uuid.UUID, e
 	return MapToDomainUser(&um), nil
 }
 
-func (r *userRepository) Update(ctx context.Context, projectID uuid.UUID, user *domain.User) *RepoError {
+func (r *userRepository) Update(ctx context.Context, projectID uuid.UUID, user *domain.User) error {
 	updates := map[string]interface{}{
 		"email":          user.Email,
 		"first_name":     user.FirstName,
@@ -125,7 +125,7 @@ func (r *userRepository) Update(ctx context.Context, projectID uuid.UUID, user *
 	return nil
 }
 
-func (r *userRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError {
+func (r *userRepository) Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error {
 	if err := r.client.
 		Where("project_id = ? AND id = ?", projectID, id).
 		Delete(&UserModel{}).

@@ -23,30 +23,30 @@ type (
 )
 
 type UserRepository interface {
-	Create(ctx context.Context, projectID uuid.UUID, user *domain.User) *RepoError
-	FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.User, *RepoError)
-	FindByEmail(ctx context.Context, projectID uuid.UUID, email string) (*domain.User, *RepoError)
-	FindByUsername(ctx context.Context, projectID uuid.UUID, username string) (*domain.User, *RepoError)
-	Update(ctx context.Context, projectID uuid.UUID, user *domain.User) *RepoError
-	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError
+	Create(ctx context.Context, projectID uuid.UUID, user *domain.User) error
+	FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.User, error)
+	FindByEmail(ctx context.Context, projectID uuid.UUID, email string) (*domain.User, error)
+	FindByUsername(ctx context.Context, projectID uuid.UUID, username string) (*domain.User, error)
+	Update(ctx context.Context, projectID uuid.UUID, user *domain.User) error
+	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error
 }
 
 type SessionRepository interface {
-	Create(ctx context.Context, session *domain.Session) *RepoError
-	FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.Session, *RepoError)
-	FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.Session, *RepoError)
-	FindByUserID(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) ([]*domain.Session, *RepoError)
-	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError
-	DeleteExpired(ctx context.Context) *RepoError
-	DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) *RepoError
-	RotateToken(ctx context.Context, session *domain.Session) *RepoError
+	Create(ctx context.Context, session *domain.Session) error
+	FindByID(ctx context.Context, projectID uuid.UUID, id uuid.UUID) (*domain.Session, error)
+	FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.Session, error)
+	FindByUserID(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) ([]*domain.Session, error)
+	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error
+	DeleteExpired(ctx context.Context) error
+	DeleteAll(ctx context.Context, projectID uuid.UUID, userID uuid.UUID) error
+	RotateToken(ctx context.Context, session *domain.Session) error
 }
 
 type VerificationTokenRepository interface {
-	Create(ctx context.Context, token *domain.VerificationToken) *RepoError
-	FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.VerificationToken, *RepoError)
-	FindByUserIDAndType(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, tokenType string) ([]*domain.VerificationToken, *RepoError)
-	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) *RepoError
-	DeleteExpired(ctx context.Context) *RepoError
-	Update(ctx context.Context, projectID uuid.UUID, token *domain.VerificationToken) *RepoError
+	Create(ctx context.Context, token *domain.VerificationToken) error
+	FindByTokenHash(ctx context.Context, projectID uuid.UUID, tokenHash string) (*domain.VerificationToken, error)
+	FindByUserIDAndType(ctx context.Context, projectID uuid.UUID, userID uuid.UUID, tokenType string) ([]*domain.VerificationToken, error)
+	Delete(ctx context.Context, projectID uuid.UUID, id uuid.UUID) error
+	DeleteExpired(ctx context.Context) error
+	Update(ctx context.Context, projectID uuid.UUID, token *domain.VerificationToken) error
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/vyolayer/vyolayer/internal/account/domain"
 	"github.com/vyolayer/vyolayer/internal/account/repository"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
-	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/mail"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
@@ -27,23 +26,23 @@ func (uc *accountUsecase) Register(
 	ctx context.Context,
 	projectID uuid.UUID,
 	email, username, password, firstName, lastName string,
-) (string, *errors.AppError) {
+) (string, error) {
 	var (
 		user *domain.User
-		err  *errors.AppError
+		err  error
 	)
 
 	// Check email and username
 	if username != "" {
 		user, err = uc.userRepo.FindByUsername(ctx, projectID, username)
 		if user != nil {
-			return "", errors.BadRequest("Username already exists")
+			return "", ErrUsernameAlreadyExists
 		}
 	}
 
 	user, err = uc.userRepo.FindByEmail(ctx, projectID, email)
 	if user != nil {
-		return "", errors.BadRequest("Email already exists")
+		return "", ErrEmailAlreadyExists
 	}
 
 	user = domain.NewUser(projectID, email, username, password, firstName, lastName)
@@ -56,7 +55,7 @@ func (uc *accountUsecase) Register(
 
 	rawToken, tokenHash, tokenErr := domain.GenerateVerificationToken()
 	if tokenErr != nil {
-		return "", errors.Internal("Failed to generate verification token", tokenErr)
+		return "", ErrJwtTokenGeneration
 	}
 
 	tokenRecord := domain.NewVerificationToken(
@@ -84,7 +83,7 @@ func (uc *accountUsecase) VerifyEmail(
 	ctx context.Context,
 	projectID uuid.UUID,
 	token string,
-) *errors.AppError {
+) error {
 	// Verify token
 	tokenHash := domain.HashToken(token)
 	tr, err := uc.tokenRepo.FindByTokenHash(ctx, projectID, tokenHash)
@@ -101,7 +100,7 @@ func (uc *accountUsecase) VerifyEmail(
 		return err
 	}
 	if user.IsVerified() {
-		return errors.BadRequest("Email already verified")
+		return ErrUserAlreadyVerified
 	}
 
 	user.VerifyEmail()
@@ -124,7 +123,7 @@ func (uc *accountUsecase) ResendVerificationEmail(
 	ctx context.Context,
 	projectID uuid.UUID,
 	email string,
-) *errors.AppError {
+) error {
 	// Find user
 	user, err := uc.userRepo.FindByEmail(ctx, projectID, email)
 	if err != nil {
@@ -132,13 +131,13 @@ func (uc *accountUsecase) ResendVerificationEmail(
 	}
 
 	if user.IsVerified() {
-		return errors.BadRequest("Email already verified")
+		return ErrUserAlreadyVerified
 	}
 
 	// Generate token
 	rawToken, tokenHash, tokenErr := domain.GenerateVerificationToken()
 	if tokenErr != nil {
-		return errors.Internal("Failed to generate verification token", tokenErr)
+		return ErrJwtTokenGeneration
 	}
 
 	// Create token record
@@ -168,10 +167,10 @@ func (uc *accountUsecase) Login(
 	ctx context.Context,
 	projectID uuid.UUID,
 	email, password string,
-) (*accountV1.LoginResponse, *errors.AppError) {
+) (*accountV1.LoginResponse, error) {
 	var (
 		user *domain.User
-		err  *errors.AppError
+		err  error
 	)
 
 	user, err = uc.userRepo.FindByEmail(ctx, projectID, email)
@@ -179,26 +178,26 @@ func (uc *accountUsecase) Login(
 		return nil, err
 	}
 	if user == nil {
-		return nil, errors.BadRequest("Invalid credentials")
+		return nil, ErrUserNotFound
 	}
 	if !user.IsVerified() {
-		return nil, errors.BadRequest("Email not verified")
+		return nil, ErrUserNotVerified
 	}
 	if !user.IsActive() {
-		return nil, errors.BadRequest("Account not active")
+		return nil, ErrUserInactive
 	}
 	if !user.VerifyPassword(password) {
-		return nil, errors.BadRequest("Invalid credentials")
+		return nil, ErrInvalidPassword
 	}
 
 	accessToken, tokenErr := uc.accountJWT.GenerateAccessToken(user.ID, projectID)
 	if tokenErr != nil {
-		return nil, errors.Internal("Failed to generate access token", tokenErr)
+		return nil, ErrJwtTokenGeneration
 	}
 
 	refreshToken, tokenErr := uc.accountJWT.GenerateRefreshToken()
 	if tokenErr != nil {
-		return nil, errors.Internal("Failed to generate refresh token", tokenErr)
+		return nil, ErrJwtTokenGeneration
 	}
 
 	deviceInfo, _ := ctxutil.ExtractDeviceInfo(ctx)
@@ -233,26 +232,16 @@ func (uc *accountUsecase) Logout(
 	projectID uuid.UUID,
 	userID uuid.UUID,
 	refreshToken string,
-) *errors.AppError {
+) error {
 	tokenHash := domain.SessionTokenHash(refreshToken)
 	session, err := uc.sessionRepo.FindByTokenHash(ctx, projectID, tokenHash)
 	if err != nil {
 		return err
 	}
-	if session == nil {
-		return errors.BadRequest("Invalid refresh token")
-	}
-	if session.UserID != userID {
-		return errors.BadRequest("Invalid refresh token")
-	}
-	if session.IsRevoked() {
-		return errors.BadRequest("Invalid refresh token")
-	}
-	if session.IsExpired() {
-		return errors.BadRequest("Invalid refresh token")
+	if session == nil || session.UserID != userID || session.IsRevoked() || session.IsExpired() {
+		return ErrSessionNotFound
 	}
 
-	session.Revoke("User logged out")
 	err = uc.sessionRepo.Delete(ctx, projectID, session.ID)
 	if err != nil {
 		return err

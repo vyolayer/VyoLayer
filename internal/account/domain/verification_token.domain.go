@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/vyolayer/vyolayer/pkg/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -15,6 +16,14 @@ const (
 	TokenTypePasswordReset = "password_reset"
 
 	VerificationTokenTTL = time.Minute * 15
+)
+
+var (
+	ErrVerificationTokenInvalid  = status.Error(codes.InvalidArgument, "Invalid verification token")
+	ErrVerificationTokenNotFound = status.Error(codes.NotFound, "Verification token not found")
+
+	ErrVerificationTokenExpired = status.Error(codes.FailedPrecondition, "Verification token expired")
+	ErrVerificationTokenUsed    = status.Error(codes.FailedPrecondition, "Verification token already used")
 )
 
 type VerificationToken struct {
@@ -43,15 +52,15 @@ func NewVerificationToken(
 	}
 }
 
-func (t *VerificationToken) Validate() *errors.AppError {
+func (t *VerificationToken) Validate() error {
 	if t == nil {
-		return errors.BadRequest("Invalid verification token")
+		return ErrVerificationTokenInvalid
 	}
 	if t.IsExpired() {
-		return errors.BadRequest("Verification token expired")
+		return ErrVerificationTokenExpired
 	}
 	if t.IsUsed() {
-		return errors.BadRequest("Verification token already used")
+		return ErrVerificationTokenUsed
 	}
 	return nil
 }

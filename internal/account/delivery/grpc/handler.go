@@ -2,12 +2,10 @@ package grpc
 
 import (
 	"context"
-	"log"
 
 	"github.com/google/uuid"
 	"github.com/vyolayer/vyolayer/internal/account/usecase"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
-	"github.com/vyolayer/vyolayer/pkg/errors"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -129,20 +127,14 @@ func (h *AccountHandler) Logout(
 	ctx context.Context,
 	req *accountV1.LogoutRequest,
 ) (*accountV1.LogoutResponse, error) {
-	aki, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	projectID, userID, err := h.validateRequest(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	_, userID, err := ctxutil.ExtractVyoServiceAccountDetails(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	log.Println("Logout request for user: ", userID, aki.ProjectID, req.RefreshToken)
 	appErr := h.usecase.Logout(
 		ctx,
-		aki.ProjectID,
+		projectID,
 		userID,
 		req.RefreshToken,
 	)
@@ -177,16 +169,9 @@ func (h *AccountHandler) AllSessions(
 	ctx context.Context,
 	req *accountV1.AllSessionsRequest,
 ) (*accountV1.AllSessionsResponse, error) {
-	apiKeyInfo, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	projectID, userID, err := h.validateRequest(ctx)
 	if err != nil {
 		return nil, err
-	}
-	projectID, userID, err := ctxutil.ExtractVyoServiceAccountDetails(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if apiKeyInfo.ProjectID != projectID {
-		return nil, errors.NewWithMessage(errors.ErrProjectInfoNotLoaded, "invalid project id")
 	}
 
 	resp, appErr := h.sessionuc.ListSessions(ctx, projectID, userID)
@@ -201,16 +186,9 @@ func (h *AccountHandler) RevokeSession(
 	ctx context.Context,
 	req *accountV1.RevokeSessionRequest,
 ) (*accountV1.RevokeSessionResponse, error) {
-	apiKeyInfo, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	projectID, userID, err := h.validateRequest(ctx)
 	if err != nil {
 		return nil, err
-	}
-	projectID, userID, err := ctxutil.ExtractVyoServiceAccountDetails(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if apiKeyInfo.ProjectID != projectID {
-		return nil, errors.NewWithMessage(errors.ErrProjectInfoNotLoaded, "invalid project id")
 	}
 
 	appErr := h.sessionuc.RevokeSession(ctx, projectID, userID, uuid.MustParse(req.GetSessionId()))
@@ -225,16 +203,9 @@ func (h *AccountHandler) RevokeAllSessions(
 	ctx context.Context,
 	req *accountV1.RevokeAllSessionsRequest,
 ) (*accountV1.RevokeAllSessionsResponse, error) {
-	apiKeyInfo, err := ctxutil.ExtractAPIKeyInfo(ctx)
+	projectID, userID, err := h.validateRequest(ctx)
 	if err != nil {
 		return nil, err
-	}
-	projectID, userID, err := ctxutil.ExtractVyoServiceAccountDetails(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if apiKeyInfo.ProjectID != projectID {
-		return nil, errors.NewWithMessage(errors.ErrProjectInfoNotLoaded, "invalid project id")
 	}
 
 	appErr := h.sessionuc.RevokeAllSessions(ctx, projectID, userID)
@@ -249,7 +220,6 @@ func (h *AccountHandler) ChangePassword(
 	ctx context.Context,
 	req *accountV1.ChangePasswordRequest,
 ) (*accountV1.ChangePasswordResponse, error) {
-	log.Println("Change password")
 	projectID, userID, err := h.validateRequest(ctx)
 	if err != nil {
 		return nil, err

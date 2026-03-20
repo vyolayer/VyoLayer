@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tenant.v1;
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/any.proto";
+
+message TenantSuccessResponse {
+  string              message = 1;
+  google.protobuf.Any payload = 2;
+}
+
+message TenantEmptyRequest {}

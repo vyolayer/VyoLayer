@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package tenant.v1;
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
+
+import "buf/validate/validate.proto";
+import "tenant/v1/common.proto";
+
+service ApiKeyService {
+  rpc GenerateKey(GenerateKeyRequest) returns (ApiKeyCreatedResponse);
+  rpc ListKeys(ListKeysRequest) returns (ListApiKeysResponse);
+  rpc GetKey(GetKeyRequest) returns (ApiKeyResponse);
+  rpc RevokeKey(RevokeKeyRequest) returns (TenantSuccessResponse);
+}
+
+message GenerateKeyRequest {
+  string project_id = 1 [(buf.validate.field).string.min_len = 1];
+  string name       = 2 [(buf.validate.field).string.min_len = 1];
+  string mode       = 3 [(buf.validate.field).string.min_len = 1]; // "dev" | "live"
+}
+
+message ListKeysRequest {
+  string project_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message GetKeyRequest {
+  string project_id = 1 [(buf.validate.field).string.min_len = 1];
+  string api_key_id = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message RevokeKeyRequest {
+  string project_id = 1 [(buf.validate.field).string.min_len = 1];
+  string api_key_id = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message ApiKeyResponse {
+  ApiKey api_key = 1;
+}
+
+message ApiKeyCreatedResponse {
+  ApiKey api_key = 1;
+  string raw_key = 2;
+}
+
+message ListApiKeysResponse {
+  repeated ApiKey api_keys = 1;
+}
+
+message ApiKey {
+  string          id            = 1;
+  string          project_id    = 2;
+  string          name          = 3;
+  string          key_prefix    = 4;
+  string          mode          = 5;
+  string          created_by    = 6;
+  optional string expires_at    = 7;
+  optional string last_used_at  = 8;
+  bool            is_revoked    = 9;
+  optional string revoked_at    = 10;
+  int32           request_limit = 11;
+  int32           rate_limit    = 12;
+  string          created_at    = 13; // RFC3339
+}

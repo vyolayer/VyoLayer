@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package tenant.v1;
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
+
+import "buf/validate/validate.proto";
+import "tenant/v1/common.proto";
+
+service ProjectService {
+  // Project CRUD
+  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse);
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
+  rpc GetProject(GetProjectRequest) returns (ProjectResponse);
+  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
+  rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse);
+  rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse);
+  rpc DeleteProject(DeleteProjectRequest) returns (TenantSuccessResponse);
+
+  // Members
+  rpc ListMembers(ListProjectMembersRequest) returns (ListProjectMembersResponse);
+  rpc GetCurrentMember(ListProjectMembersRequest) returns (ProjectMemberResponse);
+  rpc AddMember(AddProjectMemberRequest) returns (ProjectMemberResponse);
+  rpc ChangeMemberRole(ChangeProjectMemberRoleRequest) returns (TenantSuccessResponse);
+  rpc RemoveMember(RemoveProjectMemberRequest) returns (TenantSuccessResponse);
+  rpc LeaveProject(ProjectIdRequest) returns (TenantSuccessResponse);
+}
+
+// --------------------
+// Project CRUD
+// --------------------
+message CreateProjectRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string name            = 2 [(buf.validate.field).string.min_len = 3];
+  string description     = 3;
+}
+
+message ListProjectsRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message ListProjectsResponse {
+  repeated Project projects = 1;
+}
+
+message GetProjectRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message UpdateProjectRequest {
+  string          organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string          project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  optional string name            = 3;
+  optional string description     = 4;
+}
+
+message ArchiveProjectRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message RestoreProjectRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message DeleteProjectRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  string confirm_name    = 3 [(buf.validate.field).string.min_len = 1];
+}
+
+message ProjectIdRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message ProjectResponse {
+  Project                project = 1;
+  repeated ProjectMember members = 2;
+}
+
+message Project {
+  string id              = 1;
+  string organization_id = 2;
+  string name            = 3;
+  string slug            = 4;
+  string description     = 5;
+  bool   is_active       = 6;
+  string created_by      = 7;
+  int32  max_api_keys    = 8;
+  int32  max_members     = 9;
+  int32  member_count    = 10;
+  string created_at      = 11; // RFC3339
+}
+
+// --------------------
+// Project Members
+// --------------------
+message ListProjectMembersRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message ListProjectMembersResponse {
+  repeated ProjectMember members = 1;
+}
+
+message ProjectMemberResponse {
+  ProjectMember member = 1;
+}
+
+message ProjectMember {
+  string          id         = 1;
+  string          user_id    = 2;
+  string          email      = 3;
+  string          full_name  = 4;
+  string          role       = 5;
+  bool            is_active  = 6;
+  string          joined_at  = 7; // RFC3339
+  optional string removed_at = 8;
+}
+
+message AddProjectMemberRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  string user_id         = 3 [(buf.validate.field).string.min_len = 1];
+  string role            = 4;
+}
+
+message ChangeProjectMemberRoleRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  string member_id       = 3 [(buf.validate.field).string.min_len = 1];
+  string role            = 4;
+}
+
+message RemoveProjectMemberRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  string member_id       = 3 [(buf.validate.field).string.min_len = 1];
+}

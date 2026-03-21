@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package iam.v1;
+
+option go_package = "github.com/vyolayer/vyolayer/proto/iam/v1;iAMV1";
+
+import "buf/validate/validate.proto";
+import "iam/v1/common.proto";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc VerifyEmail(VerifyEmailRequest) returns (IAMSuccessResponse);
+  rpc ResendVerificationEmail(ResendVerificationEmailRequest) returns (IAMSuccessResponse);
+
+  rpc RefreshSession(RefreshSessionRequest) returns (SessionTokenResponse);
+  rpc Login(LoginRequest) returns (SessionTokenResponse);
+  rpc Logout(LogoutRequest) returns (IAMSuccessResponse);
+
+  rpc ChangePassword(ChangePasswordRequest) returns (IAMSuccessResponse);
+  rpc ForgotPassword(ForgotPasswordRequest) returns (IAMSuccessResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (IAMSuccessResponse);
+}
+
+message RegisterRequest {
+  string email      = 1 [(buf.validate.field).string.email = true];
+  string username   = 2 [(buf.validate.field).string = {max_len: 20}];
+  string password   = 3 [(buf.validate.field).string = {min_len: 8, max_len: 20}];
+  string first_name = 4 [(buf.validate.field).string = {min_len: 3, max_len: 50}];
+  string last_name  = 5 [(buf.validate.field).string = {max_len: 50}];
+}
+
+message RegisterResponse {
+  string user_id    = 1;
+  string email      = 2 [(buf.validate.field).string.email = true];
+  string username   = 3 [(buf.validate.field).string = {max_len: 20}];
+  string first_name = 4 [(buf.validate.field).string = {min_len: 3, max_len: 50}];
+  string last_name  = 5 [(buf.validate.field).string = {max_len: 50}];
+}
+
+message VerifyEmailRequest {
+  string token = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message ResendVerificationEmailRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+}
+
+message RefreshSessionRequest {
+  string session_token = 1 [(buf.validate.field).string.min_len = 1];
+  string access_token  = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message LoginRequest {
+  string email    = 1 [(buf.validate.field).string.email = true];
+  string password = 2 [(buf.validate.field).string = {min_len: 8, max_len: 20}];
+  string full_name = 3 [(buf.validate.field).string = {min_len: 3, max_len: 50}];
+}
+
+message SessionTokenResponse {
+  string session_token = 1 [(buf.validate.field).string.min_len = 1];
+  string access_token  = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message LogoutRequest {
+  string session_token = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message ChangePasswordRequest {
+  string old_password = 1 [(buf.validate.field).string.min_len = 1];
+  string new_password = 2 [(buf.validate.field).string = {
+    min_len: 8,
+    max_len: 20
+  }];
+  string confirm_password = 3 [(buf.validate.field).string.min_len = 1];
+}
+
+message ForgotPasswordRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+}
+
+message ResetPasswordRequest {
+  string token        = 2 [(buf.validate.field).string.min_len = 1];
+  string new_password = 3 [(buf.validate.field).string = {
+    min_len: 8,
+    max_len: 20
+  }];
+  string confirm_password = 4 [(buf.validate.field).string.min_len = 1];
+}

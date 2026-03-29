@@ -1,11 +1,12 @@
 package main
 
 import (
+	accountmodelv1 "github.com/vyolayer/vyolayer/internal/account/models/v1"
+	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
+
 	"github.com/vyolayer/vyolayer/internal/config"
-	iamv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	"github.com/vyolayer/vyolayer/internal/platform/database"
 	"github.com/vyolayer/vyolayer/internal/platform/database/models"
-	servicemodelv1 "github.com/vyolayer/vyolayer/pkg/postgres/models/service/account/v1"
 )
 
 func main() {
@@ -57,19 +58,19 @@ func main() {
 		models.AuditLog{},
 
 		// IAM models
-		iamv1.Avatar{},
-		iamv1.User{},
-		iamv1.Session{},
-		iamv1.VerificationToken{},
-		iamv1.PasswordResetToken{},
+		iammodelv1.Avatar{},
+		iammodelv1.User{},
+		iammodelv1.Session{},
+		iammodelv1.VerificationToken{},
+		iammodelv1.PasswordResetToken{},
 
 		// Account service models
-		servicemodelv1.ServiceUser{},
-		servicemodelv1.ServiceUserAvatar{},
-		servicemodelv1.ServiceUserSession{},
-		servicemodelv1.ServiceUserVerificationToken{},
-		servicemodelv1.ServiceUserLoginAttempt{},
-		servicemodelv1.ServiceUserAccountLock{},
+		accountmodelv1.ServiceUser{},
+		accountmodelv1.ServiceUserAvatar{},
+		accountmodelv1.ServiceUserSession{},
+		accountmodelv1.ServiceUserVerificationToken{},
+		accountmodelv1.ServiceUserLoginAttempt{},
+		accountmodelv1.ServiceUserAccountLock{},
 	)
 	if err != nil {
 		panic(err)

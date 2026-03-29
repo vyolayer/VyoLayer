@@ -1,4 +1,4 @@
-package sharedmodel
+package accountmodelv1
 
 import (
 	"time"
@@ -7,10 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-type TimeStamps struct {
-	CreatedAt time.Time `gorm:"<-:create;type:timestamp;default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time `gorm:"type:timestamp;default:CURRENT_TIMESTAMP"`
-}
+type (
+	TimeStamps = TimeStampsWithSoftDelete
+)
 
 type UUID struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key"`

@@ -1,4 +1,4 @@
-package servicemodelv1
+package accountmodelv1
 
 import (
 	"time"

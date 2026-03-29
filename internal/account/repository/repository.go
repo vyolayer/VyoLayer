@@ -5,21 +5,21 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/vyolayer/vyolayer/internal/account/domain"
-	servicemodelv1 "github.com/vyolayer/vyolayer/pkg/postgres/models/service/account/v1"
-	sharedmodel "github.com/vyolayer/vyolayer/pkg/postgres/models/shared"
+
+	accountmodelv1 "github.com/vyolayer/vyolayer/internal/account/models/v1"
 )
 
 type (
 	// Models
-	ModelID    = sharedmodel.UUID
-	TimeStamps = servicemodelv1.TimeStamps
+	ModelID    = accountmodelv1.UUID
+	TimeStamps = accountmodelv1.TimeStamps
 
-	UserModel              = servicemodelv1.ServiceUser
-	AvatarModel            = servicemodelv1.ServiceUserAvatar
-	SessionModel           = servicemodelv1.ServiceUserSession
-	VerificationTokenModel = servicemodelv1.ServiceUserVerificationToken
-	UserAccountLockModel   = servicemodelv1.ServiceUserAccountLock
-	UserLoginAttemptModel  = servicemodelv1.ServiceUserLoginAttempt
+	UserModel              = accountmodelv1.ServiceUser
+	AvatarModel            = accountmodelv1.ServiceUserAvatar
+	SessionModel           = accountmodelv1.ServiceUserSession
+	VerificationTokenModel = accountmodelv1.ServiceUserVerificationToken
+	UserAccountLockModel   = accountmodelv1.ServiceUserAccountLock
+	UserLoginAttemptModel  = accountmodelv1.ServiceUserLoginAttempt
 )
 
 type UserRepository interface {

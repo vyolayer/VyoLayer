@@ -102,6 +102,94 @@ func (x *GetMeResponse) GetUser() *User {
 	return nil
 }
 
+type UpdateMeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FullName      string                 `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateMeRequest) Reset() {
+	*x = UpdateMeRequest{}
+	mi := &file_iam_v1_user_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateMeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateMeRequest) ProtoMessage() {}
+
+func (x *UpdateMeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_v1_user_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateMeRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMeRequest) Descriptor() ([]byte, []int) {
+	return file_iam_v1_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UpdateMeRequest) GetFullName() string {
+	if x != nil {
+		return x.FullName
+	}
+	return ""
+}
+
+type UpdateMeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateMeResponse) Reset() {
+	*x = UpdateMeResponse{}
+	mi := &file_iam_v1_user_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateMeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateMeResponse) ProtoMessage() {}
+
+func (x *UpdateMeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_v1_user_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateMeResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMeResponse) Descriptor() ([]byte, []int) {
+	return file_iam_v1_user_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UpdateMeResponse) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 type User struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -116,7 +204,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_iam_v1_user_proto_msgTypes[2]
+	mi := &file_iam_v1_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -128,7 +216,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_v1_user_proto_msgTypes[2]
+	mi := &file_iam_v1_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -141,7 +229,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_iam_v1_user_proto_rawDescGZIP(), []int{2}
+	return file_iam_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *User) GetId() string {
@@ -193,6 +281,10 @@ const file_iam_v1_user_proto_rawDesc = "" +
 	"\x11iam/v1/user.proto\x12\x06iam.v1\x1a\x1bbuf/validate/validate.proto\"\x0e\n" +
 	"\fGetMeRequest\"1\n" +
 	"\rGetMeResponse\x12 \n" +
+	"\x04user\x18\x01 \x01(\v2\f.iam.v1.UserR\x04user\"7\n" +
+	"\x0fUpdateMeRequest\x12$\n" +
+	"\tfull_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18dR\bfullName\"4\n" +
+	"\x10UpdateMeResponse\x12 \n" +
 	"\x04user\x18\x01 \x01(\v2\f.iam.v1.UserR\x04user\"\xaa\x01\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
@@ -200,9 +292,10 @@ const file_iam_v1_user_proto_rawDesc = "" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\tR\x06status\x12*\n" +
 	"\x11is_email_verified\x18\x05 \x01(\bR\x0fisEmailVerified\x12\x1b\n" +
-	"\tjoined_at\x18\x06 \x01(\tR\bjoinedAt2C\n" +
+	"\tjoined_at\x18\x06 \x01(\tR\bjoinedAt2\x82\x01\n" +
 	"\vUserService\x124\n" +
-	"\x05GetMe\x12\x14.iam.v1.GetMeRequest\x1a\x15.iam.v1.GetMeResponseB1Z/github.com/vyolayer/vyolayer/proto/iam/v1;iAMV1b\x06proto3"
+	"\x05GetMe\x12\x14.iam.v1.GetMeRequest\x1a\x15.iam.v1.GetMeResponse\x12=\n" +
+	"\bUpdateMe\x12\x17.iam.v1.UpdateMeRequest\x1a\x18.iam.v1.UpdateMeResponseB1Z/github.com/vyolayer/vyolayer/proto/iam/v1;iAMV1b\x06proto3"
 
 var (
 	file_iam_v1_user_proto_rawDescOnce sync.Once
@@ -216,21 +309,26 @@ func file_iam_v1_user_proto_rawDescGZIP() []byte {
 	return file_iam_v1_user_proto_rawDescData
 }
 
-var file_iam_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_iam_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_iam_v1_user_proto_goTypes = []any{
-	(*GetMeRequest)(nil),  // 0: iam.v1.GetMeRequest
-	(*GetMeResponse)(nil), // 1: iam.v1.GetMeResponse
-	(*User)(nil),          // 2: iam.v1.User
+	(*GetMeRequest)(nil),     // 0: iam.v1.GetMeRequest
+	(*GetMeResponse)(nil),    // 1: iam.v1.GetMeResponse
+	(*UpdateMeRequest)(nil),  // 2: iam.v1.UpdateMeRequest
+	(*UpdateMeResponse)(nil), // 3: iam.v1.UpdateMeResponse
+	(*User)(nil),             // 4: iam.v1.User
 }
 var file_iam_v1_user_proto_depIdxs = []int32{
-	2, // 0: iam.v1.GetMeResponse.user:type_name -> iam.v1.User
-	0, // 1: iam.v1.UserService.GetMe:input_type -> iam.v1.GetMeRequest
-	1, // 2: iam.v1.UserService.GetMe:output_type -> iam.v1.GetMeResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	4, // 0: iam.v1.GetMeResponse.user:type_name -> iam.v1.User
+	4, // 1: iam.v1.UpdateMeResponse.user:type_name -> iam.v1.User
+	0, // 2: iam.v1.UserService.GetMe:input_type -> iam.v1.GetMeRequest
+	2, // 3: iam.v1.UserService.UpdateMe:input_type -> iam.v1.UpdateMeRequest
+	1, // 4: iam.v1.UserService.GetMe:output_type -> iam.v1.GetMeResponse
+	3, // 5: iam.v1.UserService.UpdateMe:output_type -> iam.v1.UpdateMeResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_iam_v1_user_proto_init() }
@@ -244,7 +342,7 @@ func file_iam_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_v1_user_proto_rawDesc), len(file_iam_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

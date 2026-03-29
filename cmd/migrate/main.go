@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/vyolayer/vyolayer/internal/config"
+	iamv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	"github.com/vyolayer/vyolayer/internal/platform/database"
 	"github.com/vyolayer/vyolayer/internal/platform/database/models"
 	servicemodelv1 "github.com/vyolayer/vyolayer/pkg/postgres/models/service/account/v1"
@@ -25,6 +26,7 @@ func main() {
 	defer sqlDB.Close()
 
 	db.Exec("CREATE SCHEMA IF NOT EXISTS account_service;")
+	db.Exec("CREATE SCHEMA IF NOT EXISTS iam;")
 
 	err = db.AutoMigrate(
 		// IAM models
@@ -53,6 +55,13 @@ func main() {
 
 		// Audit log models
 		models.AuditLog{},
+
+		// IAM models
+		iamv1.Avatar{},
+		iamv1.User{},
+		iamv1.Session{},
+		iamv1.VerificationToken{},
+		iamv1.PasswordResetToken{},
 
 		// Account service models
 		servicemodelv1.ServiceUser{},

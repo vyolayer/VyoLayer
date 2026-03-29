@@ -8,11 +8,20 @@ import "buf/validate/validate.proto";
 
 service UserService {
   rpc GetMe (GetMeRequest) returns (GetMeResponse);
+  rpc UpdateMe (UpdateMeRequest) returns (UpdateMeResponse);
 }
 
 message GetMeRequest {}
 
 message GetMeResponse {
+  User user = 1;
+}
+
+message UpdateMeRequest {
+  string full_name = 1 [(buf.validate.field).string = {max_len: 100}];
+}
+
+message UpdateMeResponse {
   User user = 1;
 }
 
@@ -24,4 +33,5 @@ message User {
   bool is_email_verified = 5;
   string joined_at = 6; // RFC3339 string
 }
+
 

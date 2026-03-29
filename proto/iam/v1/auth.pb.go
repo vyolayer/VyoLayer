@@ -10,6 +10,7 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -25,10 +26,8 @@ const (
 type RegisterRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	FirstName     string                 `protobuf:"bytes,4,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
-	LastName      string                 `protobuf:"bytes,5,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	FullName      string                 `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,13 +69,6 @@ func (x *RegisterRequest) GetEmail() string {
 	return ""
 }
 
-func (x *RegisterRequest) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
 func (x *RegisterRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
@@ -84,16 +76,9 @@ func (x *RegisterRequest) GetPassword() string {
 	return ""
 }
 
-func (x *RegisterRequest) GetFirstName() string {
+func (x *RegisterRequest) GetFullName() string {
 	if x != nil {
-		return x.FirstName
-	}
-	return ""
-}
-
-func (x *RegisterRequest) GetLastName() string {
-	if x != nil {
-		return x.LastName
+		return x.FullName
 	}
 	return ""
 }
@@ -102,9 +87,7 @@ type RegisterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
-	FirstName     string                 `protobuf:"bytes,4,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
-	LastName      string                 `protobuf:"bytes,5,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	FullName      string                 `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -153,23 +136,9 @@ func (x *RegisterResponse) GetEmail() string {
 	return ""
 }
 
-func (x *RegisterResponse) GetUsername() string {
+func (x *RegisterResponse) GetFullName() string {
 	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *RegisterResponse) GetFirstName() string {
-	if x != nil {
-		return x.FirstName
-	}
-	return ""
-}
-
-func (x *RegisterResponse) GetLastName() string {
-	if x != nil {
-		return x.LastName
+		return x.FullName
 	}
 	return ""
 }
@@ -265,7 +234,6 @@ func (x *ResendVerificationEmailRequest) GetEmail() string {
 type RefreshSessionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	SessionToken  string                 `protobuf:"bytes,1,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
-	AccessToken   string                 `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -307,18 +275,10 @@ func (x *RefreshSessionRequest) GetSessionToken() string {
 	return ""
 }
 
-func (x *RefreshSessionRequest) GetAccessToken() string {
-	if x != nil {
-		return x.AccessToken
-	}
-	return ""
-}
-
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	FullName      string                 `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -367,19 +327,14 @@ func (x *LoginRequest) GetPassword() string {
 	return ""
 }
 
-func (x *LoginRequest) GetFullName() string {
-	if x != nil {
-		return x.FullName
-	}
-	return ""
-}
-
 type SessionTokenResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SessionToken  string                 `protobuf:"bytes,1,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
-	AccessToken   string                 `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	SessionToken          string                 `protobuf:"bytes,1,opt,name=session_token,json=sessionToken,proto3" json:"session_token,omitempty"`
+	SessionTokenExpiresAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=session_token_expires_at,json=sessionTokenExpiresAt,proto3" json:"session_token_expires_at,omitempty"`
+	AccessToken           string                 `protobuf:"bytes,3,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	AccessTokenExpiresAt  *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=access_token_expires_at,json=accessTokenExpiresAt,proto3" json:"access_token_expires_at,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *SessionTokenResponse) Reset() {
@@ -419,11 +374,25 @@ func (x *SessionTokenResponse) GetSessionToken() string {
 	return ""
 }
 
+func (x *SessionTokenResponse) GetSessionTokenExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.SessionTokenExpiresAt
+	}
+	return nil
+}
+
 func (x *SessionTokenResponse) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
 	return ""
+}
+
+func (x *SessionTokenResponse) GetAccessTokenExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.AccessTokenExpiresAt
+	}
+	return nil
 }
 
 type LogoutRequest struct {
@@ -638,35 +607,29 @@ var File_iam_v1_auth_proto protoreflect.FileDescriptor
 
 const file_iam_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11iam/v1/auth.proto\x12\x06iam.v1\x1a\x1bbuf/validate/validate.proto\x1a\x13iam/v1/common.proto\"\xcc\x01\n" +
+	"\x11iam/v1/auth.proto\x12\x06iam.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13iam/v1/common.proto\"{\n" +
 	"\x0fRegisterRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12#\n" +
-	"\busername\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\busername\x12%\n" +
-	"\bpassword\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\bpassword\x12(\n" +
-	"\n" +
-	"first_name\x18\x04 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\tfirstName\x12$\n" +
-	"\tlast_name\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x182R\blastName\"\xbf\x01\n" +
+	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\bpassword\x12$\n" +
+	"\tfull_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x182R\bfullName\"p\n" +
 	"\x10RegisterResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
-	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12#\n" +
-	"\busername\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\busername\x12(\n" +
-	"\n" +
-	"first_name\x18\x04 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\tfirstName\x12$\n" +
-	"\tlast_name\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x182R\blastName\"3\n" +
+	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12$\n" +
+	"\tfull_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18dR\bfullName\"3\n" +
 	"\x12VerifyEmailRequest\x12\x1d\n" +
 	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\"?\n" +
 	"\x1eResendVerificationEmailRequest\x12\x1d\n" +
-	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"q\n" +
+	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"E\n" +
 	"\x15RefreshSessionRequest\x12,\n" +
-	"\rsession_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fsessionToken\x12*\n" +
-	"\faccess_token\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vaccessToken\"|\n" +
+	"\rsession_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fsessionToken\"T\n" +
 	"\fLoginRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12%\n" +
-	"\bpassword\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\bpassword\x12&\n" +
-	"\tfull_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\bfullName\"p\n" +
+	"\bpassword\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\bpassword\"\x98\x02\n" +
 	"\x14SessionTokenResponse\x12,\n" +
-	"\rsession_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fsessionToken\x12*\n" +
-	"\faccess_token\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vaccessToken\"=\n" +
+	"\rsession_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fsessionToken\x12S\n" +
+	"\x18session_token_expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x15sessionTokenExpiresAt\x12*\n" +
+	"\faccess_token\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vaccessToken\x12Q\n" +
+	"\x17access_token_expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x14accessTokenExpiresAt\"=\n" +
 	"\rLogoutRequest\x12,\n" +
 	"\rsession_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fsessionToken\"\xa5\x01\n" +
 	"\x15ChangePasswordRequest\x12*\n" +
@@ -715,32 +678,35 @@ var file_iam_v1_auth_proto_goTypes = []any{
 	(*ChangePasswordRequest)(nil),          // 8: iam.v1.ChangePasswordRequest
 	(*ForgotPasswordRequest)(nil),          // 9: iam.v1.ForgotPasswordRequest
 	(*ResetPasswordRequest)(nil),           // 10: iam.v1.ResetPasswordRequest
-	(*IAMSuccessResponse)(nil),             // 11: iam.v1.IAMSuccessResponse
+	(*timestamppb.Timestamp)(nil),          // 11: google.protobuf.Timestamp
+	(*IAMSuccessResponse)(nil),             // 12: iam.v1.IAMSuccessResponse
 }
 var file_iam_v1_auth_proto_depIdxs = []int32{
-	0,  // 0: iam.v1.AuthService.Register:input_type -> iam.v1.RegisterRequest
-	2,  // 1: iam.v1.AuthService.VerifyEmail:input_type -> iam.v1.VerifyEmailRequest
-	3,  // 2: iam.v1.AuthService.ResendVerificationEmail:input_type -> iam.v1.ResendVerificationEmailRequest
-	4,  // 3: iam.v1.AuthService.RefreshSession:input_type -> iam.v1.RefreshSessionRequest
-	5,  // 4: iam.v1.AuthService.Login:input_type -> iam.v1.LoginRequest
-	7,  // 5: iam.v1.AuthService.Logout:input_type -> iam.v1.LogoutRequest
-	8,  // 6: iam.v1.AuthService.ChangePassword:input_type -> iam.v1.ChangePasswordRequest
-	9,  // 7: iam.v1.AuthService.ForgotPassword:input_type -> iam.v1.ForgotPasswordRequest
-	10, // 8: iam.v1.AuthService.ResetPassword:input_type -> iam.v1.ResetPasswordRequest
-	1,  // 9: iam.v1.AuthService.Register:output_type -> iam.v1.RegisterResponse
-	11, // 10: iam.v1.AuthService.VerifyEmail:output_type -> iam.v1.IAMSuccessResponse
-	11, // 11: iam.v1.AuthService.ResendVerificationEmail:output_type -> iam.v1.IAMSuccessResponse
-	6,  // 12: iam.v1.AuthService.RefreshSession:output_type -> iam.v1.SessionTokenResponse
-	6,  // 13: iam.v1.AuthService.Login:output_type -> iam.v1.SessionTokenResponse
-	11, // 14: iam.v1.AuthService.Logout:output_type -> iam.v1.IAMSuccessResponse
-	11, // 15: iam.v1.AuthService.ChangePassword:output_type -> iam.v1.IAMSuccessResponse
-	11, // 16: iam.v1.AuthService.ForgotPassword:output_type -> iam.v1.IAMSuccessResponse
-	11, // 17: iam.v1.AuthService.ResetPassword:output_type -> iam.v1.IAMSuccessResponse
-	9,  // [9:18] is the sub-list for method output_type
-	0,  // [0:9] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	11, // 0: iam.v1.SessionTokenResponse.session_token_expires_at:type_name -> google.protobuf.Timestamp
+	11, // 1: iam.v1.SessionTokenResponse.access_token_expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 2: iam.v1.AuthService.Register:input_type -> iam.v1.RegisterRequest
+	2,  // 3: iam.v1.AuthService.VerifyEmail:input_type -> iam.v1.VerifyEmailRequest
+	3,  // 4: iam.v1.AuthService.ResendVerificationEmail:input_type -> iam.v1.ResendVerificationEmailRequest
+	4,  // 5: iam.v1.AuthService.RefreshSession:input_type -> iam.v1.RefreshSessionRequest
+	5,  // 6: iam.v1.AuthService.Login:input_type -> iam.v1.LoginRequest
+	7,  // 7: iam.v1.AuthService.Logout:input_type -> iam.v1.LogoutRequest
+	8,  // 8: iam.v1.AuthService.ChangePassword:input_type -> iam.v1.ChangePasswordRequest
+	9,  // 9: iam.v1.AuthService.ForgotPassword:input_type -> iam.v1.ForgotPasswordRequest
+	10, // 10: iam.v1.AuthService.ResetPassword:input_type -> iam.v1.ResetPasswordRequest
+	1,  // 11: iam.v1.AuthService.Register:output_type -> iam.v1.RegisterResponse
+	12, // 12: iam.v1.AuthService.VerifyEmail:output_type -> iam.v1.IAMSuccessResponse
+	12, // 13: iam.v1.AuthService.ResendVerificationEmail:output_type -> iam.v1.IAMSuccessResponse
+	6,  // 14: iam.v1.AuthService.RefreshSession:output_type -> iam.v1.SessionTokenResponse
+	6,  // 15: iam.v1.AuthService.Login:output_type -> iam.v1.SessionTokenResponse
+	12, // 16: iam.v1.AuthService.Logout:output_type -> iam.v1.IAMSuccessResponse
+	12, // 17: iam.v1.AuthService.ChangePassword:output_type -> iam.v1.IAMSuccessResponse
+	12, // 18: iam.v1.AuthService.ForgotPassword:output_type -> iam.v1.IAMSuccessResponse
+	12, // 19: iam.v1.AuthService.ResetPassword:output_type -> iam.v1.IAMSuccessResponse
+	11, // [11:20] is the sub-list for method output_type
+	2,  // [2:11] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_iam_v1_auth_proto_init() }

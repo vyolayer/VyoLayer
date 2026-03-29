@@ -21,23 +21,23 @@ air-install:
 
 # Run gateway with live reload
 dev-gateway:
-	@$(AIR_BIN) -c .air.gateway.toml
+	@$(AIR_BIN) -c internal/gateway/.air.gateway.toml
 
 # Run account service with live reload
 dev-account:
-	@$(AIR_BIN) -c .air.account.toml
+	@$(AIR_BIN) -c internal/account/.air.account.toml
 
 # Run iam service with live reload
 dev-iam:
-	@$(AIR_BIN) -c .air.iam.toml
+	@$(AIR_BIN) -c internal/iam/.air.iam.toml
 
 # Run gateway + account, iam service with live reload
 dev-all:
 	@echo "Starting services with Air..."
 	@trap 'kill 0' INT TERM EXIT; \
-	$(AIR_BIN) -c .air.account.toml & \
-	$(AIR_BIN) -c .air.gateway.toml & \
-	$(AIR_BIN) -c .air.iam.toml & \
+	$(AIR_BIN) -c internal/account/.air.account.toml & \
+	$(AIR_BIN) -c internal/gateway/.air.gateway.toml & \
+	$(AIR_BIN) -c internal/iam/.air.iam.toml & \
 	wait
 
 # Build the binary

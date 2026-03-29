@@ -1,0 +1,26 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/iam-service ./cmd/iam-service/main.go"
+bin = "./tmp/iam-service"
+full_bin = ""
+include_ext = ["go", "tpl", "tmpl", "html", "env", "yaml", "yml"]
+include_dir = ["cmd/iam-service", "internal/iam", "internal/shared", "pkg"]
+include_file = [".env"]
+exclude_dir = ["assets", "tmp", "vendor", "node_modules", ".git"]
+exclude_file = []
+exclude_regex = ["_test\\.go"]
+exclude_unchanged = false
+follow_symlink = false
+log = "air.iam.build.log"
+delay = 500
+stop_on_error = true
+send_interrupt = true
+kill_delay = "500ms"
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true

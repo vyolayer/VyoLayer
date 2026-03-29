@@ -27,12 +27,17 @@ dev-gateway:
 dev-account:
 	@$(AIR_BIN) -c .air.account.toml
 
-# Run gateway + account service with live reload
+# Run iam service with live reload
+dev-iam:
+	@$(AIR_BIN) -c .air.iam.toml
+
+# Run gateway + account, iam service with live reload
 dev-all:
 	@echo "Starting services with Air..."
 	@trap 'kill 0' INT TERM EXIT; \
 	$(AIR_BIN) -c .air.account.toml & \
 	$(AIR_BIN) -c .air.gateway.toml & \
+	$(AIR_BIN) -c .air.iam.toml & \
 	wait
 
 # Build the binary
@@ -46,6 +51,17 @@ docs:
 	@echo "Generating Swagger documentation..."
 	@$(shell go env GOPATH)/bin/swag init -g internal/app/server.go
 
+# Gateway docs generate	
+docs-gateway:
+	@echo "Installing swag if needed..."
+	@go install github.com/swaggo/swag/cmd/swag@latest
+	@echo "Generating Gateway Swagger docs in docs/gateway..."
+	@mkdir -p docs/gateway
+	@$(shell go env GOPATH)/bin/swag init \
+		-g internal/gateway/server/server.go \
+		-o docs/gateway \
+		--parseInternal \
+		--exclude internal/app
 
 # Start the database container
 docker-up:

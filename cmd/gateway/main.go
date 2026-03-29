@@ -7,12 +7,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/vyolayer/vyolayer/internal/gateway/config"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers"
 	"github.com/vyolayer/vyolayer/internal/gateway/server"
 	"github.com/vyolayer/vyolayer/internal/gateway/service"
-	"github.com/vyolayer/vyolayer/pkg/grpcutil"
+	"github.com/vyolayer/vyolayer/internal/gateway/wire"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
-	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
+	"github.com/vyolayer/vyolayer/pkg/logger"
 )
 
 const (
@@ -28,25 +27,22 @@ func main() {
 }
 
 func run() error {
+	appLogger := logger.NewAppLogger("GATEWAY")
+
 	// Load Environment Variables
 	if err := godotenv.Load(); err != nil {
-		log.Println("Note: No .env file found; relying on system environment variables")
+		appLogger.Warn("Note: No .env file found; relying on system environment variables", "")
 	}
 
 	// Load Configuration
 	cfg := config.Load()
 
 	// Initialize gRPC Connections
-	accountConn, err := grpcutil.NewClient(grpcutil.ClientConfig{
-		Address: cfg.AccountServiceAddr,
-		Timeout: grpcTimeout,
-	})
+	clients, err := wire.NewClients(cfg)
 	if err != nil {
 		return err
 	}
-	defer accountConn.Close()
-
-	accountClient := accountV1.NewAccountServiceClient(accountConn)
+	defer clients.Close()
 
 	// Initialize Services and Utilities
 	cookieSrv := service.NewAccountTokenService(service.AccountCookieConfig{
@@ -71,16 +67,42 @@ func run() error {
 		cfg.AccountJWT.AccessTokenExpiry,
 	)
 
+	// IAM
+	iamCookieSrv := service.NewIAMCookieService(service.IAMCookieConfig{
+		Atcc: fiber.Cookie{
+			Name:     string(service.IAMCookieAccessToken),
+			Expires:  time.Now().Add(5 * time.Minute), // TODO: Get from config
+			HTTPOnly: true,
+			Secure:   true,
+			SameSite: fiber.CookieSameSiteStrictMode,
+		},
+		Rtcc: fiber.Cookie{
+			Name:     string(service.IAMCookieRefreshToken),
+			Expires:  time.Now().Add(2 * time.Hour),
+			HTTPOnly: true,
+			Secure:   true,
+			SameSite: fiber.CookieSameSiteStrictMode,
+		},
+	})
+
+	iamSession := jwt.NewIamJWT(
+		cfg.IAMJWT.AccessTokenSecret,
+		cfg.IAMJWT.AccessTokenExpiry,
+		cfg.IAMJWT.RefreshTokenExpiry,
+	)
+
 	// Initialize Handlers
-	accountHandler := handlers.NewAccountHandler(
-		accountClient,
+	registrars := wire.NewRegistrars(
+		clients,
 		cookieSrv,
 		accountJWT,
+		iamCookieSrv,
+		iamSession,
 	)
 
 	// Setup and Start Server
 	srv := server.New(cfg.HTTPPort)
-	srv.RegisterRegistrars(accountHandler)
+	srv.RegisterRegistrars(registrars...)
 
 	return srv.Start()
 }

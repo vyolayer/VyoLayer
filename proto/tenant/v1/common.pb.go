@@ -115,9 +115,9 @@ var File_tenant_v1_common_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x16tenant/v1/common.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\"a\n" +
-	"\x15TenantSuccessResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12.\n" +
+	"\x16tenant/v1/common.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\"j\n" +
+	"\x15TenantSuccessResponse\x12!\n" +
+	"\amessage\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\amessage\x12.\n" +
 	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\"\x14\n" +
 	"\x12TenantEmptyRequestB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 

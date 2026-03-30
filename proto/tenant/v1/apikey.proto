@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package tenant.v1;
 
-option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
-
 import "buf/validate/validate.proto";
 import "tenant/v1/common.proto";
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
 service ApiKeyService {
   rpc GenerateKey(GenerateKeyRequest) returns (ApiKeyCreatedResponse);
@@ -16,12 +16,23 @@ service ApiKeyService {
 
 message GenerateKeyRequest {
   string project_id = 1 [(buf.validate.field).string.min_len = 1];
-  string name       = 2 [(buf.validate.field).string.min_len = 1];
-  string mode       = 3 [(buf.validate.field).string.min_len = 1]; // "dev" | "live"
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 100
+  }];
+  string mode = 3 [(buf.validate.field).string = {
+    min_len: 1
+    pattern: "^(dev|live)$"
+  }]; // "dev" | "live"
 }
 
 message ListKeysRequest {
   string project_id = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 3 [(buf.validate.field).string.max_len = 256];
 }
 
 message GetKeyRequest {
@@ -44,7 +55,9 @@ message ApiKeyCreatedResponse {
 }
 
 message ListApiKeysResponse {
-  repeated ApiKey api_keys = 1;
+  repeated ApiKey api_keys        = 1;
+  int32           total_count     = 2;
+  string          next_page_token = 3;
 }
 
 message ApiKey {

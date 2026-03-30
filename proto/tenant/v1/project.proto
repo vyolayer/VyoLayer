@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package tenant.v1;
 
-option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
-
 import "buf/validate/validate.proto";
 import "tenant/v1/common.proto";
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
 service ProjectService {
   // Project CRUD
@@ -31,16 +31,26 @@ service ProjectService {
 // --------------------
 message CreateProjectRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  string name            = 2 [(buf.validate.field).string.min_len = 3];
-  string description     = 3;
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 50
+  }];
+  string description = 3 [(buf.validate.field).string.max_len = 500];
 }
 
 message ListProjectsRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 3 [(buf.validate.field).string.max_len = 256];
 }
 
 message ListProjectsResponse {
-  repeated Project projects = 1;
+  repeated Project projects        = 1;
+  int32            total_count     = 2;
+  string           next_page_token = 3;
 }
 
 message GetProjectRequest {
@@ -49,10 +59,13 @@ message GetProjectRequest {
 }
 
 message UpdateProjectRequest {
-  string          organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  string          project_id      = 2 [(buf.validate.field).string.min_len = 1];
-  optional string name            = 3;
-  optional string description     = 4;
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  optional string name = 3 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 100
+  }];
+  optional string description = 4 [(buf.validate.field).string.max_len = 500];
 }
 
 message ArchiveProjectRequest {
@@ -68,7 +81,10 @@ message RestoreProjectRequest {
 message DeleteProjectRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
-  string confirm_name    = 3 [(buf.validate.field).string.min_len = 1];
+  string confirm_name = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 100
+  }];
 }
 
 message ProjectIdRequest {
@@ -101,10 +117,17 @@ message Project {
 message ListProjectMembersRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 4 [(buf.validate.field).string.max_len = 256];
 }
 
 message ListProjectMembersResponse {
-  repeated ProjectMember members = 1;
+  repeated ProjectMember members         = 1;
+  int32                  total_count     = 2;
+  string                 next_page_token = 3;
 }
 
 message ProjectMemberResponse {
@@ -126,14 +149,14 @@ message AddProjectMemberRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
   string user_id         = 3 [(buf.validate.field).string.min_len = 1];
-  string role            = 4;
+  string role            = 4 [(buf.validate.field).string.min_len = 1];
 }
 
 message ChangeProjectMemberRoleRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
   string member_id       = 3 [(buf.validate.field).string.min_len = 1];
-  string role            = 4;
+  string role            = 4 [(buf.validate.field).string.min_len = 1];
 }
 
 message RemoveProjectMemberRequest {

@@ -88,6 +88,8 @@ func (x *CreateProjectRequest) GetDescription() string {
 type ListProjectsRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	PageSize       int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken      string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -129,9 +131,25 @@ func (x *ListProjectsRequest) GetOrganizationId() string {
 	return ""
 }
 
+func (x *ListProjectsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListProjectsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 type ListProjectsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Projects      []*Project             `protobuf:"bytes,1,rep,name=projects,proto3" json:"projects,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -171,6 +189,20 @@ func (x *ListProjectsResponse) GetProjects() []*Project {
 		return x.Projects
 	}
 	return nil
+}
+
+func (x *ListProjectsResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListProjectsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type GetProjectRequest struct {
@@ -692,6 +724,8 @@ type ListProjectMembersRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
 	ProjectId      string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	PageSize       int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken      string                 `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -740,9 +774,25 @@ func (x *ListProjectMembersRequest) GetProjectId() string {
 	return ""
 }
 
+func (x *ListProjectMembersRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListProjectMembersRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 type ListProjectMembersResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Members       []*ProjectMember       `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -782,6 +832,20 @@ func (x *ListProjectMembersResponse) GetMembers() []*ProjectMember {
 		return x.Members
 	}
 	return nil
+}
+
+func (x *ListProjectMembersResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListProjectMembersResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type ProjectMemberResponse struct {
@@ -1128,25 +1192,31 @@ var File_tenant_v1_project_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_project_proto_rawDesc = "" +
 	"\n" +
-	"\x17tenant/v1/project.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"\x87\x01\n" +
+	"\x17tenant/v1/project.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"\x93\x01\n" +
 	"\x14CreateProjectRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x03R\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\"G\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\x04name\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\xf4\x03R\vdescription\"\x98\x01\n" +
 	"\x13ListProjectsRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"F\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"\x8f\x01\n" +
 	"\x14ListProjectsResponse\x12.\n" +
-	"\bprojects\x18\x01 \x03(\v2\x12.tenant.v1.ProjectR\bprojects\"m\n" +
+	"\bprojects\x18\x01 \x03(\v2\x12.tenant.v1.ProjectR\bprojects\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"m\n" +
 	"\x11GetProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"\xc9\x01\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"\xde\x01\n" +
 	"\x14UpdateProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x04 \x01(\tH\x01R\vdescription\x88\x01\x01B\a\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12\"\n" +
+	"\x04name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x18dH\x00R\x04name\x88\x01\x01\x12/\n" +
+	"\vdescription\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\xf4\x03H\x01R\vdescription\x88\x01\x01B\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_description\"q\n" +
 	"\x15ArchiveProjectRequest\x120\n" +
@@ -1156,12 +1226,12 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\x15RestoreProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"\x9c\x01\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"\x9e\x01\n" +
 	"\x14DeleteProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12*\n" +
-	"\fconfirm_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vconfirmName\"l\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12,\n" +
+	"\fconfirm_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\vconfirmName\"l\n" +
 	"\x10ProjectIdRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
@@ -1185,13 +1255,19 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\fmember_count\x18\n" +
 	" \x01(\x05R\vmemberCount\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\v \x01(\tR\tcreatedAt\"u\n" +
+	"created_at\x18\v \x01(\tR\tcreatedAt\"\xc6\x01\n" +
 	"\x19ListProjectMembersRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"P\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12&\n" +
+	"\tpage_size\x18\x03 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
+	"\n" +
+	"page_token\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"\x99\x01\n" +
 	"\x1aListProjectMembersResponse\x122\n" +
-	"\amembers\x18\x01 \x03(\v2\x18.tenant.v1.ProjectMemberR\amembers\"I\n" +
+	"\amembers\x18\x01 \x03(\v2\x18.tenant.v1.ProjectMemberR\amembers\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"I\n" +
 	"\x15ProjectMemberResponse\x120\n" +
 	"\x06member\x18\x01 \x01(\v2\x18.tenant.v1.ProjectMemberR\x06member\"\xec\x01\n" +
 	"\rProjectMember\x12\x0e\n" +
@@ -1204,19 +1280,19 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\tjoined_at\x18\a \x01(\tR\bjoinedAt\x12\"\n" +
 	"\n" +
 	"removed_at\x18\b \x01(\tH\x00R\tremovedAt\x88\x01\x01B\r\n" +
-	"\v_removed_at\"\xa9\x01\n" +
+	"\v_removed_at\"\xb2\x01\n" +
 	"\x17AddProjectMemberRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
 	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12 \n" +
-	"\auser_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06userId\x12\x12\n" +
-	"\x04role\x18\x04 \x01(\tR\x04role\"\xb4\x01\n" +
+	"\auser_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06userId\x12\x1b\n" +
+	"\x04role\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04role\"\xbd\x01\n" +
 	"\x1eChangeProjectMemberRoleRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
 	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12$\n" +
-	"\tmember_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\x12\x12\n" +
-	"\x04role\x18\x04 \x01(\tR\x04role\"\x9c\x01\n" +
+	"\tmember_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\x12\x1b\n" +
+	"\x04role\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04role\"\x9c\x01\n" +
 	"\x1aRemoveProjectMemberRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +

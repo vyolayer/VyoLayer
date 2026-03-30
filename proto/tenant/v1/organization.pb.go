@@ -123,7 +123,6 @@ type UpdateOrganizationRequest struct {
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
 	Name           *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Description    *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	Slug           *string                `protobuf:"bytes,4,opt,name=slug,proto3,oneof" json:"slug,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -175,13 +174,6 @@ func (x *UpdateOrganizationRequest) GetName() string {
 func (x *UpdateOrganizationRequest) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
-	}
-	return ""
-}
-
-func (x *UpdateOrganizationRequest) GetSlug() string {
-	if x != nil && x.Slug != nil {
-		return *x.Slug
 	}
 	return ""
 }
@@ -328,6 +320,8 @@ func (x *GetOrganizationBySlugRequest) GetSlug() string {
 
 type ListOrganizationsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	PageSize      int32                  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -362,9 +356,25 @@ func (*ListOrganizationsRequest) Descriptor() ([]byte, []int) {
 	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{6}
 }
 
+func (x *ListOrganizationsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListOrganizationsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 type ListOrganizationsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Organizations []*Organization        `protobuf:"bytes,1,rep,name=organizations,proto3" json:"organizations,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -406,12 +416,28 @@ func (x *ListOrganizationsResponse) GetOrganizations() []*Organization {
 	return nil
 }
 
+func (x *ListOrganizationsResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListOrganizationsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 // --------------------
 // Membership & RBAC
 // --------------------
 type ListOrganizationMembersResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Members       []*OrganizationMember  `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -451,6 +477,20 @@ func (x *ListOrganizationMembersResponse) GetMembers() []*OrganizationMember {
 		return x.Members
 	}
 	return nil
+}
+
+func (x *ListOrganizationMembersResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListOrganizationMembersResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type GetOrganizationMemberByIdRequest struct {
@@ -1363,6 +1403,8 @@ func (x *CreateInvitationRequest) GetRoleIds() []string {
 type ListInvitationsRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	PageSize       int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken      string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1400,6 +1442,20 @@ func (*ListInvitationsRequest) Descriptor() ([]byte, []int) {
 func (x *ListInvitationsRequest) GetOrganizationId() string {
 	if x != nil {
 		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *ListInvitationsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListInvitationsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
 	}
 	return ""
 }
@@ -1493,10 +1549,11 @@ func (x *AcceptInvitationRequest) GetToken() string {
 }
 
 type CancelInvitationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	InvitationId  string                 `protobuf:"bytes,1,opt,name=invitation_id,json=invitationId,proto3" json:"invitation_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	InvitationId   string                 `protobuf:"bytes,1,opt,name=invitation_id,json=invitationId,proto3" json:"invitation_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CancelInvitationRequest) Reset() {
@@ -1532,6 +1589,13 @@ func (*CancelInvitationRequest) Descriptor() ([]byte, []int) {
 func (x *CancelInvitationRequest) GetInvitationId() string {
 	if x != nil {
 		return x.InvitationId
+	}
+	return ""
+}
+
+func (x *CancelInvitationRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
 	}
 	return ""
 }
@@ -1635,6 +1699,8 @@ func (x *OrganizationMemberInvitationResponse) GetInvitation() *OrganizationMemb
 type ListOrganizationInvitationsResponse struct {
 	state         protoimpl.MessageState          `protogen:"open.v1"`
 	Invitations   []*OrganizationMemberInvitation `protobuf:"bytes,1,rep,name=invitations,proto3" json:"invitations,omitempty"`
+	TotalCount    int32                           `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                          `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1674,6 +1740,20 @@ func (x *ListOrganizationInvitationsResponse) GetInvitations() []*OrganizationMe
 		return x.Invitations
 	}
 	return nil
+}
+
+func (x *ListOrganizationInvitationsResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListOrganizationInvitationsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type OrganizationMemberInvitation struct {
@@ -1856,11 +1936,13 @@ type Organization struct {
 	OwnerId       string                 `protobuf:"bytes,5,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	IsActive      bool                   `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	MaxProjects   int32                  `protobuf:"varint,7,opt,name=max_projects,json=maxProjects,proto3" json:"max_projects,omitempty"`
-	MaxMembers    int32                  `protobuf:"varint,8,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
-	MemberCount   int32                  `protobuf:"varint,9,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
-	DeactivatedBy *string                `protobuf:"bytes,10,opt,name=deactivated_by,json=deactivatedBy,proto3,oneof" json:"deactivated_by,omitempty"`
-	DeactivatedAt *string                `protobuf:"bytes,11,opt,name=deactivated_at,json=deactivatedAt,proto3,oneof" json:"deactivated_at,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
+	ProjectCount  int32                  `protobuf:"varint,8,opt,name=project_count,json=projectCount,proto3" json:"project_count,omitempty"`
+	MaxMembers    int32                  `protobuf:"varint,9,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
+	MemberCount   int32                  `protobuf:"varint,10,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
+	DeactivatedBy *string                `protobuf:"bytes,11,opt,name=deactivated_by,json=deactivatedBy,proto3,oneof" json:"deactivated_by,omitempty"`
+	DeactivatedAt *string                `protobuf:"bytes,12,opt,name=deactivated_at,json=deactivatedAt,proto3,oneof" json:"deactivated_at,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
+	UpdatedAt     string                 `protobuf:"bytes,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // RFC3339
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1944,6 +2026,13 @@ func (x *Organization) GetMaxProjects() int32 {
 	return 0
 }
 
+func (x *Organization) GetProjectCount() int32 {
+	if x != nil {
+		return x.ProjectCount
+	}
+	return 0
+}
+
 func (x *Organization) GetMaxMembers() int32 {
 	if x != nil {
 		return x.MaxMembers
@@ -1979,36 +2068,50 @@ func (x *Organization) GetCreatedAt() string {
 	return ""
 }
 
+func (x *Organization) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
 var File_tenant_v1_organization_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\n" +
 	"\x1ctenant/v1/organization.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"I\n" +
 	"\x15OrganizationIdRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"Z\n" +
-	"\x19CreateOrganizationRequest\x12\x1b\n" +
-	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x03R\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\"\xc8\x01\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"f\n" +
+	"\x19CreateOrganizationRequest\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\x04name\x12*\n" +
+	"\vdescription\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01R\vdescription\"\xbb\x01\n" +
 	"\x19UpdateOrganizationRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01\x12\x17\n" +
-	"\x04slug\x18\x04 \x01(\tH\x02R\x04slug\x88\x01\x01B\a\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\"\n" +
+	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182H\x00R\x04name\x88\x01\x01\x12/\n" +
+	"\vdescription\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01H\x01R\vdescription\x88\x01\x01B\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_descriptionB\a\n" +
-	"\x05_slug\"y\n" +
+	"\f_description\"{\n" +
 	"\x19DeleteOrganizationRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12*\n" +
-	"\fconfirm_name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vconfirmName\"N\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12,\n" +
+	"\fconfirm_name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x182R\vconfirmName\"N\n" +
 	"\x1aGetOrganizationByIdRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\";\n" +
-	"\x1cGetOrganizationBySlugRequest\x12\x1b\n" +
-	"\x04slug\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04slug\"\x1a\n" +
-	"\x18ListOrganizationsRequest\"Z\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"=\n" +
+	"\x1cGetOrganizationBySlugRequest\x12\x1d\n" +
+	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04slug\"k\n" +
+	"\x18ListOrganizationsRequest\x12&\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"\xa3\x01\n" +
 	"\x19ListOrganizationsResponse\x12=\n" +
-	"\rorganizations\x18\x01 \x03(\v2\x17.tenant.v1.OrganizationR\rorganizations\"Z\n" +
+	"\rorganizations\x18\x01 \x03(\v2\x17.tenant.v1.OrganizationR\rorganizations\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xa3\x01\n" +
 	"\x1fListOrganizationMembersResponse\x127\n" +
-	"\amembers\x18\x01 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\"z\n" +
+	"\amembers\x18\x01 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"z\n" +
 	" GetOrganizationMemberByIdRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12$\n" +
 	"\tmember_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\"y\n" +
@@ -2077,28 +2180,35 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\x1dListOrganizationRolesResponse\x121\n" +
 	"\x05roles\x18\x01 \x03(\v2\x1b.tenant.v1.OrganizationRoleR\x05roles\"j\n" +
 	"#ListOrganizationPermissionsResponse\x12C\n" +
-	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions\"\x85\x01\n" +
+	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions\"\x93\x01\n" +
 	"\x17CreateInvitationRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x1d\n" +
-	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12\x19\n" +
-	"\brole_ids\x18\x03 \x03(\tR\aroleIds\"J\n" +
+	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12'\n" +
+	"\brole_ids\x18\x03 \x03(\tB\f\xbaH\t\x92\x01\x06\"\x04r\x02\x10\x01R\aroleIds\"\x9b\x01\n" +
 	"\x16ListInvitationsRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"=\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"=\n" +
 	"\x1cGetPendingInvitationsRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"8\n" +
 	"\x17AcceptInvitationRequest\x12\x1d\n" +
-	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\"G\n" +
+	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\"p\n" +
 	"\x17CancelInvitationRequest\x12,\n" +
-	"\rinvitation_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\finvitationId\"y\n" +
+	"\rinvitation_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\finvitationId\x12'\n" +
+	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"y\n" +
 	"\x17ResendInvitationRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12,\n" +
 	"\rinvitation_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\finvitationId\"o\n" +
 	"$OrganizationMemberInvitationResponse\x12G\n" +
 	"\n" +
 	"invitation\x18\x01 \x01(\v2'.tenant.v1.OrganizationMemberInvitationR\n" +
-	"invitation\"p\n" +
+	"invitation\"\xb9\x01\n" +
 	"#ListOrganizationInvitationsResponse\x12I\n" +
-	"\vinvitations\x18\x01 \x03(\v2'.tenant.v1.OrganizationMemberInvitationR\vinvitations\"\xdb\x02\n" +
+	"\vinvitations\x18\x01 \x03(\v2'.tenant.v1.OrganizationMemberInvitationR\vinvitations\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xdb\x02\n" +
 	"\x1cOrganizationMemberInvitation\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12'\n" +
 	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\x12\x1d\n" +
@@ -2120,7 +2230,7 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\f_accepted_at\"\x8c\x01\n" +
 	"\x14OrganizationResponse\x12;\n" +
 	"\forganization\x18\x01 \x01(\v2\x17.tenant.v1.OrganizationR\forganization\x127\n" +
-	"\amembers\x18\x02 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\"\xa4\x03\n" +
+	"\amembers\x18\x02 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\"\xe8\x03\n" +
 	"\fOrganization\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
@@ -2128,15 +2238,18 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x19\n" +
 	"\bowner_id\x18\x05 \x01(\tR\aownerId\x12\x1b\n" +
 	"\tis_active\x18\x06 \x01(\bR\bisActive\x12!\n" +
-	"\fmax_projects\x18\a \x01(\x05R\vmaxProjects\x12\x1f\n" +
-	"\vmax_members\x18\b \x01(\x05R\n" +
+	"\fmax_projects\x18\a \x01(\x05R\vmaxProjects\x12#\n" +
+	"\rproject_count\x18\b \x01(\x05R\fprojectCount\x12\x1f\n" +
+	"\vmax_members\x18\t \x01(\x05R\n" +
 	"maxMembers\x12!\n" +
-	"\fmember_count\x18\t \x01(\x05R\vmemberCount\x12*\n" +
-	"\x0edeactivated_by\x18\n" +
-	" \x01(\tH\x00R\rdeactivatedBy\x88\x01\x01\x12*\n" +
-	"\x0edeactivated_at\x18\v \x01(\tH\x01R\rdeactivatedAt\x88\x01\x01\x12\x1d\n" +
+	"\fmember_count\x18\n" +
+	" \x01(\x05R\vmemberCount\x12*\n" +
+	"\x0edeactivated_by\x18\v \x01(\tH\x00R\rdeactivatedBy\x88\x01\x01\x12*\n" +
+	"\x0edeactivated_at\x18\f \x01(\tH\x01R\rdeactivatedAt\x88\x01\x01\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\f \x01(\tR\tcreatedAtB\x11\n" +
+	"created_at\x18\r \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\x0e \x01(\tR\tupdatedAtB\x11\n" +
 	"\x0f_deactivated_byB\x11\n" +
 	"\x0f_deactivated_at2\xaa\x12\n" +
 	"\x13OrganizationService\x12[\n" +

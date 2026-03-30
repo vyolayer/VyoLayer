@@ -85,6 +85,8 @@ func (x *GenerateKeyRequest) GetMode() string {
 type ListKeysRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProjectId     string                 `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -122,6 +124,20 @@ func (*ListKeysRequest) Descriptor() ([]byte, []int) {
 func (x *ListKeysRequest) GetProjectId() string {
 	if x != nil {
 		return x.ProjectId
+	}
+	return ""
+}
+
+func (x *ListKeysRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListKeysRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
 	}
 	return ""
 }
@@ -329,6 +345,8 @@ func (x *ApiKeyCreatedResponse) GetRawKey() string {
 type ListApiKeysResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ApiKeys       []*ApiKey              `protobuf:"bytes,1,rep,name=api_keys,json=apiKeys,proto3" json:"api_keys,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -368,6 +386,20 @@ func (x *ListApiKeysResponse) GetApiKeys() []*ApiKey {
 		return x.ApiKeys
 	}
 	return nil
+}
+
+func (x *ListApiKeysResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListApiKeysResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type ApiKey struct {
@@ -514,15 +546,18 @@ var File_tenant_v1_apikey_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_apikey_proto_rawDesc = "" +
 	"\n" +
-	"\x16tenant/v1/apikey.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"v\n" +
+	"\x16tenant/v1/apikey.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"\x86\x01\n" +
 	"\x12GenerateKeyRequest\x12&\n" +
 	"\n" +
-	"project_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1b\n" +
-	"\x04mode\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04mode\"9\n" +
+	"project_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\x12)\n" +
+	"\x04mode\x18\x03 \x01(\tB\x15\xbaH\x12r\x10\x10\x012\f^(dev|live)$R\x04mode\"\x8a\x01\n" +
 	"\x0fListKeysRequest\x12&\n" +
 	"\n" +
-	"project_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"^\n" +
+	"project_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12&\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"^\n" +
 	"\rGetKeyRequest\x12&\n" +
 	"\n" +
 	"project_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12%\n" +
@@ -537,9 +572,12 @@ const file_tenant_v1_apikey_proto_rawDesc = "" +
 	"\aapi_key\x18\x01 \x01(\v2\x11.tenant.v1.ApiKeyR\x06apiKey\"\\\n" +
 	"\x15ApiKeyCreatedResponse\x12*\n" +
 	"\aapi_key\x18\x01 \x01(\v2\x11.tenant.v1.ApiKeyR\x06apiKey\x12\x17\n" +
-	"\araw_key\x18\x02 \x01(\tR\x06rawKey\"C\n" +
+	"\araw_key\x18\x02 \x01(\tR\x06rawKey\"\x8c\x01\n" +
 	"\x13ListApiKeysResponse\x12,\n" +
-	"\bapi_keys\x18\x01 \x03(\v2\x11.tenant.v1.ApiKeyR\aapiKeys\"\xbd\x03\n" +
+	"\bapi_keys\x18\x01 \x03(\v2\x11.tenant.v1.ApiKeyR\aapiKeys\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12&\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xbd\x03\n" +
 	"\x06ApiKey\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +

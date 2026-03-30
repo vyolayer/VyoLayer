@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package tenant.v1;
 
-option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
-
 import "buf/validate/validate.proto";
 import "tenant/v1/common.proto";
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
 service OrganizationService {
   rpc CreateOrganization(CreateOrganizationRequest) returns (OrganizationResponse);
@@ -40,26 +40,33 @@ service OrganizationService {
   rpc GetAllRoles(OrganizationIdRequest) returns (ListOrganizationRolesResponse);
 }
 
-
 message OrganizationIdRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
 }
 
 message CreateOrganizationRequest {
-  string name        = 1 [(buf.validate.field).string.min_len = 3];
-  string description = 2;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 50
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 250];
 }
 
 message UpdateOrganizationRequest {
-  string          organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  optional string name            = 2;
-  optional string description     = 3;
-  optional string slug            = 4;
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 50
+  }];
+  optional string description = 3 [(buf.validate.field).string.max_len = 250];
 }
 
 message DeleteOrganizationRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  string confirm_name    = 2 [(buf.validate.field).string.min_len = 1];
+  string confirm_name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 50
+  }];
 }
 
 message GetOrganizationByIdRequest {
@@ -67,20 +74,33 @@ message GetOrganizationByIdRequest {
 }
 
 message GetOrganizationBySlugRequest {
-  string slug = 1 [(buf.validate.field).string.min_len = 1];
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 100
+  }];
 }
 
-message ListOrganizationsRequest {}
+message ListOrganizationsRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 2 [(buf.validate.field).string.max_len = 256];
+}
 
 message ListOrganizationsResponse {
-  repeated Organization organizations = 1;
+  repeated Organization organizations   = 1;
+  int32                 total_count     = 2;
+  string                next_page_token = 3;
 }
 
 // --------------------
 // Membership & RBAC
 // --------------------
 message ListOrganizationMembersResponse {
-  repeated OrganizationMember members = 1;
+  repeated OrganizationMember members         = 1;
+  int32                       total_count     = 2;
+  string                      next_page_token = 3;
 }
 
 message GetOrganizationMemberByIdRequest {
@@ -177,11 +197,20 @@ message ListOrganizationPermissionsResponse {
 message CreateInvitationRequest {
   string          organization_id = 1 [(buf.validate.field).string.min_len = 1];
   string          email           = 2 [(buf.validate.field).string.email = true];
-  repeated string role_ids        = 3;
+  repeated string role_ids = 3 [(buf.validate.field).repeated = {
+    items: {
+      string: {min_len: 1}
+    }
+  }];
 }
 
 message ListInvitationsRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 3 [(buf.validate.field).string.max_len = 256];
 }
 
 message GetPendingInvitationsRequest {
@@ -193,7 +222,8 @@ message AcceptInvitationRequest {
 }
 
 message CancelInvitationRequest {
-  string invitation_id = 1 [(buf.validate.field).string.min_len = 1];
+  string invitation_id   = 1 [(buf.validate.field).string.min_len = 1];
+  string organization_id = 2;
 }
 
 message ResendInvitationRequest {
@@ -206,7 +236,9 @@ message OrganizationMemberInvitationResponse {
 }
 
 message ListOrganizationInvitationsResponse {
-  repeated OrganizationMemberInvitation invitations = 1;
+  repeated OrganizationMemberInvitation invitations     = 1;
+  int32                                 total_count     = 2;
+  string                                next_page_token = 3;
 }
 
 message OrganizationMemberInvitation {
@@ -238,11 +270,13 @@ message Organization {
   string owner_id    = 5;
   bool   is_active   = 6;
 
-  int32 max_projects = 7;
-  int32 max_members  = 8;
-  int32 member_count = 9;
+  int32 max_projects  = 7;
+  int32 project_count = 8;
+  int32 max_members   = 9;
+  int32 member_count  = 10;
 
-  optional string deactivated_by = 10;
-  optional string deactivated_at = 11;
-  string          created_at     = 12; // RFC3339
+  optional string deactivated_by = 11;
+  optional string deactivated_at = 12;
+  string          created_at     = 13; // RFC3339
+  string          updated_at     = 14; // RFC3339
 }

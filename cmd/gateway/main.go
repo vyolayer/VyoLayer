@@ -38,9 +38,9 @@ func run() error {
 	cfg := config.Load()
 
 	// Initialize gRPC Connections
-	clients, err := wire.NewClients(cfg)
+	clients, err := wire.NewClients(appLogger, cfg, grpcTimeout)
 	if err != nil {
-		return err
+		appLogger.Error("Failed to initialize gRPC clients", err.Error())
 	}
 	defer clients.Close()
 
@@ -93,6 +93,7 @@ func run() error {
 
 	// Initialize Handlers
 	registrars := wire.NewRegistrars(
+		appLogger,
 		clients,
 		cookieSrv,
 		accountJWT,

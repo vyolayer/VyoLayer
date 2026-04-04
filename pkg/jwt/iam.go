@@ -12,8 +12,8 @@ import (
 )
 
 type IamJWT interface {
-	GenerateAccessToken(userID uuid.UUID) (string, time.Time, error)
-	VerifyAccessToken(token string) (uuid.UUID, error)
+	GenerateAccessToken(user *IAMUserJWTDto) (string, time.Time, error)
+	VerifyAccessToken(token string) (*IAMUserJWTDto, error)
 	GenerateRefreshToken() (string, time.Time, error)
 	GetRefreshTokenExpiry() time.Time
 	GetAccessTokenExpiry() time.Time
@@ -25,8 +25,17 @@ type iamJWT struct {
 	refreshTokenExpiry time.Duration
 }
 
+type IAMUserJWTDto struct {
+	UserID          uuid.UUID `json:"user_id"`
+	FullName        string    `json:"full_name"`
+	Email           string    `json:"email"`
+	Status          string    `json:"status"`
+	IsEmailVerified bool      `json:"is_email_verified"`
+	JoinedAt        time.Time `json:"joined_at"`
+}
+
 type iamClaims struct {
-	UserID uuid.UUID
+	IAMUserJWTDto
 	jwt.RegisteredClaims
 }
 
@@ -38,9 +47,9 @@ func NewIamJWT(accessTokenSecret string, accessTokenExpiry, refreshTokenExpiry t
 	}
 }
 
-func (a *iamJWT) GenerateAccessToken(userID uuid.UUID) (string, time.Time, error) {
+func (a *iamJWT) GenerateAccessToken(user *IAMUserJWTDto) (string, time.Time, error) {
 	claims := iamClaims{
-		UserID: userID,
+		IAMUserJWTDto: *user,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(a.accessTokenExpiry)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -55,9 +64,9 @@ func (a *iamJWT) GenerateAccessToken(userID uuid.UUID) (string, time.Time, error
 	return token, claims.ExpiresAt.Time, nil
 }
 
-func (a *iamJWT) VerifyAccessToken(tokenStr string) (uuid.UUID, error) {
+func (a *iamJWT) VerifyAccessToken(tokenStr string) (*IAMUserJWTDto, error) {
 	if tokenStr == "" {
-		return uuid.Nil, ErrInvalidToken
+		return nil, ErrInvalidToken
 	}
 
 	t, err := jwt.ParseWithClaims(tokenStr, &iamClaims{}, func(token *jwt.Token) (any, error) {
@@ -69,15 +78,15 @@ func (a *iamJWT) VerifyAccessToken(tokenStr string) (uuid.UUID, error) {
 
 	if err != nil {
 		log.Printf("[JWT] Error verifying access token: %v", err)
-		return uuid.Nil, err
+		return nil, err
 	}
 
 	if claims, ok := t.Claims.(*iamClaims); ok && t.Valid {
-		return claims.UserID, nil
+		return &claims.IAMUserJWTDto, nil
 	}
 
 	log.Printf("[JWT] Token parsed but invalid or claims mismatch")
-	return uuid.Nil, ErrInvalidToken
+	return nil, ErrInvalidToken
 }
 
 func (a *iamJWT) GenerateRefreshToken() (string, time.Time, error) {

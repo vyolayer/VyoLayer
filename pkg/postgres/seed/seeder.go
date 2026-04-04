@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/vyolayer/vyolayer/internal/platform/database/models"
+	tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -29,8 +29,8 @@ func Run(db *gorm.DB) error {
 
 func mapPermissions(db *gorm.DB) error {
 	// A. Fetch freshly created records to get their UUIDs
-	var roles []models.OrganizationRole
-	var perms []models.OrganizationPermission
+	var roles []tenantmodelv1.OrganizationRole
+	var perms []tenantmodelv1.OrganizationPermission
 
 	// Get only system roles/perms to be safe
 	db.Where("is_system = ?", true).Find(&roles)
@@ -43,13 +43,13 @@ func mapPermissions(db *gorm.DB) error {
 	}
 
 	// C. Define Logic
-	var links []models.OrganizationRolePermission
+	var links []tenantmodelv1.OrganizationRolePermission
 
 	for _, p := range perms {
 		// --- 1. OWNER & ADMIN (Get Everything) ---
 		links = append(links,
-			models.OrganizationRolePermission{RoleID: roleMap[RoleOwner], PermissionID: p.ID},
-			models.OrganizationRolePermission{RoleID: roleMap[RoleAdmin], PermissionID: p.ID},
+			tenantmodelv1.OrganizationRolePermission{RoleID: roleMap[RoleOwner], PermissionID: p.ID},
+			tenantmodelv1.OrganizationRolePermission{RoleID: roleMap[RoleAdmin], PermissionID: p.ID},
 		)
 
 		// Audit & Roles are not accessible to any role
@@ -60,7 +60,7 @@ func mapPermissions(db *gorm.DB) error {
 		// --- 2. VIEWER (Read Only) ---
 		if isReadAction(p.Action) {
 			links = append(links,
-				models.OrganizationRolePermission{RoleID: roleMap[RoleViewer], PermissionID: p.ID},
+				tenantmodelv1.OrganizationRolePermission{RoleID: roleMap[RoleViewer], PermissionID: p.ID},
 			)
 		}
 
@@ -68,7 +68,7 @@ func mapPermissions(db *gorm.DB) error {
 		// Rule A: Full Access to Projects
 		if p.Resource == ResourceProject {
 			links = append(links,
-				models.OrganizationRolePermission{RoleID: roleMap[RoleMember], PermissionID: p.ID},
+				tenantmodelv1.OrganizationRolePermission{RoleID: roleMap[RoleMember], PermissionID: p.ID},
 			)
 			continue // Done for this permission
 		}
@@ -78,7 +78,7 @@ func mapPermissions(db *gorm.DB) error {
 		// (Blocks: Invite Member, Remove Member, Update Org)
 		if (p.Resource == ResourceOrganization || p.Resource == ResourceMember) && isReadAction(p.Action) {
 			links = append(links,
-				models.OrganizationRolePermission{RoleID: roleMap[RoleMember], PermissionID: p.ID},
+				tenantmodelv1.OrganizationRolePermission{RoleID: roleMap[RoleMember], PermissionID: p.ID},
 			)
 		}
 	}

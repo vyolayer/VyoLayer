@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/vyolayer/vyolayer/internal/config"
-	"github.com/vyolayer/vyolayer/internal/platform/database"
-	"github.com/vyolayer/vyolayer/internal/platform/database/seed"
+	"github.com/vyolayer/vyolayer/pkg/postgres"
+	"github.com/vyolayer/vyolayer/pkg/postgres/seed"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	// Connect to DB
-	db, err := database.Init(&cfg.Database)
+	db, err := postgres.NewConnectionFromDSN(cfg.Database.DSN)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

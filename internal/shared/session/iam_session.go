@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 )
 
@@ -33,7 +32,7 @@ func NewIAMSession(
 	}
 }
 
-func (s *IAMSession) CreateSession(userID uuid.UUID) (*IAMSessionResponse, error) {
+func (s *IAMSession) CreateSession(dto *jwt.IAMUserJWTDto) (*IAMSessionResponse, error) {
 	var (
 		accessToken        string
 		accessTokenExpiry  time.Time
@@ -42,7 +41,7 @@ func (s *IAMSession) CreateSession(userID uuid.UUID) (*IAMSessionResponse, error
 		err                error
 	)
 
-	accessToken, accessTokenExpiry, err = s.jwt.GenerateAccessToken(userID)
+	accessToken, accessTokenExpiry, err = s.jwt.GenerateAccessToken(dto)
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +62,6 @@ func (s *IAMSession) CreateSession(userID uuid.UUID) (*IAMSessionResponse, error
 
 }
 
-func (s *IAMSession) VerifyAccessToken(token string) (uuid.UUID, error) {
+func (s *IAMSession) VerifyAccessToken(token string) (*jwt.IAMUserJWTDto, error) {
 	return s.jwt.VerifyAccessToken(token)
 }

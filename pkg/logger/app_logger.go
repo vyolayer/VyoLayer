@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	appLevelInfo  = "INFO"
-	appLevelWarn  = "WARN"
+	appLevelInfo  = "INFO "
+	appLevelWarn  = "WARN "
 	appLevelError = "ERROR"
 	appLevelDebug = "DEBUG"
 )
@@ -84,6 +84,12 @@ func (l *AppLogger) Error(message string, fields any) {
 	l.log(appLevelError, message, mergeFields(fields))
 }
 
+func (l *AppLogger) ErrorWithErr(message string, err error) {
+	var fields map[string]any
+	fields["error"] = err.Error()
+	l.log(appLevelError, message, fields)
+}
+
 func (l *AppLogger) Debug(message string, fields any) {
 	l.log(appLevelDebug, message, mergeFields(fields))
 }
@@ -93,7 +99,7 @@ func (l *AppLogger) log(level, message string, fields map[string]any) {
 		l = ForService("app")
 	}
 
-	timestamp := time.Now().Format(time.RFC3339)
+	timestamp := time.Now().Format(time.DateTime)
 	level = strings.ToUpper(level)
 
 	serviceTag := fmt.Sprintf("[%s]", l.serviceName)
@@ -115,7 +121,7 @@ func (l *AppLogger) log(level, message string, fields map[string]any) {
 	}
 
 	fieldString := renderFields(fields)
-	line := fmt.Sprintf("%s %s%s %s %s%s", timestamp, serviceTag, contextTag, levelTag, message, fieldString)
+	line := fmt.Sprintf("%s %s %s%s %s%s", timestamp, levelTag, serviceTag, contextTag, message, fieldString)
 	l.writer.Println(line)
 }
 

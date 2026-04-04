@@ -414,8 +414,8 @@ type ApiKey struct {
 	LastUsedAt    *string                `protobuf:"bytes,8,opt,name=last_used_at,json=lastUsedAt,proto3,oneof" json:"last_used_at,omitempty"`
 	IsRevoked     bool                   `protobuf:"varint,9,opt,name=is_revoked,json=isRevoked,proto3" json:"is_revoked,omitempty"`
 	RevokedAt     *string                `protobuf:"bytes,10,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`
-	RequestLimit  int32                  `protobuf:"varint,11,opt,name=request_limit,json=requestLimit,proto3" json:"request_limit,omitempty"`
-	RateLimit     int32                  `protobuf:"varint,12,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	RequestLimit  uint32                 `protobuf:"varint,11,opt,name=request_limit,json=requestLimit,proto3" json:"request_limit,omitempty"`
+	RateLimit     uint32                 `protobuf:"varint,12,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -521,14 +521,14 @@ func (x *ApiKey) GetRevokedAt() string {
 	return ""
 }
 
-func (x *ApiKey) GetRequestLimit() int32 {
+func (x *ApiKey) GetRequestLimit() uint32 {
 	if x != nil {
 		return x.RequestLimit
 	}
 	return 0
 }
 
-func (x *ApiKey) GetRateLimit() int32 {
+func (x *ApiKey) GetRateLimit() uint32 {
 	if x != nil {
 		return x.RateLimit
 	}
@@ -597,9 +597,9 @@ const file_tenant_v1_apikey_proto_rawDesc = "" +
 	"\n" +
 	"revoked_at\x18\n" +
 	" \x01(\tH\x02R\trevokedAt\x88\x01\x01\x12#\n" +
-	"\rrequest_limit\x18\v \x01(\x05R\frequestLimit\x12\x1d\n" +
+	"\rrequest_limit\x18\v \x01(\rR\frequestLimit\x12\x1d\n" +
 	"\n" +
-	"rate_limit\x18\f \x01(\x05R\trateLimit\x12\x1d\n" +
+	"rate_limit\x18\f \x01(\rR\trateLimit\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\r \x01(\tR\tcreatedAtB\r\n" +
 	"\v_expires_atB\x0f\n" +

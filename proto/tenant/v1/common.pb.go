@@ -75,6 +75,50 @@ func (x *TenantSuccessResponse) GetPayload() *anypb.Any {
 	return nil
 }
 
+type TenantOrganizationIDRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TenantOrganizationIDRequest) Reset() {
+	*x = TenantOrganizationIDRequest{}
+	mi := &file_tenant_v1_common_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TenantOrganizationIDRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TenantOrganizationIDRequest) ProtoMessage() {}
+
+func (x *TenantOrganizationIDRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_common_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TenantOrganizationIDRequest.ProtoReflect.Descriptor instead.
+func (*TenantOrganizationIDRequest) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TenantOrganizationIDRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
 type TenantEmptyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -83,7 +127,7 @@ type TenantEmptyRequest struct {
 
 func (x *TenantEmptyRequest) Reset() {
 	*x = TenantEmptyRequest{}
-	mi := &file_tenant_v1_common_proto_msgTypes[1]
+	mi := &file_tenant_v1_common_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -95,7 +139,7 @@ func (x *TenantEmptyRequest) String() string {
 func (*TenantEmptyRequest) ProtoMessage() {}
 
 func (x *TenantEmptyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_common_proto_msgTypes[1]
+	mi := &file_tenant_v1_common_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +152,330 @@ func (x *TenantEmptyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenantEmptyRequest.ProtoReflect.Descriptor instead.
 func (*TenantEmptyRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_common_proto_rawDescGZIP(), []int{1}
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{2}
+}
+
+// --------------------
+// RBAC Messages
+// --------------------
+type OrganizationRoleDTO struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	IsSystemRole  bool                   `protobuf:"varint,4,opt,name=is_system_role,json=isSystemRole,proto3" json:"is_system_role,omitempty"`
+	IsDefault     bool                   `protobuf:"varint,5,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationRoleDTO) Reset() {
+	*x = OrganizationRoleDTO{}
+	mi := &file_tenant_v1_common_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationRoleDTO) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationRoleDTO) ProtoMessage() {}
+
+func (x *OrganizationRoleDTO) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_common_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationRoleDTO.ProtoReflect.Descriptor instead.
+func (*OrganizationRoleDTO) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *OrganizationRoleDTO) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *OrganizationRoleDTO) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrganizationRoleDTO) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *OrganizationRoleDTO) GetIsSystemRole() bool {
+	if x != nil {
+		return x.IsSystemRole
+	}
+	return false
+}
+
+func (x *OrganizationRoleDTO) GetIsDefault() bool {
+	if x != nil {
+		return x.IsDefault
+	}
+	return false
+}
+
+type OrganizationPermissionDTO struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Resource      string                 `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
+	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Group         string                 `protobuf:"bytes,5,opt,name=group,proto3" json:"group,omitempty"`
+	IsSystem      bool                   `protobuf:"varint,6,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationPermissionDTO) Reset() {
+	*x = OrganizationPermissionDTO{}
+	mi := &file_tenant_v1_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationPermissionDTO) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationPermissionDTO) ProtoMessage() {}
+
+func (x *OrganizationPermissionDTO) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationPermissionDTO.ProtoReflect.Descriptor instead.
+func (*OrganizationPermissionDTO) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *OrganizationPermissionDTO) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionDTO) GetResource() string {
+	if x != nil {
+		return x.Resource
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionDTO) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionDTO) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionDTO) GetGroup() string {
+	if x != nil {
+		return x.Group
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionDTO) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+type OrganizationRole struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	IsSystemRole  bool                   `protobuf:"varint,4,opt,name=is_system_role,json=isSystemRole,proto3" json:"is_system_role,omitempty"`
+	IsDefault     bool                   `protobuf:"varint,5,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationRole) Reset() {
+	*x = OrganizationRole{}
+	mi := &file_tenant_v1_common_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationRole) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationRole) ProtoMessage() {}
+
+func (x *OrganizationRole) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_common_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationRole.ProtoReflect.Descriptor instead.
+func (*OrganizationRole) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *OrganizationRole) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *OrganizationRole) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrganizationRole) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *OrganizationRole) GetIsSystemRole() bool {
+	if x != nil {
+		return x.IsSystemRole
+	}
+	return false
+}
+
+func (x *OrganizationRole) GetIsDefault() bool {
+	if x != nil {
+		return x.IsDefault
+	}
+	return false
+}
+
+type OrganizationPermission struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Resource      string                 `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
+	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Group         string                 `protobuf:"bytes,5,opt,name=group,proto3" json:"group,omitempty"`
+	IsSystem      bool                   `protobuf:"varint,6,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationPermission) Reset() {
+	*x = OrganizationPermission{}
+	mi := &file_tenant_v1_common_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationPermission) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationPermission) ProtoMessage() {}
+
+func (x *OrganizationPermission) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_common_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationPermission.ProtoReflect.Descriptor instead.
+func (*OrganizationPermission) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_common_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *OrganizationPermission) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *OrganizationPermission) GetResource() string {
+	if x != nil {
+		return x.Resource
+	}
+	return ""
+}
+
+func (x *OrganizationPermission) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *OrganizationPermission) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *OrganizationPermission) GetGroup() string {
+	if x != nil {
+		return x.Group
+	}
+	return ""
+}
+
+func (x *OrganizationPermission) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
 }
 
 var File_tenant_v1_common_proto protoreflect.FileDescriptor
@@ -118,8 +485,38 @@ const file_tenant_v1_common_proto_rawDesc = "" +
 	"\x16tenant/v1/common.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\"j\n" +
 	"\x15TenantSuccessResponse\x12!\n" +
 	"\amessage\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\amessage\x12.\n" +
-	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\"\x14\n" +
-	"\x12TenantEmptyRequestB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
+	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\"O\n" +
+	"\x1bTenantOrganizationIDRequest\x120\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"\x14\n" +
+	"\x12TenantEmptyRequest\"\xa0\x01\n" +
+	"\x13OrganizationRoleDTO\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12$\n" +
+	"\x0eis_system_role\x18\x04 \x01(\bR\fisSystemRole\x12\x1d\n" +
+	"\n" +
+	"is_default\x18\x05 \x01(\bR\tisDefault\"\xa6\x01\n" +
+	"\x19OrganizationPermissionDTO\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\bresource\x18\x02 \x01(\tR\bresource\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\tR\x06action\x12\x12\n" +
+	"\x04code\x18\x04 \x01(\tR\x04code\x12\x14\n" +
+	"\x05group\x18\x05 \x01(\tR\x05group\x12\x1b\n" +
+	"\tis_system\x18\x06 \x01(\bR\bisSystem\"\x9d\x01\n" +
+	"\x10OrganizationRole\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12$\n" +
+	"\x0eis_system_role\x18\x04 \x01(\bR\fisSystemRole\x12\x1d\n" +
+	"\n" +
+	"is_default\x18\x05 \x01(\bR\tisDefault\"\xa3\x01\n" +
+	"\x16OrganizationPermission\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\bresource\x18\x02 \x01(\tR\bresource\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\tR\x06action\x12\x12\n" +
+	"\x04code\x18\x04 \x01(\tR\x04code\x12\x14\n" +
+	"\x05group\x18\x05 \x01(\tR\x05group\x12\x1b\n" +
+	"\tis_system\x18\x06 \x01(\bR\bisSystemB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 
 var (
 	file_tenant_v1_common_proto_rawDescOnce sync.Once
@@ -133,14 +530,19 @@ func file_tenant_v1_common_proto_rawDescGZIP() []byte {
 	return file_tenant_v1_common_proto_rawDescData
 }
 
-var file_tenant_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_tenant_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_tenant_v1_common_proto_goTypes = []any{
-	(*TenantSuccessResponse)(nil), // 0: tenant.v1.TenantSuccessResponse
-	(*TenantEmptyRequest)(nil),    // 1: tenant.v1.TenantEmptyRequest
-	(*anypb.Any)(nil),             // 2: google.protobuf.Any
+	(*TenantSuccessResponse)(nil),       // 0: tenant.v1.TenantSuccessResponse
+	(*TenantOrganizationIDRequest)(nil), // 1: tenant.v1.TenantOrganizationIDRequest
+	(*TenantEmptyRequest)(nil),          // 2: tenant.v1.TenantEmptyRequest
+	(*OrganizationRoleDTO)(nil),         // 3: tenant.v1.OrganizationRoleDTO
+	(*OrganizationPermissionDTO)(nil),   // 4: tenant.v1.OrganizationPermissionDTO
+	(*OrganizationRole)(nil),            // 5: tenant.v1.OrganizationRole
+	(*OrganizationPermission)(nil),      // 6: tenant.v1.OrganizationPermission
+	(*anypb.Any)(nil),                   // 7: google.protobuf.Any
 }
 var file_tenant_v1_common_proto_depIdxs = []int32{
-	2, // 0: tenant.v1.TenantSuccessResponse.payload:type_name -> google.protobuf.Any
+	7, // 0: tenant.v1.TenantSuccessResponse.payload:type_name -> google.protobuf.Any
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -159,7 +561,7 @@ func file_tenant_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tenant_v1_common_proto_rawDesc), len(file_tenant_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

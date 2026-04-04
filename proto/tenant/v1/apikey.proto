@@ -71,7 +71,7 @@ message ApiKey {
   optional string last_used_at  = 8;
   bool            is_revoked    = 9;
   optional string revoked_at    = 10;
-  int32           request_limit = 11;
-  int32           rate_limit    = 12;
+  uint32           request_limit = 11;
+  uint32           rate_limit    = 12;
   string          created_at    = 13; // RFC3339
 }

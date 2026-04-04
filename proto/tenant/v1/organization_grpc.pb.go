@@ -19,63 +19,37 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	OrganizationService_CreateOrganization_FullMethodName    = "/tenant.v1.OrganizationService/CreateOrganization"
-	OrganizationService_OnboardOrganization_FullMethodName   = "/tenant.v1.OrganizationService/OnboardOrganization"
-	OrganizationService_GetOrganizationById_FullMethodName   = "/tenant.v1.OrganizationService/GetOrganizationById"
-	OrganizationService_GetOrganizationBySlug_FullMethodName = "/tenant.v1.OrganizationService/GetOrganizationBySlug"
-	OrganizationService_ListOrganizations_FullMethodName     = "/tenant.v1.OrganizationService/ListOrganizations"
-	OrganizationService_UpdateOrganization_FullMethodName    = "/tenant.v1.OrganizationService/UpdateOrganization"
-	OrganizationService_ArchiveOrganization_FullMethodName   = "/tenant.v1.OrganizationService/ArchiveOrganization"
-	OrganizationService_RestoreOrganization_FullMethodName   = "/tenant.v1.OrganizationService/RestoreOrganization"
-	OrganizationService_DeleteOrganization_FullMethodName    = "/tenant.v1.OrganizationService/DeleteOrganization"
-	OrganizationService_GetCurrentMember_FullMethodName      = "/tenant.v1.OrganizationService/GetCurrentMember"
-	OrganizationService_LeaveOrganization_FullMethodName     = "/tenant.v1.OrganizationService/LeaveOrganization"
-	OrganizationService_GetAllMembersByOrg_FullMethodName    = "/tenant.v1.OrganizationService/GetAllMembersByOrg"
-	OrganizationService_GetMemberById_FullMethodName         = "/tenant.v1.OrganizationService/GetMemberById"
-	OrganizationService_RemoveMember_FullMethodName          = "/tenant.v1.OrganizationService/RemoveMember"
-	OrganizationService_ChangeMemberRole_FullMethodName      = "/tenant.v1.OrganizationService/ChangeMemberRole"
-	OrganizationService_TransferOwnership_FullMethodName     = "/tenant.v1.OrganizationService/TransferOwnership"
-	OrganizationService_CreateInvitation_FullMethodName      = "/tenant.v1.OrganizationService/CreateInvitation"
-	OrganizationService_ListInvitations_FullMethodName       = "/tenant.v1.OrganizationService/ListInvitations"
-	OrganizationService_GetPendingInvitations_FullMethodName = "/tenant.v1.OrganizationService/GetPendingInvitations"
-	OrganizationService_AcceptInvitation_FullMethodName      = "/tenant.v1.OrganizationService/AcceptInvitation"
-	OrganizationService_CancelInvitation_FullMethodName      = "/tenant.v1.OrganizationService/CancelInvitation"
-	OrganizationService_ResendInvitation_FullMethodName      = "/tenant.v1.OrganizationService/ResendInvitation"
-	OrganizationService_GetAllPermissions_FullMethodName     = "/tenant.v1.OrganizationService/GetAllPermissions"
-	OrganizationService_GetAllRoles_FullMethodName           = "/tenant.v1.OrganizationService/GetAllRoles"
+	OrganizationService_CreateOrganization_FullMethodName  = "/tenant.v1.OrganizationService/CreateOrganization"
+	OrganizationService_OnboardOrganization_FullMethodName = "/tenant.v1.OrganizationService/OnboardOrganization"
+	OrganizationService_ListOrganizations_FullMethodName   = "/tenant.v1.OrganizationService/ListOrganizations"
+	OrganizationService_GetOrganizationById_FullMethodName = "/tenant.v1.OrganizationService/GetOrganizationById"
+	OrganizationService_UpdateOrganization_FullMethodName  = "/tenant.v1.OrganizationService/UpdateOrganization"
+	OrganizationService_ArchiveOrganization_FullMethodName = "/tenant.v1.OrganizationService/ArchiveOrganization"
+	OrganizationService_RestoreOrganization_FullMethodName = "/tenant.v1.OrganizationService/RestoreOrganization"
+	OrganizationService_DeleteOrganization_FullMethodName  = "/tenant.v1.OrganizationService/DeleteOrganization"
+	OrganizationService_TransferOwnership_FullMethodName   = "/tenant.v1.OrganizationService/TransferOwnership"
+	OrganizationService_GetAllPermissions_FullMethodName   = "/tenant.v1.OrganizationService/GetAllPermissions"
+	OrganizationService_GetAllRoles_FullMethodName         = "/tenant.v1.OrganizationService/GetAllRoles"
 )
 
 // OrganizationServiceClient is the client API for OrganizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrganizationServiceClient interface {
+	// --- Global / Public Routes (Bypasses Org Check) ---
 	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
 	OnboardOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
-	GetOrganizationById(ctx context.Context, in *GetOrganizationByIdRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
-	GetOrganizationBySlug(ctx context.Context, in *GetOrganizationBySlugRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	// --- Organization Management ---
+	GetOrganizationById(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
 	UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
-	ArchiveOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	RestoreOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
+	ArchiveOrganization(ctx context.Context, in *ArchiveOrganizationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
+	RestoreOrganization(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	// Member-level
-	GetCurrentMember(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*OrganizationMemberWithRBACResponse, error)
-	LeaveOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	GetAllMembersByOrg(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationMembersResponse, error)
-	GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberResponse, error)
-	RemoveMember(ctx context.Context, in *RemoveOrganizationMemberRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	ChangeMemberRole(ctx context.Context, in *ChangeOrganizationMemberRoleRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	TransferOwnership(ctx context.Context, in *TransferOwnershipRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	// Invitations
-	CreateInvitation(ctx context.Context, in *CreateInvitationRequest, opts ...grpc.CallOption) (*OrganizationMemberInvitationResponse, error)
-	ListInvitations(ctx context.Context, in *ListInvitationsRequest, opts ...grpc.CallOption) (*ListOrganizationInvitationsResponse, error)
-	GetPendingInvitations(ctx context.Context, in *GetPendingInvitationsRequest, opts ...grpc.CallOption) (*ListOrganizationInvitationsResponse, error)
-	AcceptInvitation(ctx context.Context, in *AcceptInvitationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	CancelInvitation(ctx context.Context, in *CancelInvitationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	ResendInvitation(ctx context.Context, in *ResendInvitationRequest, opts ...grpc.CallOption) (*OrganizationMemberInvitationResponse, error)
-	// RBAC
-	GetAllPermissions(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationPermissionsResponse, error)
-	GetAllRoles(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationRolesResponse, error)
+	// --- RBAC Viewing ---
+	GetAllPermissions(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*ListOrganizationPermissionsResponse, error)
+	GetAllRoles(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*ListOrganizationRolesResponse, error)
 }
 
 type organizationServiceClient struct {
@@ -106,30 +80,20 @@ func (c *organizationServiceClient) OnboardOrganization(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *organizationServiceClient) GetOrganizationById(ctx context.Context, in *GetOrganizationByIdRequest, opts ...grpc.CallOption) (*OrganizationResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetOrganizationById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) GetOrganizationBySlug(ctx context.Context, in *GetOrganizationBySlugRequest, opts ...grpc.CallOption) (*OrganizationResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetOrganizationBySlug_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *organizationServiceClient) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOrganizationsResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_ListOrganizations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) GetOrganizationById(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*OrganizationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_GetOrganizationById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +110,7 @@ func (c *organizationServiceClient) UpdateOrganization(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *organizationServiceClient) ArchiveOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
+func (c *organizationServiceClient) ArchiveOrganization(ctx context.Context, in *ArchiveOrganizationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TenantSuccessResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_ArchiveOrganization_FullMethodName, in, out, cOpts...)
@@ -156,7 +120,7 @@ func (c *organizationServiceClient) ArchiveOrganization(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *organizationServiceClient) RestoreOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
+func (c *organizationServiceClient) RestoreOrganization(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TenantSuccessResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_RestoreOrganization_FullMethodName, in, out, cOpts...)
@@ -176,66 +140,6 @@ func (c *organizationServiceClient) DeleteOrganization(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *organizationServiceClient) GetCurrentMember(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*OrganizationMemberWithRBACResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationMemberWithRBACResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetCurrentMember_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) LeaveOrganization(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_LeaveOrganization_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) GetAllMembersByOrg(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationMembersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOrganizationMembersResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetAllMembersByOrg_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationMemberResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetMemberById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) RemoveMember(ctx context.Context, in *RemoveOrganizationMemberRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_RemoveMember_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) ChangeMemberRole(ctx context.Context, in *ChangeOrganizationMemberRoleRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_ChangeMemberRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *organizationServiceClient) TransferOwnership(ctx context.Context, in *TransferOwnershipRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TenantSuccessResponse)
@@ -246,67 +150,7 @@ func (c *organizationServiceClient) TransferOwnership(ctx context.Context, in *T
 	return out, nil
 }
 
-func (c *organizationServiceClient) CreateInvitation(ctx context.Context, in *CreateInvitationRequest, opts ...grpc.CallOption) (*OrganizationMemberInvitationResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationMemberInvitationResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_CreateInvitation_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) ListInvitations(ctx context.Context, in *ListInvitationsRequest, opts ...grpc.CallOption) (*ListOrganizationInvitationsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOrganizationInvitationsResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_ListInvitations_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) GetPendingInvitations(ctx context.Context, in *GetPendingInvitationsRequest, opts ...grpc.CallOption) (*ListOrganizationInvitationsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListOrganizationInvitationsResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_GetPendingInvitations_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) AcceptInvitation(ctx context.Context, in *AcceptInvitationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_AcceptInvitation_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) CancelInvitation(ctx context.Context, in *CancelInvitationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_CancelInvitation_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) ResendInvitation(ctx context.Context, in *ResendInvitationRequest, opts ...grpc.CallOption) (*OrganizationMemberInvitationResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationMemberInvitationResponse)
-	err := c.cc.Invoke(ctx, OrganizationService_ResendInvitation_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *organizationServiceClient) GetAllPermissions(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationPermissionsResponse, error) {
+func (c *organizationServiceClient) GetAllPermissions(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*ListOrganizationPermissionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOrganizationPermissionsResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_GetAllPermissions_FullMethodName, in, out, cOpts...)
@@ -316,7 +160,7 @@ func (c *organizationServiceClient) GetAllPermissions(ctx context.Context, in *O
 	return out, nil
 }
 
-func (c *organizationServiceClient) GetAllRoles(ctx context.Context, in *OrganizationIdRequest, opts ...grpc.CallOption) (*ListOrganizationRolesResponse, error) {
+func (c *organizationServiceClient) GetAllRoles(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*ListOrganizationRolesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOrganizationRolesResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_GetAllRoles_FullMethodName, in, out, cOpts...)
@@ -330,33 +174,20 @@ func (c *organizationServiceClient) GetAllRoles(ctx context.Context, in *Organiz
 // All implementations must embed UnimplementedOrganizationServiceServer
 // for forward compatibility.
 type OrganizationServiceServer interface {
+	// --- Global / Public Routes (Bypasses Org Check) ---
 	CreateOrganization(context.Context, *CreateOrganizationRequest) (*OrganizationResponse, error)
 	OnboardOrganization(context.Context, *CreateOrganizationRequest) (*OrganizationResponse, error)
-	GetOrganizationById(context.Context, *GetOrganizationByIdRequest) (*OrganizationResponse, error)
-	GetOrganizationBySlug(context.Context, *GetOrganizationBySlugRequest) (*OrganizationResponse, error)
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
+	// --- Organization Management ---
+	GetOrganizationById(context.Context, *TenantOrganizationIDRequest) (*OrganizationResponse, error)
 	UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*OrganizationResponse, error)
-	ArchiveOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error)
-	RestoreOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error)
+	ArchiveOrganization(context.Context, *ArchiveOrganizationRequest) (*TenantSuccessResponse, error)
+	RestoreOrganization(context.Context, *TenantOrganizationIDRequest) (*TenantSuccessResponse, error)
 	DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*TenantSuccessResponse, error)
-	// Member-level
-	GetCurrentMember(context.Context, *OrganizationIdRequest) (*OrganizationMemberWithRBACResponse, error)
-	LeaveOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error)
-	GetAllMembersByOrg(context.Context, *OrganizationIdRequest) (*ListOrganizationMembersResponse, error)
-	GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberResponse, error)
-	RemoveMember(context.Context, *RemoveOrganizationMemberRequest) (*TenantSuccessResponse, error)
-	ChangeMemberRole(context.Context, *ChangeOrganizationMemberRoleRequest) (*TenantSuccessResponse, error)
 	TransferOwnership(context.Context, *TransferOwnershipRequest) (*TenantSuccessResponse, error)
-	// Invitations
-	CreateInvitation(context.Context, *CreateInvitationRequest) (*OrganizationMemberInvitationResponse, error)
-	ListInvitations(context.Context, *ListInvitationsRequest) (*ListOrganizationInvitationsResponse, error)
-	GetPendingInvitations(context.Context, *GetPendingInvitationsRequest) (*ListOrganizationInvitationsResponse, error)
-	AcceptInvitation(context.Context, *AcceptInvitationRequest) (*TenantSuccessResponse, error)
-	CancelInvitation(context.Context, *CancelInvitationRequest) (*TenantSuccessResponse, error)
-	ResendInvitation(context.Context, *ResendInvitationRequest) (*OrganizationMemberInvitationResponse, error)
-	// RBAC
-	GetAllPermissions(context.Context, *OrganizationIdRequest) (*ListOrganizationPermissionsResponse, error)
-	GetAllRoles(context.Context, *OrganizationIdRequest) (*ListOrganizationRolesResponse, error)
+	// --- RBAC Viewing ---
+	GetAllPermissions(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationPermissionsResponse, error)
+	GetAllRoles(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationRolesResponse, error)
 	mustEmbedUnimplementedOrganizationServiceServer()
 }
 
@@ -373,70 +204,31 @@ func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context
 func (UnimplementedOrganizationServiceServer) OnboardOrganization(context.Context, *CreateOrganizationRequest) (*OrganizationResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method OnboardOrganization not implemented")
 }
-func (UnimplementedOrganizationServiceServer) GetOrganizationById(context.Context, *GetOrganizationByIdRequest) (*OrganizationResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetOrganizationById not implemented")
-}
-func (UnimplementedOrganizationServiceServer) GetOrganizationBySlug(context.Context, *GetOrganizationBySlugRequest) (*OrganizationResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetOrganizationBySlug not implemented")
-}
 func (UnimplementedOrganizationServiceServer) ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOrganizations not implemented")
+}
+func (UnimplementedOrganizationServiceServer) GetOrganizationById(context.Context, *TenantOrganizationIDRequest) (*OrganizationResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOrganizationById not implemented")
 }
 func (UnimplementedOrganizationServiceServer) UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*OrganizationResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateOrganization not implemented")
 }
-func (UnimplementedOrganizationServiceServer) ArchiveOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error) {
+func (UnimplementedOrganizationServiceServer) ArchiveOrganization(context.Context, *ArchiveOrganizationRequest) (*TenantSuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ArchiveOrganization not implemented")
 }
-func (UnimplementedOrganizationServiceServer) RestoreOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error) {
+func (UnimplementedOrganizationServiceServer) RestoreOrganization(context.Context, *TenantOrganizationIDRequest) (*TenantSuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RestoreOrganization not implemented")
 }
 func (UnimplementedOrganizationServiceServer) DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*TenantSuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteOrganization not implemented")
 }
-func (UnimplementedOrganizationServiceServer) GetCurrentMember(context.Context, *OrganizationIdRequest) (*OrganizationMemberWithRBACResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetCurrentMember not implemented")
-}
-func (UnimplementedOrganizationServiceServer) LeaveOrganization(context.Context, *OrganizationIdRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LeaveOrganization not implemented")
-}
-func (UnimplementedOrganizationServiceServer) GetAllMembersByOrg(context.Context, *OrganizationIdRequest) (*ListOrganizationMembersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAllMembersByOrg not implemented")
-}
-func (UnimplementedOrganizationServiceServer) GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetMemberById not implemented")
-}
-func (UnimplementedOrganizationServiceServer) RemoveMember(context.Context, *RemoveOrganizationMemberRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RemoveMember not implemented")
-}
-func (UnimplementedOrganizationServiceServer) ChangeMemberRole(context.Context, *ChangeOrganizationMemberRoleRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ChangeMemberRole not implemented")
-}
 func (UnimplementedOrganizationServiceServer) TransferOwnership(context.Context, *TransferOwnershipRequest) (*TenantSuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransferOwnership not implemented")
 }
-func (UnimplementedOrganizationServiceServer) CreateInvitation(context.Context, *CreateInvitationRequest) (*OrganizationMemberInvitationResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateInvitation not implemented")
-}
-func (UnimplementedOrganizationServiceServer) ListInvitations(context.Context, *ListInvitationsRequest) (*ListOrganizationInvitationsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListInvitations not implemented")
-}
-func (UnimplementedOrganizationServiceServer) GetPendingInvitations(context.Context, *GetPendingInvitationsRequest) (*ListOrganizationInvitationsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPendingInvitations not implemented")
-}
-func (UnimplementedOrganizationServiceServer) AcceptInvitation(context.Context, *AcceptInvitationRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AcceptInvitation not implemented")
-}
-func (UnimplementedOrganizationServiceServer) CancelInvitation(context.Context, *CancelInvitationRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CancelInvitation not implemented")
-}
-func (UnimplementedOrganizationServiceServer) ResendInvitation(context.Context, *ResendInvitationRequest) (*OrganizationMemberInvitationResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ResendInvitation not implemented")
-}
-func (UnimplementedOrganizationServiceServer) GetAllPermissions(context.Context, *OrganizationIdRequest) (*ListOrganizationPermissionsResponse, error) {
+func (UnimplementedOrganizationServiceServer) GetAllPermissions(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationPermissionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllPermissions not implemented")
 }
-func (UnimplementedOrganizationServiceServer) GetAllRoles(context.Context, *OrganizationIdRequest) (*ListOrganizationRolesResponse, error) {
+func (UnimplementedOrganizationServiceServer) GetAllRoles(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationRolesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllRoles not implemented")
 }
 func (UnimplementedOrganizationServiceServer) mustEmbedUnimplementedOrganizationServiceServer() {}
@@ -496,42 +288,6 @@ func _OrganizationService_OnboardOrganization_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrganizationService_GetOrganizationById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrganizationByIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetOrganizationById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetOrganizationById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetOrganizationById(ctx, req.(*GetOrganizationByIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_GetOrganizationBySlug_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrganizationBySlugRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetOrganizationBySlug(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetOrganizationBySlug_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetOrganizationBySlug(ctx, req.(*GetOrganizationBySlugRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OrganizationService_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOrganizationsRequest)
 	if err := dec(in); err != nil {
@@ -546,6 +302,24 @@ func _OrganizationService_ListOrganizations_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServiceServer).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_GetOrganizationById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantOrganizationIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).GetOrganizationById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_GetOrganizationById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).GetOrganizationById(ctx, req.(*TenantOrganizationIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -569,7 +343,7 @@ func _OrganizationService_UpdateOrganization_Handler(srv interface{}, ctx contex
 }
 
 func _OrganizationService_ArchiveOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
+	in := new(ArchiveOrganizationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -581,13 +355,13 @@ func _OrganizationService_ArchiveOrganization_Handler(srv interface{}, ctx conte
 		FullMethod: OrganizationService_ArchiveOrganization_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).ArchiveOrganization(ctx, req.(*OrganizationIdRequest))
+		return srv.(OrganizationServiceServer).ArchiveOrganization(ctx, req.(*ArchiveOrganizationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OrganizationService_RestoreOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
+	in := new(TenantOrganizationIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -599,7 +373,7 @@ func _OrganizationService_RestoreOrganization_Handler(srv interface{}, ctx conte
 		FullMethod: OrganizationService_RestoreOrganization_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).RestoreOrganization(ctx, req.(*OrganizationIdRequest))
+		return srv.(OrganizationServiceServer).RestoreOrganization(ctx, req.(*TenantOrganizationIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -622,114 +396,6 @@ func _OrganizationService_DeleteOrganization_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrganizationService_GetCurrentMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetCurrentMember(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetCurrentMember_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetCurrentMember(ctx, req.(*OrganizationIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_LeaveOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).LeaveOrganization(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_LeaveOrganization_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).LeaveOrganization(ctx, req.(*OrganizationIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_GetAllMembersByOrg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetAllMembersByOrg(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetAllMembersByOrg_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetAllMembersByOrg(ctx, req.(*OrganizationIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_GetMemberById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrganizationMemberByIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetMemberById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetMemberById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetMemberById(ctx, req.(*GetOrganizationMemberByIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_RemoveMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveOrganizationMemberRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).RemoveMember(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_RemoveMember_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).RemoveMember(ctx, req.(*RemoveOrganizationMemberRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_ChangeMemberRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangeOrganizationMemberRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).ChangeMemberRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_ChangeMemberRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).ChangeMemberRole(ctx, req.(*ChangeOrganizationMemberRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OrganizationService_TransferOwnership_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TransferOwnershipRequest)
 	if err := dec(in); err != nil {
@@ -748,116 +414,8 @@ func _OrganizationService_TransferOwnership_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrganizationService_CreateInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateInvitationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).CreateInvitation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_CreateInvitation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).CreateInvitation(ctx, req.(*CreateInvitationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_ListInvitations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListInvitationsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).ListInvitations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_ListInvitations_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).ListInvitations(ctx, req.(*ListInvitationsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_GetPendingInvitations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPendingInvitationsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).GetPendingInvitations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_GetPendingInvitations_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetPendingInvitations(ctx, req.(*GetPendingInvitationsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_AcceptInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AcceptInvitationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).AcceptInvitation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_AcceptInvitation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).AcceptInvitation(ctx, req.(*AcceptInvitationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_CancelInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CancelInvitationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).CancelInvitation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_CancelInvitation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).CancelInvitation(ctx, req.(*CancelInvitationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrganizationService_ResendInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResendInvitationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrganizationServiceServer).ResendInvitation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrganizationService_ResendInvitation_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).ResendInvitation(ctx, req.(*ResendInvitationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OrganizationService_GetAllPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
+	in := new(TenantOrganizationIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -869,13 +427,13 @@ func _OrganizationService_GetAllPermissions_Handler(srv interface{}, ctx context
 		FullMethod: OrganizationService_GetAllPermissions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetAllPermissions(ctx, req.(*OrganizationIdRequest))
+		return srv.(OrganizationServiceServer).GetAllPermissions(ctx, req.(*TenantOrganizationIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OrganizationService_GetAllRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrganizationIdRequest)
+	in := new(TenantOrganizationIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -887,7 +445,7 @@ func _OrganizationService_GetAllRoles_Handler(srv interface{}, ctx context.Conte
 		FullMethod: OrganizationService_GetAllRoles_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).GetAllRoles(ctx, req.(*OrganizationIdRequest))
+		return srv.(OrganizationServiceServer).GetAllRoles(ctx, req.(*TenantOrganizationIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -908,16 +466,12 @@ var OrganizationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OrganizationService_OnboardOrganization_Handler,
 		},
 		{
-			MethodName: "GetOrganizationById",
-			Handler:    _OrganizationService_GetOrganizationById_Handler,
-		},
-		{
-			MethodName: "GetOrganizationBySlug",
-			Handler:    _OrganizationService_GetOrganizationBySlug_Handler,
-		},
-		{
 			MethodName: "ListOrganizations",
 			Handler:    _OrganizationService_ListOrganizations_Handler,
+		},
+		{
+			MethodName: "GetOrganizationById",
+			Handler:    _OrganizationService_GetOrganizationById_Handler,
 		},
 		{
 			MethodName: "UpdateOrganization",
@@ -936,56 +490,8 @@ var OrganizationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OrganizationService_DeleteOrganization_Handler,
 		},
 		{
-			MethodName: "GetCurrentMember",
-			Handler:    _OrganizationService_GetCurrentMember_Handler,
-		},
-		{
-			MethodName: "LeaveOrganization",
-			Handler:    _OrganizationService_LeaveOrganization_Handler,
-		},
-		{
-			MethodName: "GetAllMembersByOrg",
-			Handler:    _OrganizationService_GetAllMembersByOrg_Handler,
-		},
-		{
-			MethodName: "GetMemberById",
-			Handler:    _OrganizationService_GetMemberById_Handler,
-		},
-		{
-			MethodName: "RemoveMember",
-			Handler:    _OrganizationService_RemoveMember_Handler,
-		},
-		{
-			MethodName: "ChangeMemberRole",
-			Handler:    _OrganizationService_ChangeMemberRole_Handler,
-		},
-		{
 			MethodName: "TransferOwnership",
 			Handler:    _OrganizationService_TransferOwnership_Handler,
-		},
-		{
-			MethodName: "CreateInvitation",
-			Handler:    _OrganizationService_CreateInvitation_Handler,
-		},
-		{
-			MethodName: "ListInvitations",
-			Handler:    _OrganizationService_ListInvitations_Handler,
-		},
-		{
-			MethodName: "GetPendingInvitations",
-			Handler:    _OrganizationService_GetPendingInvitations_Handler,
-		},
-		{
-			MethodName: "AcceptInvitation",
-			Handler:    _OrganizationService_AcceptInvitation_Handler,
-		},
-		{
-			MethodName: "CancelInvitation",
-			Handler:    _OrganizationService_CancelInvitation_Handler,
-		},
-		{
-			MethodName: "ResendInvitation",
-			Handler:    _OrganizationService_ResendInvitation_Handler,
 		},
 		{
 			MethodName: "GetAllPermissions",

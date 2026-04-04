@@ -9,5 +9,8 @@
     "varchar",
     "vyolayer"
   ],
-  "protoc.options": ["--proto_path=./proto"]
+  "protoc.options": ["--proto_path=./proto"],
+  "protobuf.externalLinter.enabled": true,
+  "protobuf.externalLinter.linter": "buf",
+  "protobuf.externalLinter.bufPath": "/home/subhajit/go/bin/buf"
 }

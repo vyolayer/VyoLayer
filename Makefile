@@ -31,6 +31,10 @@ dev-account:
 dev-iam:
 	@$(AIR_BIN) -c internal/iam/.air.iam.toml
 
+# Run tenant service with live reload
+dev-tenant:
+	@$(AIR_BIN) -c internal/tenant/.air.tenant.toml
+
 # Run gateway + account, iam service with live reload
 dev-all:
 	@echo "Starting services with Air..."
@@ -38,6 +42,7 @@ dev-all:
 	$(AIR_BIN) -c internal/account/.air.account.toml & \
 	$(AIR_BIN) -c internal/gateway/.air.gateway.toml & \
 	$(AIR_BIN) -c internal/iam/.air.iam.toml & \
+	$(AIR_BIN) -c internal/tenant/.air.tenant.toml & \
 	wait
 
 # Build the binary

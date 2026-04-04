@@ -1,6 +1,6 @@
 package seed
 
-import "github.com/vyolayer/vyolayer/internal/platform/database/models"
+import tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
 
 const (
 	// Resources
@@ -22,34 +22,53 @@ const (
 	ActionView   = "view"
 
 	// Role Names
-	RoleOwner  = "Owner"
-	RoleAdmin  = "Admin"
-	RoleMember = "Member"
-	RoleViewer = "Viewer"
+	RoleOwner  = "owner"
+	RoleAdmin  = "admin"
+	RoleMember = "member"
+	RoleViewer = "viewer"
 )
 
 // 1. Define Global Permissions
-var OrgPermissions = []models.OrganizationPermission{
+var OrgPermissions = []tenantmodelv1.OrganizationPermission{
 	// Organization
 	{
 		Resource:    ResourceOrganization,
 		Action:      ActionRead,
 		Description: "View organization details",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "organization.read",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceOrganization,
 		Action:      ActionUpdate,
 		Description: "Update settings",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "organization.update",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceOrganization,
 		Action:      ActionDelete,
 		Description: "Delete organization",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "organization.delete",
+		IsSystem:    true,
+	},
+	{
+		Resource:    ResourceOrganization,
+		Action:      "transfer",
+		Description: "Transfer organization ownership",
+		Group:       "settings",
+		Code:        "organization.transfer",
+		IsSystem:    true,
+	},
+	{
+		Resource:    "billing",
+		Action:      ActionManage,
+		Description: "Manage billing and subscriptions",
+		Group:       "billing",
+		Code:        "billing.manage",
 		IsSystem:    true,
 	},
 
@@ -58,28 +77,40 @@ var OrgPermissions = []models.OrganizationPermission{
 		Resource:    ResourceMember,
 		Action:      ActionInvite,
 		Description: "Invite members to organization",
-		Group:       "Team",
+		Group:       "team",
+		Code:        "member.invite",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceMember,
 		Action:      ActionRemove,
 		Description: "Remove members from organization",
-		Group:       "Team",
+		Group:       "team",
+		Code:        "member.remove",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceMember,
 		Action:      ActionList,
 		Description: "List organization members",
-		Group:       "Team",
+		Group:       "team",
+		Code:        "member.list",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceMember,
 		Action:      ActionView,
 		Description: "View member details",
-		Group:       "Team",
+		Group:       "team",
+		Code:        "member.view",
+		IsSystem:    true,
+	},
+	{
+		Resource:    ResourceMember,
+		Action:      ActionUpdate,
+		Description: "Update member roles and status",
+		Group:       "team",
+		Code:        "member.update",
 		IsSystem:    true,
 	},
 
@@ -88,35 +119,40 @@ var OrgPermissions = []models.OrganizationPermission{
 		Resource:    ResourceRole,
 		Action:      ActionCreate,
 		Description: "Create new roles",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "role.create",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceRole,
 		Action:      ActionUpdate,
 		Description: "Update roles",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "role.update",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceRole,
 		Action:      ActionDelete,
 		Description: "Delete roles",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "role.delete",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceRole,
 		Action:      ActionView,
 		Description: "View roles",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "role.view",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceRole,
 		Action:      ActionManage,
 		Description: "Manage roles",
-		Group:       "Settings",
+		Group:       "settings",
+		Code:        "role.manage",
 		IsSystem:    true,
 	},
 
@@ -125,28 +161,32 @@ var OrgPermissions = []models.OrganizationPermission{
 		Resource:    ResourceProject,
 		Action:      ActionCreate,
 		Description: "Create projects",
-		Group:       "Projects",
+		Group:       "projects",
+		Code:        "project.create",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceProject,
 		Action:      ActionRead,
 		Description: "View projects",
-		Group:       "Projects",
+		Group:       "projects",
+		Code:        "project.read",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceProject,
 		Action:      ActionUpdate,
 		Description: "Edit projects",
-		Group:       "Projects",
+		Group:       "projects",
+		Code:        "project.update",
 		IsSystem:    true,
 	},
 	{
 		Resource:    ResourceProject,
 		Action:      ActionDelete,
 		Description: "Delete projects",
-		Group:       "Projects",
+		Group:       "projects",
+		Code:        "project.delete",
 		IsSystem:    true,
 	},
 
@@ -155,35 +195,40 @@ var OrgPermissions = []models.OrganizationPermission{
 		Resource:    ResourceAudit,
 		Action:      ActionRead,
 		Description: "View audit logs",
-		Group:       "Audit",
+		Group:       "audit",
+		Code:        "audit.read",
 		IsSystem:    true,
 	},
 }
 
 // 2. Define Global Roles (OrgID is NIL)
-var OrgRoles = []models.OrganizationRole{
+var OrgRoles = []tenantmodelv1.OrganizationRole{
 	{
-		Name:        RoleOwner,
-		Description: "Owner of the organization",
-		IsSystem:    true,
-		IsDefault:   false,
+		Name:           RoleOwner,
+		Description:    "Owner of the organization",
+		IsSystemRole:   true,
+		IsDefault:      false,
+		HierarchyLevel: 100,
 	}, // Owner is assigned on creation, not default join
 	{
-		Name:        RoleAdmin,
-		Description: "Full administrative access",
-		IsSystem:    true,
-		IsDefault:   false,
+		Name:           RoleAdmin,
+		Description:    "Full administrative access",
+		IsSystemRole:   true,
+		IsDefault:      false,
+		HierarchyLevel: 80,
 	},
 	{
-		Name:        RoleMember,
-		Description: "Standard member",
-		IsSystem:    true,
-		IsDefault:   true,
+		Name:           RoleMember,
+		Description:    "Standard member",
+		IsSystemRole:   true,
+		IsDefault:      true,
+		HierarchyLevel: 50,
 	}, // Default for new joins
 	{
-		Name:        RoleViewer,
-		Description: "Read-only access",
-		IsSystem:    true,
-		IsDefault:   false,
+		Name:           RoleViewer,
+		Description:    "Read-only access",
+		IsSystemRole:   true,
+		IsDefault:      false,
+		HierarchyLevel: 10,
 	},
 }

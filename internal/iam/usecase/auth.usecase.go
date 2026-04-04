@@ -10,6 +10,7 @@ import (
 	repo "github.com/vyolayer/vyolayer/internal/iam/repository"
 	"github.com/vyolayer/vyolayer/internal/shared/session"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
+	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/logger"
 	"github.com/vyolayer/vyolayer/pkg/mail"
 	iAMV1 "github.com/vyolayer/vyolayer/proto/iam/v1"
@@ -148,7 +149,14 @@ func (uc *AuthUsecase) Login(ctx context.Context, req *iAMV1.LoginRequest) (*iAM
 		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
 
-	sess, err := uc.ss.CreateSession(user.ID)
+	sess, err := uc.ss.CreateSession(&jwt.IAMUserJWTDto{
+		UserID:          user.GetID(),
+		FullName:        user.GetFullName(),
+		Email:           user.GetEmail(),
+		Status:          user.GetStatus(),
+		IsEmailVerified: user.IsEmailVerified,
+		JoinedAt:        user.Timestamps.CreatedAt,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -180,8 +188,19 @@ func (uc *AuthUsecase) RefreshToken(ctx context.Context, req *iAMV1.RefreshSessi
 	if time.Now().After(sessionModel.ExpiresAt) || sessionModel.RevokedAt != nil {
 		return nil, status.Error(codes.Unauthenticated, "session expired or revoked")
 	}
+	user, err := uc.ur.FindByID(ctx, sessionModel.UserID)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
 
-	sess, err := uc.ss.CreateSession(sessionModel.UserID)
+	sess, err := uc.ss.CreateSession(&jwt.IAMUserJWTDto{
+		UserID:          user.GetID(),
+		FullName:        user.GetFullName(),
+		Email:           user.GetEmail(),
+		Status:          user.GetStatus(),
+		IsEmailVerified: user.IsEmailVerified,
+		JoinedAt:        user.Timestamps.CreatedAt,
+	})
 	if err != nil {
 		return nil, err
 	}

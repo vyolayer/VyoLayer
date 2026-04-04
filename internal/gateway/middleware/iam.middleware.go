@@ -17,15 +17,17 @@ func IamJWTVerify(jwt jwt.IamJWT) fiber.Handler {
 			return err
 		}
 
-		id, err := jwt.VerifyAccessToken(t)
+		user, err := jwt.VerifyAccessToken(t)
 		if err != nil {
 			return errors.Unauthorized("invalid or expired auth token")
 		}
 
-		log.Printf("[GATEWAY - IAM] (Middleware - IAM) User ID :: %s", id)
-		ctx := ctxutil.InjectIAMUserID(c.UserContext(), id.String())
+		log.Printf("[GATEWAY - IAM] (Middleware - IAM) User ID :: %s", user.UserID.String())
+		ctx := ctxutil.InjectIAMUserID(c.UserContext(), user.UserID.String())
+		ctx = ctxutil.InjectIAMUserEmail(ctx, user.Email)
 		ctx = metadata.AppendToOutgoingContext(ctx,
-			"iam_user_id", id.String(),
+			"iam_user_id", user.UserID.String(),
+			"iam_user_email", user.Email,
 		)
 		c.SetUserContext(ctx)
 

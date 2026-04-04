@@ -31,8 +31,8 @@ type ApiKey struct {
 	LastUsedAt   *time.Time
 	RevokedAt    *time.Time `gorm:"index"`
 	RevokedBy    *uuid.UUID `gorm:"type:uuid"`    // this is id of the user
-	RequestLimit int        `gorm:"default:1000"` // per minute
-	RateLimit    int        `gorm:"default:60"`   // per minute
+	RequestLimit uint32     `gorm:"default:1000"` // per minute
+	RateLimit    uint32     `gorm:"default:60"`   // per minute
 }
 
 func (ApiKey) TableName() string {

@@ -21,8 +21,8 @@ type Project struct {
 
 	CreatedBy uuid.UUID `gorm:"type:uuid;not null;index"`
 
-	MaxAPIKeys int `gorm:"column:max_api_keys;default:5;check:max_api_keys > 0 AND max_api_keys <= 10"`
-	MaxMembers int `gorm:"default:5;check:max_members > 0 AND max_members <= 10"`
+	MaxAPIKeys uint8 `gorm:"column:max_api_keys;default:5;check:max_api_keys > 0 AND max_api_keys <= 10"`
+	MaxMembers uint8 `gorm:"default:5;check:max_members > 0 AND max_members <= 10"`
 
 	Members []ProjectMember `gorm:"foreignKey:ProjectID;constraint:OnDelete:CASCADE"`
 	APIKeys []ApiKey        `gorm:"foreignKey:ProjectID;constraint:OnDelete:CASCADE"`

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	"gorm.io/datatypes"
 )
 
@@ -20,9 +21,13 @@ type Organization struct {
 	IsActive      bool       `gorm:"default:true;index:idx_organizations_active"`
 	DeactivatedBy *uuid.UUID `gorm:"type:uuid"` // User ID
 	DeactivatedAt *time.Time
+	ArchivedAt    *time.Time `gorm:"index"`
 
-	MaxProjects int `gorm:"default:1;check:max_projects > 0 AND max_projects <= 100"`
-	MaxMembers  int `gorm:"default:5;check:max_members > 0 AND max_members <= 100"`
+	MaxProjects uint32 `gorm:"default:1;check:max_projects > 0 AND max_projects <= 100"`
+	MaxMembers  uint32 `gorm:"default:5;check:max_members > 0 AND max_members <= 100"`
+
+	ProjectCount uint32 `gorm:"default:0;not null"`
+	MemberCount  uint32 `gorm:"default:1;not null"`
 
 	Members     []OrganizationMember           `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE"`
 	Projects    []Project                      `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE"`
@@ -40,7 +45,8 @@ type OrganizationMember struct {
 	OrganizationID uuid.UUID    `gorm:"type:uuid;not null;uniqueIndex:idx_org_member_unique,priority:1"`
 	Organization   Organization `gorm:"foreignKey:OrganizationID;constraints:OnDelete:CASCADE"`
 
-	UserID uuid.UUID `gorm:"type:uuid;not null;uniqueIndex:idx_org_member_unique,priority:2"`
+	UserID uuid.UUID       `gorm:"type:uuid;not null;uniqueIndex:idx_org_member_unique,priority:2"`
+	User   iammodelv1.User `gorm:"foreignKey:UserID;references:ID"`
 
 	InvitedBy *uuid.UUID `gorm:"type:uuid"`
 	InvitedAt *time.Time
@@ -66,10 +72,11 @@ type OrganizationMemberInvitation struct {
 	OrganizationID uuid.UUID    `gorm:"type:uuid;not null;uniqueIndex:idx_org_invitation_email_org,priority:2;index"`
 	Organization   Organization `gorm:"foreignKey:OrganizationID;constraints:OnDelete:CASCADE"`
 
-	InvitedBy uuid.UUID      `gorm:"type:uuid;not null;index"`
-	Email     string         `gorm:"type:varchar(255);not null;uniqueIndex:idx_org_invitation_email_org,priority:1"`
-	Token     string         `gorm:"type:varchar(128);not null;uniqueIndex"`
-	RoleIDs   datatypes.JSON `gorm:"type:jsonb;not null;default:'[]'"`
+	InvitedBy uuid.UUID          `gorm:"type:uuid;not null;index"`
+	Inviter   OrganizationMember `gorm:"foreignKey:InvitedBy;references:ID"`
+	Email     string             `gorm:"type:varchar(255);not null;uniqueIndex:idx_org_invitation_email_org,priority:1"`
+	Token     string             `gorm:"type:varchar(128);not null;uniqueIndex"`
+	RoleIDs   datatypes.JSON     `gorm:"type:jsonb;not null;default:'[]'"`
 
 	InvitedAt  time.Time `gorm:"autoCreateTime"`
 	IsAccepted bool      `gorm:"default:false"`
@@ -98,6 +105,8 @@ type OrganizationRole struct {
 	Description  string `gorm:"type:text"`
 	IsSystemRole bool   `gorm:"column:is_system;default:false"`
 	IsDefault    bool   `gorm:"default:false"`
+
+	HierarchyLevel uint32 `gorm:"default:0;not null"`
 
 	Permissions []OrganizationPermission `gorm:"many2many:organization_role_permissions;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:PermissionID"`
 }

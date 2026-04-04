@@ -12,4 +12,46 @@ message TenantSuccessResponse {
   google.protobuf.Any payload = 2;
 }
 
+message TenantOrganizationIDRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
 message TenantEmptyRequest {}
+
+
+// --------------------
+// RBAC Messages
+// --------------------
+message OrganizationRoleDTO {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_system_role = 4;
+  bool is_default = 5;
+}
+
+message OrganizationPermissionDTO {
+  string id = 1;
+  string resource = 2;
+  string action = 3;
+  string code = 4;
+  string group = 5;
+  bool is_system = 6;
+}
+
+message OrganizationRole {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_system_role = 4;
+  bool is_default = 5;
+}
+
+message OrganizationPermission {
+  string id = 1;
+  string resource = 2;
+  string action = 3;
+  string code = 4;
+  string group = 5;
+  bool is_system = 6;
+}

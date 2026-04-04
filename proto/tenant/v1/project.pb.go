@@ -602,9 +602,9 @@ type Project struct {
 	Description    string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
 	IsActive       bool                   `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	CreatedBy      string                 `protobuf:"bytes,7,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
-	MaxApiKeys     int32                  `protobuf:"varint,8,opt,name=max_api_keys,json=maxApiKeys,proto3" json:"max_api_keys,omitempty"`
-	MaxMembers     int32                  `protobuf:"varint,9,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
-	MemberCount    int32                  `protobuf:"varint,10,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
+	MaxApiKeys     uint32                 `protobuf:"varint,8,opt,name=max_api_keys,json=maxApiKeys,proto3" json:"max_api_keys,omitempty"`
+	MaxMembers     uint32                 `protobuf:"varint,9,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
+	MemberCount    uint32                 `protobuf:"varint,10,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
 	CreatedAt      string                 `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -689,21 +689,21 @@ func (x *Project) GetCreatedBy() string {
 	return ""
 }
 
-func (x *Project) GetMaxApiKeys() int32 {
+func (x *Project) GetMaxApiKeys() uint32 {
 	if x != nil {
 		return x.MaxApiKeys
 	}
 	return 0
 }
 
-func (x *Project) GetMaxMembers() int32 {
+func (x *Project) GetMaxMembers() uint32 {
 	if x != nil {
 		return x.MaxMembers
 	}
 	return 0
 }
 
-func (x *Project) GetMemberCount() int32 {
+func (x *Project) GetMemberCount() uint32 {
 	if x != nil {
 		return x.MemberCount
 	}
@@ -1248,12 +1248,12 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\tis_active\x18\x06 \x01(\bR\bisActive\x12\x1d\n" +
 	"\n" +
 	"created_by\x18\a \x01(\tR\tcreatedBy\x12 \n" +
-	"\fmax_api_keys\x18\b \x01(\x05R\n" +
+	"\fmax_api_keys\x18\b \x01(\rR\n" +
 	"maxApiKeys\x12\x1f\n" +
-	"\vmax_members\x18\t \x01(\x05R\n" +
+	"\vmax_members\x18\t \x01(\rR\n" +
 	"maxMembers\x12!\n" +
 	"\fmember_count\x18\n" +
-	" \x01(\x05R\vmemberCount\x12\x1d\n" +
+	" \x01(\rR\vmemberCount\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\v \x01(\tR\tcreatedAt\"\xc6\x01\n" +
 	"\x19ListProjectMembersRequest\x120\n" +

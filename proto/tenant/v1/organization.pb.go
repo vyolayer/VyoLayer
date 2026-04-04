@@ -22,50 +22,9 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type OrganizationIdRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *OrganizationIdRequest) Reset() {
-	*x = OrganizationIdRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationIdRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationIdRequest) ProtoMessage() {}
-
-func (x *OrganizationIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationIdRequest.ProtoReflect.Descriptor instead.
-func (*OrganizationIdRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *OrganizationIdRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
+// --------------------
+// Organization Requests
+// --------------------
 type CreateOrganizationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -76,7 +35,7 @@ type CreateOrganizationRequest struct {
 
 func (x *CreateOrganizationRequest) Reset() {
 	*x = CreateOrganizationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	mi := &file_tenant_v1_organization_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -88,7 +47,7 @@ func (x *CreateOrganizationRequest) String() string {
 func (*CreateOrganizationRequest) ProtoMessage() {}
 
 func (x *CreateOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	mi := &file_tenant_v1_organization_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -101,7 +60,7 @@ func (x *CreateOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*CreateOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{1}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *CreateOrganizationRequest) GetName() string {
@@ -129,7 +88,7 @@ type UpdateOrganizationRequest struct {
 
 func (x *UpdateOrganizationRequest) Reset() {
 	*x = UpdateOrganizationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	mi := &file_tenant_v1_organization_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -141,7 +100,7 @@ func (x *UpdateOrganizationRequest) String() string {
 func (*UpdateOrganizationRequest) ProtoMessage() {}
 
 func (x *UpdateOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	mi := &file_tenant_v1_organization_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -154,7 +113,7 @@ func (x *UpdateOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*UpdateOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{2}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UpdateOrganizationRequest) GetOrganizationId() string {
@@ -174,6 +133,58 @@ func (x *UpdateOrganizationRequest) GetName() string {
 func (x *UpdateOrganizationRequest) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
+	}
+	return ""
+}
+
+type ArchiveOrganizationRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	ConfirmName    string                 `protobuf:"bytes,2,opt,name=confirm_name,json=confirmName,proto3" json:"confirm_name,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ArchiveOrganizationRequest) Reset() {
+	*x = ArchiveOrganizationRequest{}
+	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArchiveOrganizationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArchiveOrganizationRequest) ProtoMessage() {}
+
+func (x *ArchiveOrganizationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArchiveOrganizationRequest.ProtoReflect.Descriptor instead.
+func (*ArchiveOrganizationRequest) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ArchiveOrganizationRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *ArchiveOrganizationRequest) GetConfirmName() string {
+	if x != nil {
+		return x.ConfirmName
 	}
 	return ""
 }
@@ -370,6 +381,69 @@ func (x *ListOrganizationsRequest) GetPageToken() string {
 	return ""
 }
 
+type TransferOwnershipRequest struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId   string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	NewOwnerMemberId string                 `protobuf:"bytes,2,opt,name=new_owner_member_id,json=newOwnerMemberId,proto3" json:"new_owner_member_id,omitempty"`
+	ConfirmName      string                 `protobuf:"bytes,3,opt,name=confirm_name,json=confirmName,proto3" json:"confirm_name,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *TransferOwnershipRequest) Reset() {
+	*x = TransferOwnershipRequest{}
+	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TransferOwnershipRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransferOwnershipRequest) ProtoMessage() {}
+
+func (x *TransferOwnershipRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransferOwnershipRequest.ProtoReflect.Descriptor instead.
+func (*TransferOwnershipRequest) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TransferOwnershipRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *TransferOwnershipRequest) GetNewOwnerMemberId() string {
+	if x != nil {
+		return x.NewOwnerMemberId
+	}
+	return ""
+}
+
+func (x *TransferOwnershipRequest) GetConfirmName() string {
+	if x != nil {
+		return x.ConfirmName
+	}
+	return ""
+}
+
+// --------------------
+// Organization Responses
+// --------------------
 type ListOrganizationsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Organizations []*Organization        `protobuf:"bytes,1,rep,name=organizations,proto3" json:"organizations,omitempty"`
@@ -381,7 +455,7 @@ type ListOrganizationsResponse struct {
 
 func (x *ListOrganizationsResponse) Reset() {
 	*x = ListOrganizationsResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	mi := &file_tenant_v1_organization_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -393,7 +467,7 @@ func (x *ListOrganizationsResponse) String() string {
 func (*ListOrganizationsResponse) ProtoMessage() {}
 
 func (x *ListOrganizationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	mi := &file_tenant_v1_organization_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -406,7 +480,7 @@ func (x *ListOrganizationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrganizationsResponse.ProtoReflect.Descriptor instead.
 func (*ListOrganizationsResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{7}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListOrganizationsResponse) GetOrganizations() []*Organization {
@@ -430,1451 +504,6 @@ func (x *ListOrganizationsResponse) GetNextPageToken() string {
 	return ""
 }
 
-// --------------------
-// Membership & RBAC
-// --------------------
-type ListOrganizationMembersResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Members       []*OrganizationMember  `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
-	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListOrganizationMembersResponse) Reset() {
-	*x = ListOrganizationMembersResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListOrganizationMembersResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListOrganizationMembersResponse) ProtoMessage() {}
-
-func (x *ListOrganizationMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListOrganizationMembersResponse.ProtoReflect.Descriptor instead.
-func (*ListOrganizationMembersResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *ListOrganizationMembersResponse) GetMembers() []*OrganizationMember {
-	if x != nil {
-		return x.Members
-	}
-	return nil
-}
-
-func (x *ListOrganizationMembersResponse) GetTotalCount() int32 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *ListOrganizationMembersResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-type GetOrganizationMemberByIdRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	MemberId       string                 `protobuf:"bytes,2,opt,name=member_id,json=memberId,proto3" json:"member_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *GetOrganizationMemberByIdRequest) Reset() {
-	*x = GetOrganizationMemberByIdRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetOrganizationMemberByIdRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetOrganizationMemberByIdRequest) ProtoMessage() {}
-
-func (x *GetOrganizationMemberByIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetOrganizationMemberByIdRequest.ProtoReflect.Descriptor instead.
-func (*GetOrganizationMemberByIdRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *GetOrganizationMemberByIdRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *GetOrganizationMemberByIdRequest) GetMemberId() string {
-	if x != nil {
-		return x.MemberId
-	}
-	return ""
-}
-
-type RemoveOrganizationMemberRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	MemberId       string                 `protobuf:"bytes,2,opt,name=member_id,json=memberId,proto3" json:"member_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *RemoveOrganizationMemberRequest) Reset() {
-	*x = RemoveOrganizationMemberRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RemoveOrganizationMemberRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RemoveOrganizationMemberRequest) ProtoMessage() {}
-
-func (x *RemoveOrganizationMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RemoveOrganizationMemberRequest.ProtoReflect.Descriptor instead.
-func (*RemoveOrganizationMemberRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *RemoveOrganizationMemberRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *RemoveOrganizationMemberRequest) GetMemberId() string {
-	if x != nil {
-		return x.MemberId
-	}
-	return ""
-}
-
-type ChangeOrganizationMemberRoleRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	MemberId       string                 `protobuf:"bytes,2,opt,name=member_id,json=memberId,proto3" json:"member_id,omitempty"`
-	RoleId         string                 `protobuf:"bytes,3,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ChangeOrganizationMemberRoleRequest) Reset() {
-	*x = ChangeOrganizationMemberRoleRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ChangeOrganizationMemberRoleRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ChangeOrganizationMemberRoleRequest) ProtoMessage() {}
-
-func (x *ChangeOrganizationMemberRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ChangeOrganizationMemberRoleRequest.ProtoReflect.Descriptor instead.
-func (*ChangeOrganizationMemberRoleRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ChangeOrganizationMemberRoleRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *ChangeOrganizationMemberRoleRequest) GetMemberId() string {
-	if x != nil {
-		return x.MemberId
-	}
-	return ""
-}
-
-func (x *ChangeOrganizationMemberRoleRequest) GetRoleId() string {
-	if x != nil {
-		return x.RoleId
-	}
-	return ""
-}
-
-type TransferOwnershipRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId   string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	NewOwnerMemberId string                 `protobuf:"bytes,2,opt,name=new_owner_member_id,json=newOwnerMemberId,proto3" json:"new_owner_member_id,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
-}
-
-func (x *TransferOwnershipRequest) Reset() {
-	*x = TransferOwnershipRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TransferOwnershipRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TransferOwnershipRequest) ProtoMessage() {}
-
-func (x *TransferOwnershipRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TransferOwnershipRequest.ProtoReflect.Descriptor instead.
-func (*TransferOwnershipRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *TransferOwnershipRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *TransferOwnershipRequest) GetNewOwnerMemberId() string {
-	if x != nil {
-		return x.NewOwnerMemberId
-	}
-	return ""
-}
-
-type OrganizationMemberWithRBACResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Member        *OrganizationMember       `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
-	Roles         []*OrganizationRole       `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
-	Permissions   []*OrganizationPermission `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationMemberWithRBACResponse) Reset() {
-	*x = OrganizationMemberWithRBACResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationMemberWithRBACResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationMemberWithRBACResponse) ProtoMessage() {}
-
-func (x *OrganizationMemberWithRBACResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationMemberWithRBACResponse.ProtoReflect.Descriptor instead.
-func (*OrganizationMemberWithRBACResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *OrganizationMemberWithRBACResponse) GetMember() *OrganizationMember {
-	if x != nil {
-		return x.Member
-	}
-	return nil
-}
-
-func (x *OrganizationMemberWithRBACResponse) GetRoles() []*OrganizationRole {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
-func (x *OrganizationMemberWithRBACResponse) GetPermissions() []*OrganizationPermission {
-	if x != nil {
-		return x.Permissions
-	}
-	return nil
-}
-
-type OrganizationMemberResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Member        *OrganizationMember    `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationMemberResponse) Reset() {
-	*x = OrganizationMemberResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationMemberResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationMemberResponse) ProtoMessage() {}
-
-func (x *OrganizationMemberResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationMemberResponse.ProtoReflect.Descriptor instead.
-func (*OrganizationMemberResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *OrganizationMemberResponse) GetMember() *OrganizationMember {
-	if x != nil {
-		return x.Member
-	}
-	return nil
-}
-
-type OrganizationMember struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	FullName      string                 `protobuf:"bytes,4,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
-	IsActive      bool                   `protobuf:"varint,5,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	JoinedAt      string                 `protobuf:"bytes,6,opt,name=joined_at,json=joinedAt,proto3" json:"joined_at,omitempty"` // RFC3339 string
-	InvitedBy     *string                `protobuf:"bytes,7,opt,name=invited_by,json=invitedBy,proto3,oneof" json:"invited_by,omitempty"`
-	InvitedAt     *string                `protobuf:"bytes,8,opt,name=invited_at,json=invitedAt,proto3,oneof" json:"invited_at,omitempty"`
-	DeactivatedBy *string                `protobuf:"bytes,9,opt,name=deactivated_by,json=deactivatedBy,proto3,oneof" json:"deactivated_by,omitempty"`
-	DeactivatedAt *string                `protobuf:"bytes,10,opt,name=deactivated_at,json=deactivatedAt,proto3,oneof" json:"deactivated_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationMember) Reset() {
-	*x = OrganizationMember{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationMember) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationMember) ProtoMessage() {}
-
-func (x *OrganizationMember) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationMember.ProtoReflect.Descriptor instead.
-func (*OrganizationMember) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *OrganizationMember) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetFullName() string {
-	if x != nil {
-		return x.FullName
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetIsActive() bool {
-	if x != nil {
-		return x.IsActive
-	}
-	return false
-}
-
-func (x *OrganizationMember) GetJoinedAt() string {
-	if x != nil {
-		return x.JoinedAt
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetInvitedBy() string {
-	if x != nil && x.InvitedBy != nil {
-		return *x.InvitedBy
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetInvitedAt() string {
-	if x != nil && x.InvitedAt != nil {
-		return *x.InvitedAt
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetDeactivatedBy() string {
-	if x != nil && x.DeactivatedBy != nil {
-		return *x.DeactivatedBy
-	}
-	return ""
-}
-
-func (x *OrganizationMember) GetDeactivatedAt() string {
-	if x != nil && x.DeactivatedAt != nil {
-		return *x.DeactivatedAt
-	}
-	return ""
-}
-
-type OrganizationRoleDTO struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	IsSystemRole  bool                   `protobuf:"varint,4,opt,name=is_system_role,json=isSystemRole,proto3" json:"is_system_role,omitempty"`
-	IsDefault     bool                   `protobuf:"varint,5,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationRoleDTO) Reset() {
-	*x = OrganizationRoleDTO{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationRoleDTO) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationRoleDTO) ProtoMessage() {}
-
-func (x *OrganizationRoleDTO) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationRoleDTO.ProtoReflect.Descriptor instead.
-func (*OrganizationRoleDTO) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *OrganizationRoleDTO) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationRoleDTO) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *OrganizationRoleDTO) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *OrganizationRoleDTO) GetIsSystemRole() bool {
-	if x != nil {
-		return x.IsSystemRole
-	}
-	return false
-}
-
-func (x *OrganizationRoleDTO) GetIsDefault() bool {
-	if x != nil {
-		return x.IsDefault
-	}
-	return false
-}
-
-type OrganizationPermissionDTO struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Resource      string                 `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
-	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
-	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Group         string                 `protobuf:"bytes,5,opt,name=group,proto3" json:"group,omitempty"`
-	IsSystem      bool                   `protobuf:"varint,6,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationPermissionDTO) Reset() {
-	*x = OrganizationPermissionDTO{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationPermissionDTO) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationPermissionDTO) ProtoMessage() {}
-
-func (x *OrganizationPermissionDTO) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationPermissionDTO.ProtoReflect.Descriptor instead.
-func (*OrganizationPermissionDTO) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *OrganizationPermissionDTO) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationPermissionDTO) GetResource() string {
-	if x != nil {
-		return x.Resource
-	}
-	return ""
-}
-
-func (x *OrganizationPermissionDTO) GetAction() string {
-	if x != nil {
-		return x.Action
-	}
-	return ""
-}
-
-func (x *OrganizationPermissionDTO) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *OrganizationPermissionDTO) GetGroup() string {
-	if x != nil {
-		return x.Group
-	}
-	return ""
-}
-
-func (x *OrganizationPermissionDTO) GetIsSystem() bool {
-	if x != nil {
-		return x.IsSystem
-	}
-	return false
-}
-
-type OrganizationRole struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	IsSystemRole  bool                   `protobuf:"varint,4,opt,name=is_system_role,json=isSystemRole,proto3" json:"is_system_role,omitempty"`
-	IsDefault     bool                   `protobuf:"varint,5,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationRole) Reset() {
-	*x = OrganizationRole{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationRole) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationRole) ProtoMessage() {}
-
-func (x *OrganizationRole) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationRole.ProtoReflect.Descriptor instead.
-func (*OrganizationRole) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *OrganizationRole) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationRole) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *OrganizationRole) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *OrganizationRole) GetIsSystemRole() bool {
-	if x != nil {
-		return x.IsSystemRole
-	}
-	return false
-}
-
-func (x *OrganizationRole) GetIsDefault() bool {
-	if x != nil {
-		return x.IsDefault
-	}
-	return false
-}
-
-type OrganizationPermission struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Resource      string                 `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
-	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
-	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Group         string                 `protobuf:"bytes,5,opt,name=group,proto3" json:"group,omitempty"`
-	IsSystem      bool                   `protobuf:"varint,6,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationPermission) Reset() {
-	*x = OrganizationPermission{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationPermission) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationPermission) ProtoMessage() {}
-
-func (x *OrganizationPermission) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationPermission.ProtoReflect.Descriptor instead.
-func (*OrganizationPermission) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *OrganizationPermission) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationPermission) GetResource() string {
-	if x != nil {
-		return x.Resource
-	}
-	return ""
-}
-
-func (x *OrganizationPermission) GetAction() string {
-	if x != nil {
-		return x.Action
-	}
-	return ""
-}
-
-func (x *OrganizationPermission) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *OrganizationPermission) GetGroup() string {
-	if x != nil {
-		return x.Group
-	}
-	return ""
-}
-
-func (x *OrganizationPermission) GetIsSystem() bool {
-	if x != nil {
-		return x.IsSystem
-	}
-	return false
-}
-
-type ListOrganizationRolesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Roles         []*OrganizationRole    `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListOrganizationRolesResponse) Reset() {
-	*x = ListOrganizationRolesResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListOrganizationRolesResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListOrganizationRolesResponse) ProtoMessage() {}
-
-func (x *ListOrganizationRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListOrganizationRolesResponse.ProtoReflect.Descriptor instead.
-func (*ListOrganizationRolesResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *ListOrganizationRolesResponse) GetRoles() []*OrganizationRole {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
-type ListOrganizationPermissionsResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Permissions   []*OrganizationPermission `protobuf:"bytes,1,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListOrganizationPermissionsResponse) Reset() {
-	*x = ListOrganizationPermissionsResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListOrganizationPermissionsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListOrganizationPermissionsResponse) ProtoMessage() {}
-
-func (x *ListOrganizationPermissionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListOrganizationPermissionsResponse.ProtoReflect.Descriptor instead.
-func (*ListOrganizationPermissionsResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *ListOrganizationPermissionsResponse) GetPermissions() []*OrganizationPermission {
-	if x != nil {
-		return x.Permissions
-	}
-	return nil
-}
-
-// --------------------
-// Invitations
-// --------------------
-type CreateInvitationRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	Email          string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	RoleIds        []string               `protobuf:"bytes,3,rep,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *CreateInvitationRequest) Reset() {
-	*x = CreateInvitationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateInvitationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateInvitationRequest) ProtoMessage() {}
-
-func (x *CreateInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateInvitationRequest.ProtoReflect.Descriptor instead.
-func (*CreateInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *CreateInvitationRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *CreateInvitationRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *CreateInvitationRequest) GetRoleIds() []string {
-	if x != nil {
-		return x.RoleIds
-	}
-	return nil
-}
-
-type ListInvitationsRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	PageSize       int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken      string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ListInvitationsRequest) Reset() {
-	*x = ListInvitationsRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListInvitationsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListInvitationsRequest) ProtoMessage() {}
-
-func (x *ListInvitationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListInvitationsRequest.ProtoReflect.Descriptor instead.
-func (*ListInvitationsRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *ListInvitationsRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *ListInvitationsRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListInvitationsRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-type GetPendingInvitationsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetPendingInvitationsRequest) Reset() {
-	*x = GetPendingInvitationsRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetPendingInvitationsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetPendingInvitationsRequest) ProtoMessage() {}
-
-func (x *GetPendingInvitationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetPendingInvitationsRequest.ProtoReflect.Descriptor instead.
-func (*GetPendingInvitationsRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *GetPendingInvitationsRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-type AcceptInvitationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AcceptInvitationRequest) Reset() {
-	*x = AcceptInvitationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AcceptInvitationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AcceptInvitationRequest) ProtoMessage() {}
-
-func (x *AcceptInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AcceptInvitationRequest.ProtoReflect.Descriptor instead.
-func (*AcceptInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *AcceptInvitationRequest) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
-}
-
-type CancelInvitationRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	InvitationId   string                 `protobuf:"bytes,1,opt,name=invitation_id,json=invitationId,proto3" json:"invitation_id,omitempty"`
-	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *CancelInvitationRequest) Reset() {
-	*x = CancelInvitationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[26]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CancelInvitationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CancelInvitationRequest) ProtoMessage() {}
-
-func (x *CancelInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[26]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CancelInvitationRequest.ProtoReflect.Descriptor instead.
-func (*CancelInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *CancelInvitationRequest) GetInvitationId() string {
-	if x != nil {
-		return x.InvitationId
-	}
-	return ""
-}
-
-func (x *CancelInvitationRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-type ResendInvitationRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	InvitationId   string                 `protobuf:"bytes,2,opt,name=invitation_id,json=invitationId,proto3" json:"invitation_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ResendInvitationRequest) Reset() {
-	*x = ResendInvitationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResendInvitationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResendInvitationRequest) ProtoMessage() {}
-
-func (x *ResendInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResendInvitationRequest.ProtoReflect.Descriptor instead.
-func (*ResendInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *ResendInvitationRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *ResendInvitationRequest) GetInvitationId() string {
-	if x != nil {
-		return x.InvitationId
-	}
-	return ""
-}
-
-type OrganizationMemberInvitationResponse struct {
-	state         protoimpl.MessageState        `protogen:"open.v1"`
-	Invitation    *OrganizationMemberInvitation `protobuf:"bytes,1,opt,name=invitation,proto3" json:"invitation,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OrganizationMemberInvitationResponse) Reset() {
-	*x = OrganizationMemberInvitationResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[28]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationMemberInvitationResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationMemberInvitationResponse) ProtoMessage() {}
-
-func (x *OrganizationMemberInvitationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[28]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationMemberInvitationResponse.ProtoReflect.Descriptor instead.
-func (*OrganizationMemberInvitationResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{28}
-}
-
-func (x *OrganizationMemberInvitationResponse) GetInvitation() *OrganizationMemberInvitation {
-	if x != nil {
-		return x.Invitation
-	}
-	return nil
-}
-
-type ListOrganizationInvitationsResponse struct {
-	state         protoimpl.MessageState          `protogen:"open.v1"`
-	Invitations   []*OrganizationMemberInvitation `protobuf:"bytes,1,rep,name=invitations,proto3" json:"invitations,omitempty"`
-	TotalCount    int32                           `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	NextPageToken string                          `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListOrganizationInvitationsResponse) Reset() {
-	*x = ListOrganizationInvitationsResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[29]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListOrganizationInvitationsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListOrganizationInvitationsResponse) ProtoMessage() {}
-
-func (x *ListOrganizationInvitationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[29]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListOrganizationInvitationsResponse.ProtoReflect.Descriptor instead.
-func (*ListOrganizationInvitationsResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{29}
-}
-
-func (x *ListOrganizationInvitationsResponse) GetInvitations() []*OrganizationMemberInvitation {
-	if x != nil {
-		return x.Invitations
-	}
-	return nil
-}
-
-func (x *ListOrganizationInvitationsResponse) GetTotalCount() int32 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *ListOrganizationInvitationsResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-type OrganizationMemberInvitation struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	InvitedBy      string                 `protobuf:"bytes,3,opt,name=invited_by,json=invitedBy,proto3" json:"invited_by,omitempty"`
-	Email          string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	RoleIds        []string               `protobuf:"bytes,5,rep,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
-	InvitedAt      string                 `protobuf:"bytes,6,opt,name=invited_at,json=invitedAt,proto3" json:"invited_at,omitempty"` // RFC3339
-	IsAccepted     bool                   `protobuf:"varint,7,opt,name=is_accepted,json=isAccepted,proto3" json:"is_accepted,omitempty"`
-	AcceptedAt     *string                `protobuf:"bytes,8,opt,name=accepted_at,json=acceptedAt,proto3,oneof" json:"accepted_at,omitempty"`
-	ExpiredAt      string                 `protobuf:"bytes,9,opt,name=expired_at,json=expiredAt,proto3" json:"expired_at,omitempty"` // RFC3339
-	IsPending      bool                   `protobuf:"varint,10,opt,name=is_pending,json=isPending,proto3" json:"is_pending,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *OrganizationMemberInvitation) Reset() {
-	*x = OrganizationMemberInvitation{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[30]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OrganizationMemberInvitation) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OrganizationMemberInvitation) ProtoMessage() {}
-
-func (x *OrganizationMemberInvitation) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[30]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OrganizationMemberInvitation.ProtoReflect.Descriptor instead.
-func (*OrganizationMemberInvitation) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{30}
-}
-
-func (x *OrganizationMemberInvitation) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetInvitedBy() string {
-	if x != nil {
-		return x.InvitedBy
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetRoleIds() []string {
-	if x != nil {
-		return x.RoleIds
-	}
-	return nil
-}
-
-func (x *OrganizationMemberInvitation) GetInvitedAt() string {
-	if x != nil {
-		return x.InvitedAt
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetIsAccepted() bool {
-	if x != nil {
-		return x.IsAccepted
-	}
-	return false
-}
-
-func (x *OrganizationMemberInvitation) GetAcceptedAt() string {
-	if x != nil && x.AcceptedAt != nil {
-		return *x.AcceptedAt
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetExpiredAt() string {
-	if x != nil {
-		return x.ExpiredAt
-	}
-	return ""
-}
-
-func (x *OrganizationMemberInvitation) GetIsPending() bool {
-	if x != nil {
-		return x.IsPending
-	}
-	return false
-}
-
-// --------------------
-// Organization
-// --------------------
 type OrganizationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Organization  *Organization          `protobuf:"bytes,1,opt,name=organization,proto3" json:"organization,omitempty"`
@@ -1885,7 +514,7 @@ type OrganizationResponse struct {
 
 func (x *OrganizationResponse) Reset() {
 	*x = OrganizationResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[31]
+	mi := &file_tenant_v1_organization_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1897,7 +526,7 @@ func (x *OrganizationResponse) String() string {
 func (*OrganizationResponse) ProtoMessage() {}
 
 func (x *OrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[31]
+	mi := &file_tenant_v1_organization_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1910,7 +539,7 @@ func (x *OrganizationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrganizationResponse.ProtoReflect.Descriptor instead.
 func (*OrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{31}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *OrganizationResponse) GetOrganization() *Organization {
@@ -1927,6 +556,9 @@ func (x *OrganizationResponse) GetMembers() []*OrganizationMember {
 	return nil
 }
 
+// --------------------
+// Organization
+// --------------------
 type Organization struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -1935,10 +567,10 @@ type Organization struct {
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	OwnerId       string                 `protobuf:"bytes,5,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	IsActive      bool                   `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	MaxProjects   int32                  `protobuf:"varint,7,opt,name=max_projects,json=maxProjects,proto3" json:"max_projects,omitempty"`
-	ProjectCount  int32                  `protobuf:"varint,8,opt,name=project_count,json=projectCount,proto3" json:"project_count,omitempty"`
-	MaxMembers    int32                  `protobuf:"varint,9,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
-	MemberCount   int32                  `protobuf:"varint,10,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
+	MaxProjects   uint32                 `protobuf:"varint,7,opt,name=max_projects,json=maxProjects,proto3" json:"max_projects,omitempty"`
+	ProjectCount  uint32                 `protobuf:"varint,8,opt,name=project_count,json=projectCount,proto3" json:"project_count,omitempty"`
+	MaxMembers    uint32                 `protobuf:"varint,9,opt,name=max_members,json=maxMembers,proto3" json:"max_members,omitempty"`
+	MemberCount   uint32                 `protobuf:"varint,10,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
 	DeactivatedBy *string                `protobuf:"bytes,11,opt,name=deactivated_by,json=deactivatedBy,proto3,oneof" json:"deactivated_by,omitempty"`
 	DeactivatedAt *string                `protobuf:"bytes,12,opt,name=deactivated_at,json=deactivatedAt,proto3,oneof" json:"deactivated_at,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
@@ -1949,7 +581,7 @@ type Organization struct {
 
 func (x *Organization) Reset() {
 	*x = Organization{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[32]
+	mi := &file_tenant_v1_organization_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1961,7 +593,7 @@ func (x *Organization) String() string {
 func (*Organization) ProtoMessage() {}
 
 func (x *Organization) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[32]
+	mi := &file_tenant_v1_organization_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1974,7 +606,7 @@ func (x *Organization) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Organization.ProtoReflect.Descriptor instead.
 func (*Organization) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{32}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Organization) GetId() string {
@@ -2019,28 +651,28 @@ func (x *Organization) GetIsActive() bool {
 	return false
 }
 
-func (x *Organization) GetMaxProjects() int32 {
+func (x *Organization) GetMaxProjects() uint32 {
 	if x != nil {
 		return x.MaxProjects
 	}
 	return 0
 }
 
-func (x *Organization) GetProjectCount() int32 {
+func (x *Organization) GetProjectCount() uint32 {
 	if x != nil {
 		return x.ProjectCount
 	}
 	return 0
 }
 
-func (x *Organization) GetMaxMembers() int32 {
+func (x *Organization) GetMaxMembers() uint32 {
 	if x != nil {
 		return x.MaxMembers
 	}
 	return 0
 }
 
-func (x *Organization) GetMemberCount() int32 {
+func (x *Organization) GetMemberCount() uint32 {
 	if x != nil {
 		return x.MemberCount
 	}
@@ -2075,13 +707,99 @@ func (x *Organization) GetUpdatedAt() string {
 	return ""
 }
 
+type ListOrganizationRolesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roles         []*OrganizationRole    `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListOrganizationRolesResponse) Reset() {
+	*x = ListOrganizationRolesResponse{}
+	mi := &file_tenant_v1_organization_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListOrganizationRolesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListOrganizationRolesResponse) ProtoMessage() {}
+
+func (x *ListOrganizationRolesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_organization_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListOrganizationRolesResponse.ProtoReflect.Descriptor instead.
+func (*ListOrganizationRolesResponse) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ListOrganizationRolesResponse) GetRoles() []*OrganizationRole {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+type ListOrganizationPermissionsResponse struct {
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Permissions   []*OrganizationPermission `protobuf:"bytes,1,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListOrganizationPermissionsResponse) Reset() {
+	*x = ListOrganizationPermissionsResponse{}
+	mi := &file_tenant_v1_organization_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListOrganizationPermissionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListOrganizationPermissionsResponse) ProtoMessage() {}
+
+func (x *ListOrganizationPermissionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_organization_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListOrganizationPermissionsResponse.ProtoReflect.Descriptor instead.
+func (*ListOrganizationPermissionsResponse) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListOrganizationPermissionsResponse) GetPermissions() []*OrganizationPermission {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
 var File_tenant_v1_organization_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\n" +
-	"\x1ctenant/v1/organization.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"I\n" +
-	"\x15OrganizationIdRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\"f\n" +
+	"\x1ctenant/v1/organization.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\x1a$tenant/v1/organization_options.proto\x1a#tenant/v1/organization_member.proto\"f\n" +
 	"\x19CreateOrganizationRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\x04name\x12*\n" +
 	"\vdescription\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01R\vdescription\"\xbb\x01\n" +
@@ -2090,7 +808,10 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182H\x00R\x04name\x88\x01\x01\x12/\n" +
 	"\vdescription\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01H\x01R\vdescription\x88\x01\x01B\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_description\"{\n" +
+	"\f_description\"|\n" +
+	"\x1aArchiveOrganizationRequest\x120\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12,\n" +
+	"\fconfirm_name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x182R\vconfirmName\"{\n" +
 	"\x19DeleteOrganizationRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12,\n" +
 	"\fconfirm_name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x182R\vconfirmName\"N\n" +
@@ -2101,133 +822,16 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\x18ListOrganizationsRequest\x12&\n" +
 	"\tpage_size\x18\x01 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
 	"\n" +
-	"page_token\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"\xa3\x01\n" +
+	"page_token\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"\xb2\x01\n" +
+	"\x18TransferOwnershipRequest\x120\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x126\n" +
+	"\x13new_owner_member_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x10newOwnerMemberId\x12,\n" +
+	"\fconfirm_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x182R\vconfirmName\"\xa3\x01\n" +
 	"\x19ListOrganizationsResponse\x12=\n" +
 	"\rorganizations\x18\x01 \x03(\v2\x17.tenant.v1.OrganizationR\rorganizations\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xa3\x01\n" +
-	"\x1fListOrganizationMembersResponse\x127\n" +
-	"\amembers\x18\x01 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\x12\x1f\n" +
-	"\vtotal_count\x18\x02 \x01(\x05R\n" +
-	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"z\n" +
-	" GetOrganizationMemberByIdRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12$\n" +
-	"\tmember_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\"y\n" +
-	"\x1fRemoveOrganizationMemberRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12$\n" +
-	"\tmember_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\"\x9f\x01\n" +
-	"#ChangeOrganizationMemberRoleRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12$\n" +
-	"\tmember_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\x12 \n" +
-	"\arole_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06roleId\"\x84\x01\n" +
-	"\x18TransferOwnershipRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x126\n" +
-	"\x13new_owner_member_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x10newOwnerMemberId\"\xd3\x01\n" +
-	"\"OrganizationMemberWithRBACResponse\x125\n" +
-	"\x06member\x18\x01 \x01(\v2\x1d.tenant.v1.OrganizationMemberR\x06member\x121\n" +
-	"\x05roles\x18\x02 \x03(\v2\x1b.tenant.v1.OrganizationRoleR\x05roles\x12C\n" +
-	"\vpermissions\x18\x03 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions\"S\n" +
-	"\x1aOrganizationMemberResponse\x125\n" +
-	"\x06member\x18\x01 \x01(\v2\x1d.tenant.v1.OrganizationMemberR\x06member\"\x8e\x03\n" +
-	"\x12OrganizationMember\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1b\n" +
-	"\tfull_name\x18\x04 \x01(\tR\bfullName\x12\x1b\n" +
-	"\tis_active\x18\x05 \x01(\bR\bisActive\x12\x1b\n" +
-	"\tjoined_at\x18\x06 \x01(\tR\bjoinedAt\x12\"\n" +
-	"\n" +
-	"invited_by\x18\a \x01(\tH\x00R\tinvitedBy\x88\x01\x01\x12\"\n" +
-	"\n" +
-	"invited_at\x18\b \x01(\tH\x01R\tinvitedAt\x88\x01\x01\x12*\n" +
-	"\x0edeactivated_by\x18\t \x01(\tH\x02R\rdeactivatedBy\x88\x01\x01\x12*\n" +
-	"\x0edeactivated_at\x18\n" +
-	" \x01(\tH\x03R\rdeactivatedAt\x88\x01\x01B\r\n" +
-	"\v_invited_byB\r\n" +
-	"\v_invited_atB\x11\n" +
-	"\x0f_deactivated_byB\x11\n" +
-	"\x0f_deactivated_at\"\xa0\x01\n" +
-	"\x13OrganizationRoleDTO\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12$\n" +
-	"\x0eis_system_role\x18\x04 \x01(\bR\fisSystemRole\x12\x1d\n" +
-	"\n" +
-	"is_default\x18\x05 \x01(\bR\tisDefault\"\xa6\x01\n" +
-	"\x19OrganizationPermissionDTO\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\bresource\x18\x02 \x01(\tR\bresource\x12\x16\n" +
-	"\x06action\x18\x03 \x01(\tR\x06action\x12\x12\n" +
-	"\x04code\x18\x04 \x01(\tR\x04code\x12\x14\n" +
-	"\x05group\x18\x05 \x01(\tR\x05group\x12\x1b\n" +
-	"\tis_system\x18\x06 \x01(\bR\bisSystem\"\x9d\x01\n" +
-	"\x10OrganizationRole\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12$\n" +
-	"\x0eis_system_role\x18\x04 \x01(\bR\fisSystemRole\x12\x1d\n" +
-	"\n" +
-	"is_default\x18\x05 \x01(\bR\tisDefault\"\xa3\x01\n" +
-	"\x16OrganizationPermission\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\bresource\x18\x02 \x01(\tR\bresource\x12\x16\n" +
-	"\x06action\x18\x03 \x01(\tR\x06action\x12\x12\n" +
-	"\x04code\x18\x04 \x01(\tR\x04code\x12\x14\n" +
-	"\x05group\x18\x05 \x01(\tR\x05group\x12\x1b\n" +
-	"\tis_system\x18\x06 \x01(\bR\bisSystem\"R\n" +
-	"\x1dListOrganizationRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.tenant.v1.OrganizationRoleR\x05roles\"j\n" +
-	"#ListOrganizationPermissionsResponse\x12C\n" +
-	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions\"\x93\x01\n" +
-	"\x17CreateInvitationRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x1d\n" +
-	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12'\n" +
-	"\brole_ids\x18\x03 \x03(\tB\f\xbaH\t\x92\x01\x06\"\x04r\x02\x10\x01R\aroleIds\"\x9b\x01\n" +
-	"\x16ListInvitationsRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
-	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x00R\bpageSize\x12'\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\tpageToken\"=\n" +
-	"\x1cGetPendingInvitationsRequest\x12\x1d\n" +
-	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"8\n" +
-	"\x17AcceptInvitationRequest\x12\x1d\n" +
-	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\"p\n" +
-	"\x17CancelInvitationRequest\x12,\n" +
-	"\rinvitation_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\finvitationId\x12'\n" +
-	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"y\n" +
-	"\x17ResendInvitationRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12,\n" +
-	"\rinvitation_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\finvitationId\"o\n" +
-	"$OrganizationMemberInvitationResponse\x12G\n" +
-	"\n" +
-	"invitation\x18\x01 \x01(\v2'.tenant.v1.OrganizationMemberInvitationR\n" +
-	"invitation\"\xb9\x01\n" +
-	"#ListOrganizationInvitationsResponse\x12I\n" +
-	"\vinvitations\x18\x01 \x03(\v2'.tenant.v1.OrganizationMemberInvitationR\vinvitations\x12\x1f\n" +
-	"\vtotal_count\x18\x02 \x01(\x05R\n" +
-	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xdb\x02\n" +
-	"\x1cOrganizationMemberInvitation\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12'\n" +
-	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\x12\x1d\n" +
-	"\n" +
-	"invited_by\x18\x03 \x01(\tR\tinvitedBy\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12\x19\n" +
-	"\brole_ids\x18\x05 \x03(\tR\aroleIds\x12\x1d\n" +
-	"\n" +
-	"invited_at\x18\x06 \x01(\tR\tinvitedAt\x12\x1f\n" +
-	"\vis_accepted\x18\a \x01(\bR\n" +
-	"isAccepted\x12$\n" +
-	"\vaccepted_at\x18\b \x01(\tH\x00R\n" +
-	"acceptedAt\x88\x01\x01\x12\x1d\n" +
-	"\n" +
-	"expired_at\x18\t \x01(\tR\texpiredAt\x12\x1d\n" +
-	"\n" +
-	"is_pending\x18\n" +
-	" \x01(\bR\tisPendingB\x0e\n" +
-	"\f_accepted_at\"\x8c\x01\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x8c\x01\n" +
 	"\x14OrganizationResponse\x12;\n" +
 	"\forganization\x18\x01 \x01(\v2\x17.tenant.v1.OrganizationR\forganization\x127\n" +
 	"\amembers\x18\x02 \x03(\v2\x1d.tenant.v1.OrganizationMemberR\amembers\"\xe8\x03\n" +
@@ -2238,12 +842,12 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x19\n" +
 	"\bowner_id\x18\x05 \x01(\tR\aownerId\x12\x1b\n" +
 	"\tis_active\x18\x06 \x01(\bR\bisActive\x12!\n" +
-	"\fmax_projects\x18\a \x01(\x05R\vmaxProjects\x12#\n" +
-	"\rproject_count\x18\b \x01(\x05R\fprojectCount\x12\x1f\n" +
-	"\vmax_members\x18\t \x01(\x05R\n" +
+	"\fmax_projects\x18\a \x01(\rR\vmaxProjects\x12#\n" +
+	"\rproject_count\x18\b \x01(\rR\fprojectCount\x12\x1f\n" +
+	"\vmax_members\x18\t \x01(\rR\n" +
 	"maxMembers\x12!\n" +
 	"\fmember_count\x18\n" +
-	" \x01(\x05R\vmemberCount\x12*\n" +
+	" \x01(\rR\vmemberCount\x12*\n" +
 	"\x0edeactivated_by\x18\v \x01(\tH\x00R\rdeactivatedBy\x88\x01\x01\x12*\n" +
 	"\x0edeactivated_at\x18\f \x01(\tH\x01R\rdeactivatedAt\x88\x01\x01\x12\x1d\n" +
 	"\n" +
@@ -2251,32 +855,23 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\x0e \x01(\tR\tupdatedAtB\x11\n" +
 	"\x0f_deactivated_byB\x11\n" +
-	"\x0f_deactivated_at2\xaa\x12\n" +
-	"\x13OrganizationService\x12[\n" +
-	"\x12CreateOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\x12\\\n" +
-	"\x13OnboardOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\x12]\n" +
-	"\x13GetOrganizationById\x12%.tenant.v1.GetOrganizationByIdRequest\x1a\x1f.tenant.v1.OrganizationResponse\x12a\n" +
-	"\x15GetOrganizationBySlug\x12'.tenant.v1.GetOrganizationBySlugRequest\x1a\x1f.tenant.v1.OrganizationResponse\x12^\n" +
-	"\x11ListOrganizations\x12#.tenant.v1.ListOrganizationsRequest\x1a$.tenant.v1.ListOrganizationsResponse\x12[\n" +
-	"\x12UpdateOrganization\x12$.tenant.v1.UpdateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\x12Y\n" +
-	"\x13ArchiveOrganization\x12 .tenant.v1.OrganizationIdRequest\x1a .tenant.v1.TenantSuccessResponse\x12Y\n" +
-	"\x13RestoreOrganization\x12 .tenant.v1.OrganizationIdRequest\x1a .tenant.v1.TenantSuccessResponse\x12\\\n" +
-	"\x12DeleteOrganization\x12$.tenant.v1.DeleteOrganizationRequest\x1a .tenant.v1.TenantSuccessResponse\x12c\n" +
-	"\x10GetCurrentMember\x12 .tenant.v1.OrganizationIdRequest\x1a-.tenant.v1.OrganizationMemberWithRBACResponse\x12W\n" +
-	"\x11LeaveOrganization\x12 .tenant.v1.OrganizationIdRequest\x1a .tenant.v1.TenantSuccessResponse\x12b\n" +
-	"\x12GetAllMembersByOrg\x12 .tenant.v1.OrganizationIdRequest\x1a*.tenant.v1.ListOrganizationMembersResponse\x12c\n" +
-	"\rGetMemberById\x12+.tenant.v1.GetOrganizationMemberByIdRequest\x1a%.tenant.v1.OrganizationMemberResponse\x12\\\n" +
-	"\fRemoveMember\x12*.tenant.v1.RemoveOrganizationMemberRequest\x1a .tenant.v1.TenantSuccessResponse\x12d\n" +
-	"\x10ChangeMemberRole\x12..tenant.v1.ChangeOrganizationMemberRoleRequest\x1a .tenant.v1.TenantSuccessResponse\x12Z\n" +
-	"\x11TransferOwnership\x12#.tenant.v1.TransferOwnershipRequest\x1a .tenant.v1.TenantSuccessResponse\x12g\n" +
-	"\x10CreateInvitation\x12\".tenant.v1.CreateInvitationRequest\x1a/.tenant.v1.OrganizationMemberInvitationResponse\x12d\n" +
-	"\x0fListInvitations\x12!.tenant.v1.ListInvitationsRequest\x1a..tenant.v1.ListOrganizationInvitationsResponse\x12p\n" +
-	"\x15GetPendingInvitations\x12'.tenant.v1.GetPendingInvitationsRequest\x1a..tenant.v1.ListOrganizationInvitationsResponse\x12X\n" +
-	"\x10AcceptInvitation\x12\".tenant.v1.AcceptInvitationRequest\x1a .tenant.v1.TenantSuccessResponse\x12X\n" +
-	"\x10CancelInvitation\x12\".tenant.v1.CancelInvitationRequest\x1a .tenant.v1.TenantSuccessResponse\x12g\n" +
-	"\x10ResendInvitation\x12\".tenant.v1.ResendInvitationRequest\x1a/.tenant.v1.OrganizationMemberInvitationResponse\x12e\n" +
-	"\x11GetAllPermissions\x12 .tenant.v1.OrganizationIdRequest\x1a..tenant.v1.ListOrganizationPermissionsResponse\x12Y\n" +
-	"\vGetAllRoles\x12 .tenant.v1.OrganizationIdRequest\x1a(.tenant.v1.ListOrganizationRolesResponseB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
+	"\x0f_deactivated_at\"R\n" +
+	"\x1dListOrganizationRolesResponse\x121\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.tenant.v1.OrganizationRoleR\x05roles\"j\n" +
+	"#ListOrganizationPermissionsResponse\x12C\n" +
+	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions2\xf1\t\n" +
+	"\x13OrganizationService\x12`\n" +
+	"\x12CreateOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x03\xc8>\x01\x12a\n" +
+	"\x13OnboardOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x03\xc8>\x01\x12c\n" +
+	"\x11ListOrganizations\x12#.tenant.v1.ListOrganizationsRequest\x1a$.tenant.v1.ListOrganizationsResponse\"\x03\xc8>\x01\x12t\n" +
+	"\x13GetOrganizationById\x12&.tenant.v1.TenantOrganizationIDRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x14\xd2>\x11organization.read\x12s\n" +
+	"\x12UpdateOrganization\x12$.tenant.v1.UpdateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x16\xd2>\x13organization.update\x12v\n" +
+	"\x13ArchiveOrganization\x12%.tenant.v1.ArchiveOrganizationRequest\x1a .tenant.v1.TenantSuccessResponse\"\x16\xd2>\x13organization.delete\x12w\n" +
+	"\x13RestoreOrganization\x12&.tenant.v1.TenantOrganizationIDRequest\x1a .tenant.v1.TenantSuccessResponse\"\x16\xd2>\x13organization.update\x12t\n" +
+	"\x12DeleteOrganization\x12$.tenant.v1.DeleteOrganizationRequest\x1a .tenant.v1.TenantSuccessResponse\"\x16\xd2>\x13organization.delete\x12t\n" +
+	"\x11TransferOwnership\x12#.tenant.v1.TransferOwnershipRequest\x1a .tenant.v1.TenantSuccessResponse\"\x18\xd2>\x15organization.transfer\x12y\n" +
+	"\x11GetAllPermissions\x12&.tenant.v1.TenantOrganizationIDRequest\x1a..tenant.v1.ListOrganizationPermissionsResponse\"\f\xd2>\trole.view\x12m\n" +
+	"\vGetAllRoles\x12&.tenant.v1.TenantOrganizationIDRequest\x1a(.tenant.v1.ListOrganizationRolesResponse\"\f\xd2>\trole.viewB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 
 var (
 	file_tenant_v1_organization_proto_rawDescOnce sync.Once
@@ -2290,109 +885,60 @@ func file_tenant_v1_organization_proto_rawDescGZIP() []byte {
 	return file_tenant_v1_organization_proto_rawDescData
 }
 
-var file_tenant_v1_organization_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
+var file_tenant_v1_organization_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_tenant_v1_organization_proto_goTypes = []any{
-	(*OrganizationIdRequest)(nil),                // 0: tenant.v1.OrganizationIdRequest
-	(*CreateOrganizationRequest)(nil),            // 1: tenant.v1.CreateOrganizationRequest
-	(*UpdateOrganizationRequest)(nil),            // 2: tenant.v1.UpdateOrganizationRequest
-	(*DeleteOrganizationRequest)(nil),            // 3: tenant.v1.DeleteOrganizationRequest
-	(*GetOrganizationByIdRequest)(nil),           // 4: tenant.v1.GetOrganizationByIdRequest
-	(*GetOrganizationBySlugRequest)(nil),         // 5: tenant.v1.GetOrganizationBySlugRequest
-	(*ListOrganizationsRequest)(nil),             // 6: tenant.v1.ListOrganizationsRequest
-	(*ListOrganizationsResponse)(nil),            // 7: tenant.v1.ListOrganizationsResponse
-	(*ListOrganizationMembersResponse)(nil),      // 8: tenant.v1.ListOrganizationMembersResponse
-	(*GetOrganizationMemberByIdRequest)(nil),     // 9: tenant.v1.GetOrganizationMemberByIdRequest
-	(*RemoveOrganizationMemberRequest)(nil),      // 10: tenant.v1.RemoveOrganizationMemberRequest
-	(*ChangeOrganizationMemberRoleRequest)(nil),  // 11: tenant.v1.ChangeOrganizationMemberRoleRequest
-	(*TransferOwnershipRequest)(nil),             // 12: tenant.v1.TransferOwnershipRequest
-	(*OrganizationMemberWithRBACResponse)(nil),   // 13: tenant.v1.OrganizationMemberWithRBACResponse
-	(*OrganizationMemberResponse)(nil),           // 14: tenant.v1.OrganizationMemberResponse
-	(*OrganizationMember)(nil),                   // 15: tenant.v1.OrganizationMember
-	(*OrganizationRoleDTO)(nil),                  // 16: tenant.v1.OrganizationRoleDTO
-	(*OrganizationPermissionDTO)(nil),            // 17: tenant.v1.OrganizationPermissionDTO
-	(*OrganizationRole)(nil),                     // 18: tenant.v1.OrganizationRole
-	(*OrganizationPermission)(nil),               // 19: tenant.v1.OrganizationPermission
-	(*ListOrganizationRolesResponse)(nil),        // 20: tenant.v1.ListOrganizationRolesResponse
-	(*ListOrganizationPermissionsResponse)(nil),  // 21: tenant.v1.ListOrganizationPermissionsResponse
-	(*CreateInvitationRequest)(nil),              // 22: tenant.v1.CreateInvitationRequest
-	(*ListInvitationsRequest)(nil),               // 23: tenant.v1.ListInvitationsRequest
-	(*GetPendingInvitationsRequest)(nil),         // 24: tenant.v1.GetPendingInvitationsRequest
-	(*AcceptInvitationRequest)(nil),              // 25: tenant.v1.AcceptInvitationRequest
-	(*CancelInvitationRequest)(nil),              // 26: tenant.v1.CancelInvitationRequest
-	(*ResendInvitationRequest)(nil),              // 27: tenant.v1.ResendInvitationRequest
-	(*OrganizationMemberInvitationResponse)(nil), // 28: tenant.v1.OrganizationMemberInvitationResponse
-	(*ListOrganizationInvitationsResponse)(nil),  // 29: tenant.v1.ListOrganizationInvitationsResponse
-	(*OrganizationMemberInvitation)(nil),         // 30: tenant.v1.OrganizationMemberInvitation
-	(*OrganizationResponse)(nil),                 // 31: tenant.v1.OrganizationResponse
-	(*Organization)(nil),                         // 32: tenant.v1.Organization
-	(*TenantSuccessResponse)(nil),                // 33: tenant.v1.TenantSuccessResponse
+	(*CreateOrganizationRequest)(nil),           // 0: tenant.v1.CreateOrganizationRequest
+	(*UpdateOrganizationRequest)(nil),           // 1: tenant.v1.UpdateOrganizationRequest
+	(*ArchiveOrganizationRequest)(nil),          // 2: tenant.v1.ArchiveOrganizationRequest
+	(*DeleteOrganizationRequest)(nil),           // 3: tenant.v1.DeleteOrganizationRequest
+	(*GetOrganizationByIdRequest)(nil),          // 4: tenant.v1.GetOrganizationByIdRequest
+	(*GetOrganizationBySlugRequest)(nil),        // 5: tenant.v1.GetOrganizationBySlugRequest
+	(*ListOrganizationsRequest)(nil),            // 6: tenant.v1.ListOrganizationsRequest
+	(*TransferOwnershipRequest)(nil),            // 7: tenant.v1.TransferOwnershipRequest
+	(*ListOrganizationsResponse)(nil),           // 8: tenant.v1.ListOrganizationsResponse
+	(*OrganizationResponse)(nil),                // 9: tenant.v1.OrganizationResponse
+	(*Organization)(nil),                        // 10: tenant.v1.Organization
+	(*ListOrganizationRolesResponse)(nil),       // 11: tenant.v1.ListOrganizationRolesResponse
+	(*ListOrganizationPermissionsResponse)(nil), // 12: tenant.v1.ListOrganizationPermissionsResponse
+	(*OrganizationMember)(nil),                  // 13: tenant.v1.OrganizationMember
+	(*OrganizationRole)(nil),                    // 14: tenant.v1.OrganizationRole
+	(*OrganizationPermission)(nil),              // 15: tenant.v1.OrganizationPermission
+	(*TenantOrganizationIDRequest)(nil),         // 16: tenant.v1.TenantOrganizationIDRequest
+	(*TenantSuccessResponse)(nil),               // 17: tenant.v1.TenantSuccessResponse
 }
 var file_tenant_v1_organization_proto_depIdxs = []int32{
-	32, // 0: tenant.v1.ListOrganizationsResponse.organizations:type_name -> tenant.v1.Organization
-	15, // 1: tenant.v1.ListOrganizationMembersResponse.members:type_name -> tenant.v1.OrganizationMember
-	15, // 2: tenant.v1.OrganizationMemberWithRBACResponse.member:type_name -> tenant.v1.OrganizationMember
-	18, // 3: tenant.v1.OrganizationMemberWithRBACResponse.roles:type_name -> tenant.v1.OrganizationRole
-	19, // 4: tenant.v1.OrganizationMemberWithRBACResponse.permissions:type_name -> tenant.v1.OrganizationPermission
-	15, // 5: tenant.v1.OrganizationMemberResponse.member:type_name -> tenant.v1.OrganizationMember
-	18, // 6: tenant.v1.ListOrganizationRolesResponse.roles:type_name -> tenant.v1.OrganizationRole
-	19, // 7: tenant.v1.ListOrganizationPermissionsResponse.permissions:type_name -> tenant.v1.OrganizationPermission
-	30, // 8: tenant.v1.OrganizationMemberInvitationResponse.invitation:type_name -> tenant.v1.OrganizationMemberInvitation
-	30, // 9: tenant.v1.ListOrganizationInvitationsResponse.invitations:type_name -> tenant.v1.OrganizationMemberInvitation
-	32, // 10: tenant.v1.OrganizationResponse.organization:type_name -> tenant.v1.Organization
-	15, // 11: tenant.v1.OrganizationResponse.members:type_name -> tenant.v1.OrganizationMember
-	1,  // 12: tenant.v1.OrganizationService.CreateOrganization:input_type -> tenant.v1.CreateOrganizationRequest
-	1,  // 13: tenant.v1.OrganizationService.OnboardOrganization:input_type -> tenant.v1.CreateOrganizationRequest
-	4,  // 14: tenant.v1.OrganizationService.GetOrganizationById:input_type -> tenant.v1.GetOrganizationByIdRequest
-	5,  // 15: tenant.v1.OrganizationService.GetOrganizationBySlug:input_type -> tenant.v1.GetOrganizationBySlugRequest
-	6,  // 16: tenant.v1.OrganizationService.ListOrganizations:input_type -> tenant.v1.ListOrganizationsRequest
-	2,  // 17: tenant.v1.OrganizationService.UpdateOrganization:input_type -> tenant.v1.UpdateOrganizationRequest
-	0,  // 18: tenant.v1.OrganizationService.ArchiveOrganization:input_type -> tenant.v1.OrganizationIdRequest
-	0,  // 19: tenant.v1.OrganizationService.RestoreOrganization:input_type -> tenant.v1.OrganizationIdRequest
-	3,  // 20: tenant.v1.OrganizationService.DeleteOrganization:input_type -> tenant.v1.DeleteOrganizationRequest
-	0,  // 21: tenant.v1.OrganizationService.GetCurrentMember:input_type -> tenant.v1.OrganizationIdRequest
-	0,  // 22: tenant.v1.OrganizationService.LeaveOrganization:input_type -> tenant.v1.OrganizationIdRequest
-	0,  // 23: tenant.v1.OrganizationService.GetAllMembersByOrg:input_type -> tenant.v1.OrganizationIdRequest
-	9,  // 24: tenant.v1.OrganizationService.GetMemberById:input_type -> tenant.v1.GetOrganizationMemberByIdRequest
-	10, // 25: tenant.v1.OrganizationService.RemoveMember:input_type -> tenant.v1.RemoveOrganizationMemberRequest
-	11, // 26: tenant.v1.OrganizationService.ChangeMemberRole:input_type -> tenant.v1.ChangeOrganizationMemberRoleRequest
-	12, // 27: tenant.v1.OrganizationService.TransferOwnership:input_type -> tenant.v1.TransferOwnershipRequest
-	22, // 28: tenant.v1.OrganizationService.CreateInvitation:input_type -> tenant.v1.CreateInvitationRequest
-	23, // 29: tenant.v1.OrganizationService.ListInvitations:input_type -> tenant.v1.ListInvitationsRequest
-	24, // 30: tenant.v1.OrganizationService.GetPendingInvitations:input_type -> tenant.v1.GetPendingInvitationsRequest
-	25, // 31: tenant.v1.OrganizationService.AcceptInvitation:input_type -> tenant.v1.AcceptInvitationRequest
-	26, // 32: tenant.v1.OrganizationService.CancelInvitation:input_type -> tenant.v1.CancelInvitationRequest
-	27, // 33: tenant.v1.OrganizationService.ResendInvitation:input_type -> tenant.v1.ResendInvitationRequest
-	0,  // 34: tenant.v1.OrganizationService.GetAllPermissions:input_type -> tenant.v1.OrganizationIdRequest
-	0,  // 35: tenant.v1.OrganizationService.GetAllRoles:input_type -> tenant.v1.OrganizationIdRequest
-	31, // 36: tenant.v1.OrganizationService.CreateOrganization:output_type -> tenant.v1.OrganizationResponse
-	31, // 37: tenant.v1.OrganizationService.OnboardOrganization:output_type -> tenant.v1.OrganizationResponse
-	31, // 38: tenant.v1.OrganizationService.GetOrganizationById:output_type -> tenant.v1.OrganizationResponse
-	31, // 39: tenant.v1.OrganizationService.GetOrganizationBySlug:output_type -> tenant.v1.OrganizationResponse
-	7,  // 40: tenant.v1.OrganizationService.ListOrganizations:output_type -> tenant.v1.ListOrganizationsResponse
-	31, // 41: tenant.v1.OrganizationService.UpdateOrganization:output_type -> tenant.v1.OrganizationResponse
-	33, // 42: tenant.v1.OrganizationService.ArchiveOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	33, // 43: tenant.v1.OrganizationService.RestoreOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	33, // 44: tenant.v1.OrganizationService.DeleteOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	13, // 45: tenant.v1.OrganizationService.GetCurrentMember:output_type -> tenant.v1.OrganizationMemberWithRBACResponse
-	33, // 46: tenant.v1.OrganizationService.LeaveOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	8,  // 47: tenant.v1.OrganizationService.GetAllMembersByOrg:output_type -> tenant.v1.ListOrganizationMembersResponse
-	14, // 48: tenant.v1.OrganizationService.GetMemberById:output_type -> tenant.v1.OrganizationMemberResponse
-	33, // 49: tenant.v1.OrganizationService.RemoveMember:output_type -> tenant.v1.TenantSuccessResponse
-	33, // 50: tenant.v1.OrganizationService.ChangeMemberRole:output_type -> tenant.v1.TenantSuccessResponse
-	33, // 51: tenant.v1.OrganizationService.TransferOwnership:output_type -> tenant.v1.TenantSuccessResponse
-	28, // 52: tenant.v1.OrganizationService.CreateInvitation:output_type -> tenant.v1.OrganizationMemberInvitationResponse
-	29, // 53: tenant.v1.OrganizationService.ListInvitations:output_type -> tenant.v1.ListOrganizationInvitationsResponse
-	29, // 54: tenant.v1.OrganizationService.GetPendingInvitations:output_type -> tenant.v1.ListOrganizationInvitationsResponse
-	33, // 55: tenant.v1.OrganizationService.AcceptInvitation:output_type -> tenant.v1.TenantSuccessResponse
-	33, // 56: tenant.v1.OrganizationService.CancelInvitation:output_type -> tenant.v1.TenantSuccessResponse
-	28, // 57: tenant.v1.OrganizationService.ResendInvitation:output_type -> tenant.v1.OrganizationMemberInvitationResponse
-	21, // 58: tenant.v1.OrganizationService.GetAllPermissions:output_type -> tenant.v1.ListOrganizationPermissionsResponse
-	20, // 59: tenant.v1.OrganizationService.GetAllRoles:output_type -> tenant.v1.ListOrganizationRolesResponse
-	36, // [36:60] is the sub-list for method output_type
-	12, // [12:36] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	10, // 0: tenant.v1.ListOrganizationsResponse.organizations:type_name -> tenant.v1.Organization
+	10, // 1: tenant.v1.OrganizationResponse.organization:type_name -> tenant.v1.Organization
+	13, // 2: tenant.v1.OrganizationResponse.members:type_name -> tenant.v1.OrganizationMember
+	14, // 3: tenant.v1.ListOrganizationRolesResponse.roles:type_name -> tenant.v1.OrganizationRole
+	15, // 4: tenant.v1.ListOrganizationPermissionsResponse.permissions:type_name -> tenant.v1.OrganizationPermission
+	0,  // 5: tenant.v1.OrganizationService.CreateOrganization:input_type -> tenant.v1.CreateOrganizationRequest
+	0,  // 6: tenant.v1.OrganizationService.OnboardOrganization:input_type -> tenant.v1.CreateOrganizationRequest
+	6,  // 7: tenant.v1.OrganizationService.ListOrganizations:input_type -> tenant.v1.ListOrganizationsRequest
+	16, // 8: tenant.v1.OrganizationService.GetOrganizationById:input_type -> tenant.v1.TenantOrganizationIDRequest
+	1,  // 9: tenant.v1.OrganizationService.UpdateOrganization:input_type -> tenant.v1.UpdateOrganizationRequest
+	2,  // 10: tenant.v1.OrganizationService.ArchiveOrganization:input_type -> tenant.v1.ArchiveOrganizationRequest
+	16, // 11: tenant.v1.OrganizationService.RestoreOrganization:input_type -> tenant.v1.TenantOrganizationIDRequest
+	3,  // 12: tenant.v1.OrganizationService.DeleteOrganization:input_type -> tenant.v1.DeleteOrganizationRequest
+	7,  // 13: tenant.v1.OrganizationService.TransferOwnership:input_type -> tenant.v1.TransferOwnershipRequest
+	16, // 14: tenant.v1.OrganizationService.GetAllPermissions:input_type -> tenant.v1.TenantOrganizationIDRequest
+	16, // 15: tenant.v1.OrganizationService.GetAllRoles:input_type -> tenant.v1.TenantOrganizationIDRequest
+	9,  // 16: tenant.v1.OrganizationService.CreateOrganization:output_type -> tenant.v1.OrganizationResponse
+	9,  // 17: tenant.v1.OrganizationService.OnboardOrganization:output_type -> tenant.v1.OrganizationResponse
+	8,  // 18: tenant.v1.OrganizationService.ListOrganizations:output_type -> tenant.v1.ListOrganizationsResponse
+	9,  // 19: tenant.v1.OrganizationService.GetOrganizationById:output_type -> tenant.v1.OrganizationResponse
+	9,  // 20: tenant.v1.OrganizationService.UpdateOrganization:output_type -> tenant.v1.OrganizationResponse
+	17, // 21: tenant.v1.OrganizationService.ArchiveOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	17, // 22: tenant.v1.OrganizationService.RestoreOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	17, // 23: tenant.v1.OrganizationService.DeleteOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	17, // 24: tenant.v1.OrganizationService.TransferOwnership:output_type -> tenant.v1.TenantSuccessResponse
+	12, // 25: tenant.v1.OrganizationService.GetAllPermissions:output_type -> tenant.v1.ListOrganizationPermissionsResponse
+	11, // 26: tenant.v1.OrganizationService.GetAllRoles:output_type -> tenant.v1.ListOrganizationRolesResponse
+	16, // [16:27] is the sub-list for method output_type
+	5,  // [5:16] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_tenant_v1_organization_proto_init() }
@@ -2401,17 +947,17 @@ func file_tenant_v1_organization_proto_init() {
 		return
 	}
 	file_tenant_v1_common_proto_init()
-	file_tenant_v1_organization_proto_msgTypes[2].OneofWrappers = []any{}
-	file_tenant_v1_organization_proto_msgTypes[15].OneofWrappers = []any{}
-	file_tenant_v1_organization_proto_msgTypes[30].OneofWrappers = []any{}
-	file_tenant_v1_organization_proto_msgTypes[32].OneofWrappers = []any{}
+	file_tenant_v1_organization_options_proto_init()
+	file_tenant_v1_organization_member_proto_init()
+	file_tenant_v1_organization_proto_msgTypes[1].OneofWrappers = []any{}
+	file_tenant_v1_organization_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tenant_v1_organization_proto_rawDesc), len(file_tenant_v1_organization_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   33,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package tenant.v1;
+
+import "buf/validate/validate.proto";
+import "tenant/v1/common.proto";
+import "tenant/v1/organization_options.proto";
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
+
+service OrganizationInvitationService {
+  // --- Public / Bypasses Org Check ---
+  rpc AcceptInvitation(AcceptInvitationRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.skip_org_check) = true;
+  };
+  // A user canceling their own pending invite doesn't require org membership yet
+  rpc CancelInvitation(CancelInvitationRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.skip_org_check) = true;
+  };
+  rpc GetPendingInvitations(GetPendingInvitationsRequest) returns (ListOrganizationInvitationsResponse) {
+    option (tenant.v1.skip_org_check) = true;
+  };
+
+  // --- Requires Org Membership ---
+  rpc CreateInvitation(CreateInvitationRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.required_org_permission) = "member.invite";
+  };
+  rpc ListInvitations(ListInvitationsRequest) returns (ListOrganizationInvitationsResponse) {
+    option (tenant.v1.required_org_permission) = "member.list";
+  };
+  rpc GetPendingByOrg(TenantOrganizationIDRequest) returns (ListOrgInvitationsResponseForOrg) {
+    option (tenant.v1.required_org_permission) = "member.list";
+  }
+}
+
+// --------------------
+// Invitation Requests
+// --------------------
+message CreateInvitationRequest {
+  string          organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string          email           = 2 [(buf.validate.field).string.email = true];
+  repeated string role_ids = 3 [(buf.validate.field).repeated = {
+    items: {
+      string: {min_len: 1}
+    }
+  }];
+}
+
+message ListInvitationsRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  string page_token = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+message GetPendingInvitationsRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+}
+
+message AcceptInvitationRequest {
+  string token = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message CancelInvitationRequest {
+  string invitation_id   = 1 [(buf.validate.field).string.min_len = 1];
+  string organization_id = 2;
+}
+
+// --------------------
+// Invitation Responses
+// --------------------
+message OrganizationMemberInvitationResponse {
+  OrganizationMemberInvitation invitation = 1;
+}
+
+message ListOrganizationInvitationsResponse {
+  repeated OrganizationMemberInvitation invitations     = 1;
+  int32                                 total_count     = 2;
+  string                                next_page_token = 3;
+}
+
+// --------------------
+// Invitation Message
+// --------------------
+message OrganizationMemberInvitation {
+  string          id              = 1;
+  string          organization_id = 2;
+  string          invited_by      = 3;
+  string          email           = 4;
+  repeated string role_ids        = 5;
+  string          invited_at      = 6; // RFC3339
+  bool            is_accepted     = 7;
+  optional string accepted_at     = 8;
+  string          expired_at      = 9; // RFC3339
+  bool            is_pending      = 10;
+}
+
+message InvitedBy {
+  string member_id = 1;
+  string full_name = 2;
+  string email     = 3;
+}
+
+message OrganizationMemberInvitationForOrg {
+  OrganizationMemberInvitation invitation = 1;
+  InvitedBy                    invited_by = 2;
+}
+
+message ListOrgInvitationsResponseForOrg {
+  repeated OrganizationMemberInvitationForOrg invitations     = 1;
+  int32                                       total_count     = 2;
+  string                                      next_page_token = 3;
+}

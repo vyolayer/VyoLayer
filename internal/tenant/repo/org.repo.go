@@ -181,7 +181,7 @@ func (r *organizationRepo) GetBySlug(ctx context.Context, slug string) (*domain.
 func (r *organizationRepo) List(ctx context.Context, userID uuid.UUID, offset, limit int) ([]*domain.Organization, error) {
 	var models []Organization
 	err := r.db.WithContext(ctx).
-		Joins("JOIN tenant.organization_members om ON om.organization_id = organizations.id").
+		Joins("JOIN organization_members om ON om.organization_id = organizations.id").
 		Where("om.user_id = ?", userID).
 		Where("archived_at IS NULL").
 		Limit(limit).

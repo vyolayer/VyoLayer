@@ -85,7 +85,7 @@ func (l *AppLogger) Error(message string, fields any) {
 }
 
 func (l *AppLogger) ErrorWithErr(message string, err error) {
-	var fields map[string]any
+	fields := make(map[string]any)
 	fields["error"] = err.Error()
 	l.log(appLevelError, message, fields)
 }

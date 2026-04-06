@@ -1,8 +1,11 @@
 package grpc
 
 import (
+	"context"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/pkg/ctxutil"
 	"github.com/vyolayer/vyolayer/pkg/pagination"
 )
 
@@ -38,4 +41,9 @@ func timePtrToStringPtr(t *time.Time) *string {
 	}
 	s := t.Format(time.RFC3339)
 	return &s
+}
+
+func extractUserIDFromContext(ctx context.Context) (uuid.UUID, error) {
+	return ctxutil.ExtractIAMUserUUID(ctx)
+
 }

@@ -10,7 +10,8 @@ import (
 	"github.com/vyolayer/vyolayer/internal/account/repository"
 	"github.com/vyolayer/vyolayer/internal/account/server"
 	"github.com/vyolayer/vyolayer/internal/account/usecase"
-	apikey "github.com/vyolayer/vyolayer/internal/shared/api-key"
+
+	// apikey "github.com/vyolayer/vyolayer/internal/shared/api-key"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/mail"
 	"github.com/vyolayer/vyolayer/pkg/postgres"
@@ -46,7 +47,7 @@ func run() error {
 
 	// Initialize Dependency Injection Container
 	//   Core Utilities & Security
-	apiKeyVerifier := apikey.NewAPIKeyVerifier(db)
+	// apiKeyVerifier := apikey.NewAPIKeyVerifier(db)
 	accountJWT := jwt.NewAccountJWT(
 		cfg.JWT.AccessTokenSecret,
 		cfg.JWT.AccessTokenExpiry,
@@ -102,7 +103,7 @@ func run() error {
 	)
 
 	// Setup and Start Server
-	grpcSrv := server.NewGRPCServer(cfg.GRPCPort, apiKeyVerifier)
+	grpcSrv := server.NewGRPCServer(cfg.GRPCPort)
 	accountV1.RegisterAccountServiceServer(grpcSrv.Engine, accountHandler)
 
 	return grpcSrv.Start()

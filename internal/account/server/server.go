@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"buf.build/go/protovalidate"
-	apikey "github.com/vyolayer/vyolayer/internal/shared/api-key"
+	// apikey "github.com/vyolayer/vyolayer/internal/shared/api-key"
 	"github.com/vyolayer/vyolayer/pkg/interceptor"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -25,7 +25,7 @@ type GRPCServer struct {
 }
 
 // NewGRPCServer creates and configures a new Server instance
-func NewGRPCServer(port string, apiKeyVerifier apikey.APIKeyVerifier) *GRPCServer {
+func NewGRPCServer(port string) *GRPCServer {
 	v, err := protovalidate.New()
 	if err != nil {
 		log.Fatalf("failed to initialize validator: %v", err)
@@ -34,7 +34,6 @@ func NewGRPCServer(port string, apiKeyVerifier apikey.APIKeyVerifier) *GRPCServe
 	srv := grpc.NewServer(
 		grpc.ConnectionTimeout(120*time.Second),
 		grpc.ChainUnaryInterceptor(
-			interceptor.APIKeyInterceptor(apiKeyVerifier),
 			interceptor.GRPCValidationInterceptor(v),
 			interceptor.DeviceInterceptor(),
 		),

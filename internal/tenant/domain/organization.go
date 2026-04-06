@@ -40,7 +40,7 @@ type OrganizationWithMember struct {
 func NewOrganization(ownerID uuid.UUID, name, description string) *Organization {
 	id := uuid.New()
 	now := time.Now()
-	slugify := utils.ToSlug(name).Slugify()
+	slugify := utils.ToSlug(name).Slugify().AddSuffix(id.String()[:8])
 
 	return &Organization{
 		ID:            id,

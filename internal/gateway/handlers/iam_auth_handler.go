@@ -205,6 +205,7 @@ func (h *IAMAuthGatewayHandler) refreshSession(c *fiber.Ctx) error {
 	defer cancel()
 
 	st := h.cookie.GetSessionToken(c)
+	log.Println(st)
 	if st == "" {
 		return response.Error(c, errors.Unauthorized("unauthorized"))
 	}

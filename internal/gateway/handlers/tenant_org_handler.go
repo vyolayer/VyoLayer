@@ -62,6 +62,10 @@ func (h *OrganizationHandler) RegisterRoutes(router fiber.Router) {
 		Post("/restore", h.restore).
 		Post("/transfer-ownership", h.transferOwnership)
 
+	// Roles and permissions
+	orgGroup.Get("/roles", h.listRoles).
+		Get("/permissions", h.listPermissions)
+
 	h.logger.Info("Organization routes registered", "")
 }
 
@@ -249,4 +253,39 @@ func (h *OrganizationHandler) transferOwnership(c *fiber.Ctx) error {
 	}
 
 	return response.SuccessWithMessage(c, fiber.StatusOK, resp.GetMessage(), nil)
+}
+
+func (h *OrganizationHandler) listRoles(c *fiber.Ctx) error {
+	var req tenantV1.TenantOrganizationIDRequest
+	req.OrganizationId = getOrgIDFromLocals(c)
+
+	resp, err := h.client.GetAllRoles(c.UserContext(), &req)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"organization roles fetched successfully",
+		resp.GetRoles(),
+	)
+}
+
+// Get all permissions
+func (h *OrganizationHandler) listPermissions(c *fiber.Ctx) error {
+	var req tenantV1.TenantOrganizationIDRequest
+	req.OrganizationId = getOrgIDFromLocals(c)
+
+	resp, err := h.client.GetAllPermissions(c.UserContext(), &req)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"organization permissions fetched successfully",
+		resp.GetPermissions(),
+	)
 }

@@ -17,6 +17,8 @@ func NewRegistrars(
 	iamJWT jwt.IamJWT,
 ) []server.RouteRegistrar {
 	return []server.RouteRegistrar{
+		handlers.NewHealthHandler(),
+
 		// Account routes
 		handlers.NewAccountHandler(
 			clients.AccountClient,
@@ -51,6 +53,13 @@ func NewRegistrars(
 		handlers.NewOrganizationInvitationHandler(
 			logger,
 			clients.TenantOrganizationInvClient,
+			iamJWT,
+		),
+
+		// Tenant Project & Project Member routes
+		handlers.NewProjectHandler(
+			logger,
+			clients.TenantProjectClient,
 			iamJWT,
 		),
 	}

@@ -93,3 +93,54 @@ func protoInvitationForOrgToDTO(inv *tenantV1.OrganizationMemberInvitationForOrg
 		InvitedBy:  invByDto,
 	}
 }
+
+// ─── Project mappers ──────────────────────────────────────────────────────────
+
+func protoProjectToDTO(p *tenantV1.Project) *dto.TProject {
+	if p == nil {
+		return nil
+	}
+	return &dto.TProject{
+		ID:             p.GetId(),
+		OrganizationID: p.GetOrganizationId(),
+		Name:           p.GetName(),
+		Slug:           p.GetSlug(),
+		Description:    p.GetDescription(),
+		IsActive:       p.GetIsActive(),
+		CreatedBy:      p.GetCreatedBy(),
+		MaxAPIKeys:     p.GetMaxApiKeys(),
+		MaxMembers:     p.GetMaxMembers(),
+		MemberCount:    p.GetMemberCount(),
+		CreatedAt:      p.GetCreatedAt(),
+	}
+}
+
+func protoProjectResponseToDTO(resp *tenantV1.ProjectResponse) *dto.ProjectResponse {
+	if resp == nil {
+		return nil
+	}
+	members := make([]*dto.TProjectMember, len(resp.GetMembers()))
+	for i, m := range resp.GetMembers() {
+		members[i] = protoProjectMemberToDTO(m)
+	}
+	return &dto.ProjectResponse{
+		Project: protoProjectToDTO(resp.GetProject()),
+		Members: members,
+	}
+}
+
+func protoProjectMemberToDTO(m *tenantV1.ProjectMember) *dto.TProjectMember {
+	if m == nil {
+		return nil
+	}
+	return &dto.TProjectMember{
+		ID:        m.GetId(),
+		UserID:    m.GetUserId(),
+		Email:     m.GetEmail(),
+		FullName:  m.GetFullName(),
+		Role:      m.GetRole(),
+		IsActive:  m.GetIsActive(),
+		JoinedAt:  m.GetJoinedAt(),
+		RemovedAt: m.RemovedAt, // *string – optional in proto3
+	}
+}

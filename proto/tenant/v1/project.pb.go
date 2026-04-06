@@ -325,110 +325,6 @@ func (x *UpdateProjectRequest) GetDescription() string {
 	return ""
 }
 
-type ArchiveProjectRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	ProjectId      string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ArchiveProjectRequest) Reset() {
-	*x = ArchiveProjectRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ArchiveProjectRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ArchiveProjectRequest) ProtoMessage() {}
-
-func (x *ArchiveProjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ArchiveProjectRequest.ProtoReflect.Descriptor instead.
-func (*ArchiveProjectRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ArchiveProjectRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *ArchiveProjectRequest) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
-type RestoreProjectRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
-	ProjectId      string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *RestoreProjectRequest) Reset() {
-	*x = RestoreProjectRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RestoreProjectRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RestoreProjectRequest) ProtoMessage() {}
-
-func (x *RestoreProjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RestoreProjectRequest.ProtoReflect.Descriptor instead.
-func (*RestoreProjectRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *RestoreProjectRequest) GetOrganizationId() string {
-	if x != nil {
-		return x.OrganizationId
-	}
-	return ""
-}
-
-func (x *RestoreProjectRequest) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
 type DeleteProjectRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
@@ -440,7 +336,7 @@ type DeleteProjectRequest struct {
 
 func (x *DeleteProjectRequest) Reset() {
 	*x = DeleteProjectRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[7]
+	mi := &file_tenant_v1_project_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -452,7 +348,7 @@ func (x *DeleteProjectRequest) String() string {
 func (*DeleteProjectRequest) ProtoMessage() {}
 
 func (x *DeleteProjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[7]
+	mi := &file_tenant_v1_project_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -465,7 +361,7 @@ func (x *DeleteProjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteProjectRequest.ProtoReflect.Descriptor instead.
 func (*DeleteProjectRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{7}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DeleteProjectRequest) GetOrganizationId() string {
@@ -499,7 +395,7 @@ type ProjectIdRequest struct {
 
 func (x *ProjectIdRequest) Reset() {
 	*x = ProjectIdRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[8]
+	mi := &file_tenant_v1_project_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -511,7 +407,7 @@ func (x *ProjectIdRequest) String() string {
 func (*ProjectIdRequest) ProtoMessage() {}
 
 func (x *ProjectIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[8]
+	mi := &file_tenant_v1_project_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -524,7 +420,7 @@ func (x *ProjectIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectIdRequest.ProtoReflect.Descriptor instead.
 func (*ProjectIdRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{8}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ProjectIdRequest) GetOrganizationId() string {
@@ -551,7 +447,7 @@ type ProjectResponse struct {
 
 func (x *ProjectResponse) Reset() {
 	*x = ProjectResponse{}
-	mi := &file_tenant_v1_project_proto_msgTypes[9]
+	mi := &file_tenant_v1_project_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -563,7 +459,7 @@ func (x *ProjectResponse) String() string {
 func (*ProjectResponse) ProtoMessage() {}
 
 func (x *ProjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[9]
+	mi := &file_tenant_v1_project_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -576,7 +472,7 @@ func (x *ProjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectResponse.ProtoReflect.Descriptor instead.
 func (*ProjectResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{9}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ProjectResponse) GetProject() *Project {
@@ -612,7 +508,7 @@ type Project struct {
 
 func (x *Project) Reset() {
 	*x = Project{}
-	mi := &file_tenant_v1_project_proto_msgTypes[10]
+	mi := &file_tenant_v1_project_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -624,7 +520,7 @@ func (x *Project) String() string {
 func (*Project) ProtoMessage() {}
 
 func (x *Project) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[10]
+	mi := &file_tenant_v1_project_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -637,7 +533,7 @@ func (x *Project) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Project.ProtoReflect.Descriptor instead.
 func (*Project) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{10}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Project) GetId() string {
@@ -732,7 +628,7 @@ type ListProjectMembersRequest struct {
 
 func (x *ListProjectMembersRequest) Reset() {
 	*x = ListProjectMembersRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[11]
+	mi := &file_tenant_v1_project_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -744,7 +640,7 @@ func (x *ListProjectMembersRequest) String() string {
 func (*ListProjectMembersRequest) ProtoMessage() {}
 
 func (x *ListProjectMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[11]
+	mi := &file_tenant_v1_project_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -757,7 +653,7 @@ func (x *ListProjectMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProjectMembersRequest.ProtoReflect.Descriptor instead.
 func (*ListProjectMembersRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{11}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListProjectMembersRequest) GetOrganizationId() string {
@@ -799,7 +695,7 @@ type ListProjectMembersResponse struct {
 
 func (x *ListProjectMembersResponse) Reset() {
 	*x = ListProjectMembersResponse{}
-	mi := &file_tenant_v1_project_proto_msgTypes[12]
+	mi := &file_tenant_v1_project_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -811,7 +707,7 @@ func (x *ListProjectMembersResponse) String() string {
 func (*ListProjectMembersResponse) ProtoMessage() {}
 
 func (x *ListProjectMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[12]
+	mi := &file_tenant_v1_project_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -824,7 +720,7 @@ func (x *ListProjectMembersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProjectMembersResponse.ProtoReflect.Descriptor instead.
 func (*ListProjectMembersResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{12}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListProjectMembersResponse) GetMembers() []*ProjectMember {
@@ -848,6 +744,66 @@ func (x *ListProjectMembersResponse) GetNextPageToken() string {
 	return ""
 }
 
+type GetProjectMemberRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	ProjectId      string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	MemberId       string                 `protobuf:"bytes,3,opt,name=member_id,json=memberId,proto3" json:"member_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetProjectMemberRequest) Reset() {
+	*x = GetProjectMemberRequest{}
+	mi := &file_tenant_v1_project_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProjectMemberRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProjectMemberRequest) ProtoMessage() {}
+
+func (x *GetProjectMemberRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_project_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProjectMemberRequest.ProtoReflect.Descriptor instead.
+func (*GetProjectMemberRequest) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetProjectMemberRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *GetProjectMemberRequest) GetProjectId() string {
+	if x != nil {
+		return x.ProjectId
+	}
+	return ""
+}
+
+func (x *GetProjectMemberRequest) GetMemberId() string {
+	if x != nil {
+		return x.MemberId
+	}
+	return ""
+}
+
 type ProjectMemberResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Member        *ProjectMember         `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
@@ -857,7 +813,7 @@ type ProjectMemberResponse struct {
 
 func (x *ProjectMemberResponse) Reset() {
 	*x = ProjectMemberResponse{}
-	mi := &file_tenant_v1_project_proto_msgTypes[13]
+	mi := &file_tenant_v1_project_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -869,7 +825,7 @@ func (x *ProjectMemberResponse) String() string {
 func (*ProjectMemberResponse) ProtoMessage() {}
 
 func (x *ProjectMemberResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[13]
+	mi := &file_tenant_v1_project_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -882,7 +838,7 @@ func (x *ProjectMemberResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectMemberResponse.ProtoReflect.Descriptor instead.
 func (*ProjectMemberResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{13}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ProjectMemberResponse) GetMember() *ProjectMember {
@@ -908,7 +864,7 @@ type ProjectMember struct {
 
 func (x *ProjectMember) Reset() {
 	*x = ProjectMember{}
-	mi := &file_tenant_v1_project_proto_msgTypes[14]
+	mi := &file_tenant_v1_project_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -920,7 +876,7 @@ func (x *ProjectMember) String() string {
 func (*ProjectMember) ProtoMessage() {}
 
 func (x *ProjectMember) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[14]
+	mi := &file_tenant_v1_project_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -933,7 +889,7 @@ func (x *ProjectMember) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectMember.ProtoReflect.Descriptor instead.
 func (*ProjectMember) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{14}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ProjectMember) GetId() string {
@@ -1004,7 +960,7 @@ type AddProjectMemberRequest struct {
 
 func (x *AddProjectMemberRequest) Reset() {
 	*x = AddProjectMemberRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[15]
+	mi := &file_tenant_v1_project_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1016,7 +972,7 @@ func (x *AddProjectMemberRequest) String() string {
 func (*AddProjectMemberRequest) ProtoMessage() {}
 
 func (x *AddProjectMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[15]
+	mi := &file_tenant_v1_project_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1029,7 +985,7 @@ func (x *AddProjectMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddProjectMemberRequest.ProtoReflect.Descriptor instead.
 func (*AddProjectMemberRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{15}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *AddProjectMemberRequest) GetOrganizationId() string {
@@ -1072,7 +1028,7 @@ type ChangeProjectMemberRoleRequest struct {
 
 func (x *ChangeProjectMemberRoleRequest) Reset() {
 	*x = ChangeProjectMemberRoleRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[16]
+	mi := &file_tenant_v1_project_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1084,7 +1040,7 @@ func (x *ChangeProjectMemberRoleRequest) String() string {
 func (*ChangeProjectMemberRoleRequest) ProtoMessage() {}
 
 func (x *ChangeProjectMemberRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[16]
+	mi := &file_tenant_v1_project_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1097,7 +1053,7 @@ func (x *ChangeProjectMemberRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeProjectMemberRoleRequest.ProtoReflect.Descriptor instead.
 func (*ChangeProjectMemberRoleRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{16}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ChangeProjectMemberRoleRequest) GetOrganizationId() string {
@@ -1139,7 +1095,7 @@ type RemoveProjectMemberRequest struct {
 
 func (x *RemoveProjectMemberRequest) Reset() {
 	*x = RemoveProjectMemberRequest{}
-	mi := &file_tenant_v1_project_proto_msgTypes[17]
+	mi := &file_tenant_v1_project_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1151,7 +1107,7 @@ func (x *RemoveProjectMemberRequest) String() string {
 func (*RemoveProjectMemberRequest) ProtoMessage() {}
 
 func (x *RemoveProjectMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_project_proto_msgTypes[17]
+	mi := &file_tenant_v1_project_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1164,7 +1120,7 @@ func (x *RemoveProjectMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveProjectMemberRequest.ProtoReflect.Descriptor instead.
 func (*RemoveProjectMemberRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_project_proto_rawDescGZIP(), []int{17}
+	return file_tenant_v1_project_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RemoveProjectMemberRequest) GetOrganizationId() string {
@@ -1192,7 +1148,7 @@ var File_tenant_v1_project_proto protoreflect.FileDescriptor
 
 const file_tenant_v1_project_proto_rawDesc = "" +
 	"\n" +
-	"\x17tenant/v1/project.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\"\x93\x01\n" +
+	"\x17tenant/v1/project.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\x1a$tenant/v1/organization_options.proto\"\x93\x01\n" +
 	"\x14CreateProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\x04name\x12*\n" +
@@ -1218,15 +1174,7 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x18dH\x00R\x04name\x88\x01\x01\x12/\n" +
 	"\vdescription\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\xf4\x03H\x01R\vdescription\x88\x01\x01B\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_description\"q\n" +
-	"\x15ArchiveProjectRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
-	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"q\n" +
-	"\x15RestoreProjectRequest\x120\n" +
-	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
-	"\n" +
-	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\"\x9e\x01\n" +
+	"\f_description\"\x9e\x01\n" +
 	"\x14DeleteProjectRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
@@ -1267,7 +1215,12 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\amembers\x18\x01 \x03(\v2\x18.tenant.v1.ProjectMemberR\amembers\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"I\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x99\x01\n" +
+	"\x17GetProjectMemberRequest\x120\n" +
+	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
+	"\n" +
+	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12$\n" +
+	"\tmember_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId\"I\n" +
 	"\x15ProjectMemberResponse\x120\n" +
 	"\x06member\x18\x01 \x01(\v2\x18.tenant.v1.ProjectMemberR\x06member\"\xec\x01\n" +
 	"\rProjectMember\x12\x0e\n" +
@@ -1297,22 +1250,22 @@ const file_tenant_v1_project_proto_rawDesc = "" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12&\n" +
 	"\n" +
 	"project_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tprojectId\x12$\n" +
-	"\tmember_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId2\xd9\b\n" +
-	"\x0eProjectService\x12L\n" +
-	"\rCreateProject\x12\x1f.tenant.v1.CreateProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\x12O\n" +
-	"\fListProjects\x12\x1e.tenant.v1.ListProjectsRequest\x1a\x1f.tenant.v1.ListProjectsResponse\x12F\n" +
+	"\tmember_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bmemberId2\xfd\n" +
 	"\n" +
-	"GetProject\x12\x1c.tenant.v1.GetProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\x12L\n" +
-	"\rUpdateProject\x12\x1f.tenant.v1.UpdateProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\x12T\n" +
-	"\x0eArchiveProject\x12 .tenant.v1.ArchiveProjectRequest\x1a .tenant.v1.TenantSuccessResponse\x12T\n" +
-	"\x0eRestoreProject\x12 .tenant.v1.RestoreProjectRequest\x1a .tenant.v1.TenantSuccessResponse\x12R\n" +
-	"\rDeleteProject\x12\x1f.tenant.v1.DeleteProjectRequest\x1a .tenant.v1.TenantSuccessResponse\x12Z\n" +
-	"\vListMembers\x12$.tenant.v1.ListProjectMembersRequest\x1a%.tenant.v1.ListProjectMembersResponse\x12Z\n" +
-	"\x10GetCurrentMember\x12$.tenant.v1.ListProjectMembersRequest\x1a .tenant.v1.ProjectMemberResponse\x12Q\n" +
-	"\tAddMember\x12\".tenant.v1.AddProjectMemberRequest\x1a .tenant.v1.ProjectMemberResponse\x12_\n" +
-	"\x10ChangeMemberRole\x12).tenant.v1.ChangeProjectMemberRoleRequest\x1a .tenant.v1.TenantSuccessResponse\x12W\n" +
-	"\fRemoveMember\x12%.tenant.v1.RemoveProjectMemberRequest\x1a .tenant.v1.TenantSuccessResponse\x12M\n" +
-	"\fLeaveProject\x12\x1b.tenant.v1.ProjectIdRequest\x1a .tenant.v1.TenantSuccessResponseB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
+	"\x0eProjectService\x12_\n" +
+	"\rCreateProject\x12\x1f.tenant.v1.CreateProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\"\x11\xd2>\x0eproject.create\x12`\n" +
+	"\fListProjects\x12\x1e.tenant.v1.ListProjectsRequest\x1a\x1f.tenant.v1.ListProjectsResponse\"\x0f\xd2>\fproject.read\x12f\n" +
+	"\n" +
+	"GetProject\x12\x1c.tenant.v1.GetProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\"\x1e\xd2>\fproject.read\xda>\fproject.read\x12p\n" +
+	"\rUpdateProject\x12\x1f.tenant.v1.UpdateProjectRequest\x1a\x1a.tenant.v1.ProjectResponse\"\"\xd2>\x0eproject.update\xda>\x0eproject.update\x12v\n" +
+	"\rDeleteProject\x12\x1f.tenant.v1.DeleteProjectRequest\x1a .tenant.v1.TenantSuccessResponse\"\"\xd2>\x0eproject.delete\xda>\x0eproject.delete\x12z\n" +
+	"\vListMembers\x12$.tenant.v1.ListProjectMembersRequest\x1a%.tenant.v1.ListProjectMembersResponse\"\x1e\xd2>\fproject.read\xda>\fproject.read\x12q\n" +
+	"\tGetMember\x12\".tenant.v1.GetProjectMemberRequest\x1a .tenant.v1.ProjectMemberResponse\"\x1e\xd2>\fproject.read\xda>\fproject.read\x12z\n" +
+	"\x10GetCurrentMember\x12$.tenant.v1.ListProjectMembersRequest\x1a .tenant.v1.ProjectMemberResponse\"\x1e\xd2>\fproject.read\xda>\fproject.read\x12u\n" +
+	"\tAddMember\x12\".tenant.v1.AddProjectMemberRequest\x1a .tenant.v1.ProjectMemberResponse\"\"\xd2>\x0eproject.update\xda>\x0eproject.update\x12\x83\x01\n" +
+	"\x10ChangeMemberRole\x12).tenant.v1.ChangeProjectMemberRoleRequest\x1a .tenant.v1.TenantSuccessResponse\"\"\xd2>\x0eproject.update\xda>\x0eproject.update\x12{\n" +
+	"\fRemoveMember\x12%.tenant.v1.RemoveProjectMemberRequest\x1a .tenant.v1.TenantSuccessResponse\"\"\xd2>\x0eproject.delete\xda>\x0eproject.delete\x12q\n" +
+	"\fLeaveProject\x12\x1b.tenant.v1.ProjectIdRequest\x1a .tenant.v1.TenantSuccessResponse\"\"\xd2>\x0eproject.delete\xda>\x0eproject.deleteB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 
 var (
 	file_tenant_v1_project_proto_rawDescOnce sync.Once
@@ -1326,62 +1279,59 @@ func file_tenant_v1_project_proto_rawDescGZIP() []byte {
 	return file_tenant_v1_project_proto_rawDescData
 }
 
-var file_tenant_v1_project_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_tenant_v1_project_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_tenant_v1_project_proto_goTypes = []any{
 	(*CreateProjectRequest)(nil),           // 0: tenant.v1.CreateProjectRequest
 	(*ListProjectsRequest)(nil),            // 1: tenant.v1.ListProjectsRequest
 	(*ListProjectsResponse)(nil),           // 2: tenant.v1.ListProjectsResponse
 	(*GetProjectRequest)(nil),              // 3: tenant.v1.GetProjectRequest
 	(*UpdateProjectRequest)(nil),           // 4: tenant.v1.UpdateProjectRequest
-	(*ArchiveProjectRequest)(nil),          // 5: tenant.v1.ArchiveProjectRequest
-	(*RestoreProjectRequest)(nil),          // 6: tenant.v1.RestoreProjectRequest
-	(*DeleteProjectRequest)(nil),           // 7: tenant.v1.DeleteProjectRequest
-	(*ProjectIdRequest)(nil),               // 8: tenant.v1.ProjectIdRequest
-	(*ProjectResponse)(nil),                // 9: tenant.v1.ProjectResponse
-	(*Project)(nil),                        // 10: tenant.v1.Project
-	(*ListProjectMembersRequest)(nil),      // 11: tenant.v1.ListProjectMembersRequest
-	(*ListProjectMembersResponse)(nil),     // 12: tenant.v1.ListProjectMembersResponse
-	(*ProjectMemberResponse)(nil),          // 13: tenant.v1.ProjectMemberResponse
-	(*ProjectMember)(nil),                  // 14: tenant.v1.ProjectMember
-	(*AddProjectMemberRequest)(nil),        // 15: tenant.v1.AddProjectMemberRequest
-	(*ChangeProjectMemberRoleRequest)(nil), // 16: tenant.v1.ChangeProjectMemberRoleRequest
-	(*RemoveProjectMemberRequest)(nil),     // 17: tenant.v1.RemoveProjectMemberRequest
-	(*TenantSuccessResponse)(nil),          // 18: tenant.v1.TenantSuccessResponse
+	(*DeleteProjectRequest)(nil),           // 5: tenant.v1.DeleteProjectRequest
+	(*ProjectIdRequest)(nil),               // 6: tenant.v1.ProjectIdRequest
+	(*ProjectResponse)(nil),                // 7: tenant.v1.ProjectResponse
+	(*Project)(nil),                        // 8: tenant.v1.Project
+	(*ListProjectMembersRequest)(nil),      // 9: tenant.v1.ListProjectMembersRequest
+	(*ListProjectMembersResponse)(nil),     // 10: tenant.v1.ListProjectMembersResponse
+	(*GetProjectMemberRequest)(nil),        // 11: tenant.v1.GetProjectMemberRequest
+	(*ProjectMemberResponse)(nil),          // 12: tenant.v1.ProjectMemberResponse
+	(*ProjectMember)(nil),                  // 13: tenant.v1.ProjectMember
+	(*AddProjectMemberRequest)(nil),        // 14: tenant.v1.AddProjectMemberRequest
+	(*ChangeProjectMemberRoleRequest)(nil), // 15: tenant.v1.ChangeProjectMemberRoleRequest
+	(*RemoveProjectMemberRequest)(nil),     // 16: tenant.v1.RemoveProjectMemberRequest
+	(*TenantSuccessResponse)(nil),          // 17: tenant.v1.TenantSuccessResponse
 }
 var file_tenant_v1_project_proto_depIdxs = []int32{
-	10, // 0: tenant.v1.ListProjectsResponse.projects:type_name -> tenant.v1.Project
-	10, // 1: tenant.v1.ProjectResponse.project:type_name -> tenant.v1.Project
-	14, // 2: tenant.v1.ProjectResponse.members:type_name -> tenant.v1.ProjectMember
-	14, // 3: tenant.v1.ListProjectMembersResponse.members:type_name -> tenant.v1.ProjectMember
-	14, // 4: tenant.v1.ProjectMemberResponse.member:type_name -> tenant.v1.ProjectMember
+	8,  // 0: tenant.v1.ListProjectsResponse.projects:type_name -> tenant.v1.Project
+	8,  // 1: tenant.v1.ProjectResponse.project:type_name -> tenant.v1.Project
+	13, // 2: tenant.v1.ProjectResponse.members:type_name -> tenant.v1.ProjectMember
+	13, // 3: tenant.v1.ListProjectMembersResponse.members:type_name -> tenant.v1.ProjectMember
+	13, // 4: tenant.v1.ProjectMemberResponse.member:type_name -> tenant.v1.ProjectMember
 	0,  // 5: tenant.v1.ProjectService.CreateProject:input_type -> tenant.v1.CreateProjectRequest
 	1,  // 6: tenant.v1.ProjectService.ListProjects:input_type -> tenant.v1.ListProjectsRequest
 	3,  // 7: tenant.v1.ProjectService.GetProject:input_type -> tenant.v1.GetProjectRequest
 	4,  // 8: tenant.v1.ProjectService.UpdateProject:input_type -> tenant.v1.UpdateProjectRequest
-	5,  // 9: tenant.v1.ProjectService.ArchiveProject:input_type -> tenant.v1.ArchiveProjectRequest
-	6,  // 10: tenant.v1.ProjectService.RestoreProject:input_type -> tenant.v1.RestoreProjectRequest
-	7,  // 11: tenant.v1.ProjectService.DeleteProject:input_type -> tenant.v1.DeleteProjectRequest
-	11, // 12: tenant.v1.ProjectService.ListMembers:input_type -> tenant.v1.ListProjectMembersRequest
-	11, // 13: tenant.v1.ProjectService.GetCurrentMember:input_type -> tenant.v1.ListProjectMembersRequest
-	15, // 14: tenant.v1.ProjectService.AddMember:input_type -> tenant.v1.AddProjectMemberRequest
-	16, // 15: tenant.v1.ProjectService.ChangeMemberRole:input_type -> tenant.v1.ChangeProjectMemberRoleRequest
-	17, // 16: tenant.v1.ProjectService.RemoveMember:input_type -> tenant.v1.RemoveProjectMemberRequest
-	8,  // 17: tenant.v1.ProjectService.LeaveProject:input_type -> tenant.v1.ProjectIdRequest
-	9,  // 18: tenant.v1.ProjectService.CreateProject:output_type -> tenant.v1.ProjectResponse
-	2,  // 19: tenant.v1.ProjectService.ListProjects:output_type -> tenant.v1.ListProjectsResponse
-	9,  // 20: tenant.v1.ProjectService.GetProject:output_type -> tenant.v1.ProjectResponse
-	9,  // 21: tenant.v1.ProjectService.UpdateProject:output_type -> tenant.v1.ProjectResponse
-	18, // 22: tenant.v1.ProjectService.ArchiveProject:output_type -> tenant.v1.TenantSuccessResponse
-	18, // 23: tenant.v1.ProjectService.RestoreProject:output_type -> tenant.v1.TenantSuccessResponse
-	18, // 24: tenant.v1.ProjectService.DeleteProject:output_type -> tenant.v1.TenantSuccessResponse
-	12, // 25: tenant.v1.ProjectService.ListMembers:output_type -> tenant.v1.ListProjectMembersResponse
-	13, // 26: tenant.v1.ProjectService.GetCurrentMember:output_type -> tenant.v1.ProjectMemberResponse
-	13, // 27: tenant.v1.ProjectService.AddMember:output_type -> tenant.v1.ProjectMemberResponse
-	18, // 28: tenant.v1.ProjectService.ChangeMemberRole:output_type -> tenant.v1.TenantSuccessResponse
-	18, // 29: tenant.v1.ProjectService.RemoveMember:output_type -> tenant.v1.TenantSuccessResponse
-	18, // 30: tenant.v1.ProjectService.LeaveProject:output_type -> tenant.v1.TenantSuccessResponse
-	18, // [18:31] is the sub-list for method output_type
-	5,  // [5:18] is the sub-list for method input_type
+	5,  // 9: tenant.v1.ProjectService.DeleteProject:input_type -> tenant.v1.DeleteProjectRequest
+	9,  // 10: tenant.v1.ProjectService.ListMembers:input_type -> tenant.v1.ListProjectMembersRequest
+	11, // 11: tenant.v1.ProjectService.GetMember:input_type -> tenant.v1.GetProjectMemberRequest
+	9,  // 12: tenant.v1.ProjectService.GetCurrentMember:input_type -> tenant.v1.ListProjectMembersRequest
+	14, // 13: tenant.v1.ProjectService.AddMember:input_type -> tenant.v1.AddProjectMemberRequest
+	15, // 14: tenant.v1.ProjectService.ChangeMemberRole:input_type -> tenant.v1.ChangeProjectMemberRoleRequest
+	16, // 15: tenant.v1.ProjectService.RemoveMember:input_type -> tenant.v1.RemoveProjectMemberRequest
+	6,  // 16: tenant.v1.ProjectService.LeaveProject:input_type -> tenant.v1.ProjectIdRequest
+	7,  // 17: tenant.v1.ProjectService.CreateProject:output_type -> tenant.v1.ProjectResponse
+	2,  // 18: tenant.v1.ProjectService.ListProjects:output_type -> tenant.v1.ListProjectsResponse
+	7,  // 19: tenant.v1.ProjectService.GetProject:output_type -> tenant.v1.ProjectResponse
+	7,  // 20: tenant.v1.ProjectService.UpdateProject:output_type -> tenant.v1.ProjectResponse
+	17, // 21: tenant.v1.ProjectService.DeleteProject:output_type -> tenant.v1.TenantSuccessResponse
+	10, // 22: tenant.v1.ProjectService.ListMembers:output_type -> tenant.v1.ListProjectMembersResponse
+	12, // 23: tenant.v1.ProjectService.GetMember:output_type -> tenant.v1.ProjectMemberResponse
+	12, // 24: tenant.v1.ProjectService.GetCurrentMember:output_type -> tenant.v1.ProjectMemberResponse
+	12, // 25: tenant.v1.ProjectService.AddMember:output_type -> tenant.v1.ProjectMemberResponse
+	17, // 26: tenant.v1.ProjectService.ChangeMemberRole:output_type -> tenant.v1.TenantSuccessResponse
+	17, // 27: tenant.v1.ProjectService.RemoveMember:output_type -> tenant.v1.TenantSuccessResponse
+	17, // 28: tenant.v1.ProjectService.LeaveProject:output_type -> tenant.v1.TenantSuccessResponse
+	17, // [17:29] is the sub-list for method output_type
+	5,  // [5:17] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -1393,15 +1343,16 @@ func file_tenant_v1_project_proto_init() {
 		return
 	}
 	file_tenant_v1_common_proto_init()
+	file_tenant_v1_organization_options_proto_init()
 	file_tenant_v1_project_proto_msgTypes[4].OneofWrappers = []any{}
-	file_tenant_v1_project_proto_msgTypes[14].OneofWrappers = []any{}
+	file_tenant_v1_project_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tenant_v1_project_proto_rawDesc), len(file_tenant_v1_project_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -71,6 +71,7 @@ func (u *IAMUser) GetFullName() string { return u.FullName }
 func (u *IAMUser) GetStatus() string   { return u.Status.String() }
 
 func (u *IAMUser) VerifyEmail() {
+	u.Status = UserStatusActive
 	u.IsEmailVerified = true
 	u.Timestamps.Update()
 }

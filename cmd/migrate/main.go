@@ -1,7 +1,6 @@
 package main
 
 import (
-	accountmodelv1 "github.com/vyolayer/vyolayer/internal/account/models/v1"
 	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
 
@@ -25,10 +24,6 @@ func main() {
 		panic(err)
 	}
 	defer sqlDB.Close()
-
-	db.Exec("CREATE SCHEMA IF NOT EXISTS account_service;")
-	db.Exec("CREATE SCHEMA IF NOT EXISTS iam;")
-	db.Exec("CREATE SCHEMA IF NOT EXISTS tenant;")
 
 	err = db.AutoMigrate(
 		//
@@ -68,6 +63,7 @@ func main() {
 
 		// Tenant models
 		tenantmodelv1.Organization{},
+		tenantmodelv1.TenantInfra{},
 
 		tenantmodelv1.OrganizationMember{},
 		tenantmodelv1.OrganizationMemberInvitation{},
@@ -83,12 +79,12 @@ func main() {
 		tenantmodelv1.ApiKey{},
 
 		// Account service models
-		accountmodelv1.ServiceUser{},
-		accountmodelv1.ServiceUserAvatar{},
-		accountmodelv1.ServiceUserSession{},
-		accountmodelv1.ServiceUserVerificationToken{},
-		accountmodelv1.ServiceUserLoginAttempt{},
-		accountmodelv1.ServiceUserAccountLock{},
+		// accountmodelv1.ServiceUser{},
+		// accountmodelv1.ServiceUserAvatar{},
+		// accountmodelv1.ServiceUserSession{},
+		// accountmodelv1.ServiceUserVerificationToken{},
+		// accountmodelv1.ServiceUserLoginAttempt{},
+		// accountmodelv1.ServiceUserAccountLock{},
 	)
 	if err != nil {
 		panic(err)

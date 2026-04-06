@@ -20,5 +20,5 @@ type ServiceUserVerificationToken struct {
 }
 
 func (ServiceUserVerificationToken) TableName() string {
-	return "account_service.user_verification_tokens"
+	return "user_verification_tokens"
 }

@@ -2,8 +2,10 @@ package grpc
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/vyolayer/vyolayer/internal/tenant/domain"
 	"github.com/vyolayer/vyolayer/internal/tenant/usecase"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
 	"github.com/vyolayer/vyolayer/pkg/logger"
@@ -13,17 +15,23 @@ import (
 
 type OrganizationHandler struct {
 	tenantV1.UnimplementedOrganizationServiceServer
-	logger *logger.AppLogger
-	orgUC  usecase.OrganizationUseCase
+	logger          *logger.AppLogger
+	orgUC           usecase.OrganizationUseCase
+	projectUC       domain.ProjectUseCase
+	projectMemberUC domain.ProjectMemberUseCase
 }
 
 func NewOrganizationHandler(
 	logger *logger.AppLogger,
 	orgUC usecase.OrganizationUseCase,
+	projectUC domain.ProjectUseCase,
+	projectMemberUC domain.ProjectMemberUseCase,
 ) *OrganizationHandler {
 	return &OrganizationHandler{
-		logger: logger,
-		orgUC:  orgUC,
+		logger:          logger,
+		orgUC:           orgUC,
+		projectUC:       projectUC,
+		projectMemberUC: projectMemberUC,
 	}
 }
 
@@ -31,10 +39,26 @@ func (h *OrganizationHandler) CreateOrganization(
 	ctx context.Context,
 	req *tenantV1.CreateOrganizationRequest,
 ) (*tenantV1.OrganizationResponse, error) {
-	org, member, err := h.orgUC.Create(ctx, req.GetName(), req.GetDescription())
-
+	userId, err := ctxutil.ExtractIAMUserUUID(ctx)
 	if err != nil {
-		h.logger.ErrorWithErr("Failed to create organization", err)
+		return nil, err
+	}
+
+	org, member, err := h.orgUC.Create(ctx, userId, req.GetName(), req.GetDescription())
+	if err != nil {
+		h.logger.Error("Failed to create organization", err.Error())
+		return nil, err
+	}
+
+	time.Sleep(1 * time.Second)
+
+	// create default project
+	project, err := h.projectUC.Create(ctx, org.ID, member.ID, "Default Project", "Default project")
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := h.projectMemberUC.AddMember(ctx, org.ID, project.ID, userId, member.ID, "project_admin"); err != nil {
 		return nil, err
 	}
 

@@ -9,4 +9,5 @@ option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 extend google.protobuf.MethodOptions {
   bool skip_org_check = 1001;
   string required_org_permission = 1002;
+  string required_project_permission = 1003;
 }

@@ -19,5 +19,5 @@ type ServiceUserAccountLock struct {
 }
 
 func (ServiceUserAccountLock) TableName() string {
-	return "account_service.account_lock"
+	return "account_lock"
 }

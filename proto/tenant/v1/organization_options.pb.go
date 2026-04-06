@@ -7,11 +7,12 @@
 package tenantV1
 
 import (
+	reflect "reflect"
+	unsafe "unsafe"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
-	reflect "reflect"
-	unsafe "unsafe"
 )
 
 const (
@@ -38,6 +39,14 @@ var file_tenant_v1_organization_options_proto_extTypes = []protoimpl.ExtensionIn
 		Tag:           "bytes,1002,opt,name=required_org_permission",
 		Filename:      "tenant/v1/organization_options.proto",
 	},
+	{
+		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
+		ExtensionType: (*string)(nil),
+		Field:         1003,
+		Name:          "tenant.v1.required_project_permission",
+		Tag:           "bytes,1003,opt,name=required_project_permission",
+		Filename:      "tenant/v1/organization_options.proto",
+	},
 }
 
 // Extension fields to descriptorpb.MethodOptions.
@@ -46,6 +55,8 @@ var (
 	E_SkipOrgCheck = &file_tenant_v1_organization_options_proto_extTypes[0]
 	// optional string required_org_permission = 1002;
 	E_RequiredOrgPermission = &file_tenant_v1_organization_options_proto_extTypes[1]
+	// optional string required_project_permission = 1003;
+	E_RequiredProjectPermission = &file_tenant_v1_organization_options_proto_extTypes[2]
 )
 
 var File_tenant_v1_organization_options_proto protoreflect.FileDescriptor
@@ -54,7 +65,8 @@ const file_tenant_v1_organization_options_proto_rawDesc = "" +
 	"\n" +
 	"$tenant/v1/organization_options.proto\x12\ttenant.v1\x1a google/protobuf/descriptor.proto:E\n" +
 	"\x0eskip_org_check\x12\x1e.google.protobuf.MethodOptions\x18\xe9\a \x01(\bR\fskipOrgCheck:W\n" +
-	"\x17required_org_permission\x12\x1e.google.protobuf.MethodOptions\x18\xea\a \x01(\tR\x15requiredOrgPermissionB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
+	"\x17required_org_permission\x12\x1e.google.protobuf.MethodOptions\x18\xea\a \x01(\tR\x15requiredOrgPermission:_\n" +
+	"\x1brequired_project_permission\x12\x1e.google.protobuf.MethodOptions\x18\xeb\a \x01(\tR\x19requiredProjectPermissionB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 
 var file_tenant_v1_organization_options_proto_goTypes = []any{
 	(*descriptorpb.MethodOptions)(nil), // 0: google.protobuf.MethodOptions
@@ -62,10 +74,11 @@ var file_tenant_v1_organization_options_proto_goTypes = []any{
 var file_tenant_v1_organization_options_proto_depIdxs = []int32{
 	0, // 0: tenant.v1.skip_org_check:extendee -> google.protobuf.MethodOptions
 	0, // 1: tenant.v1.required_org_permission:extendee -> google.protobuf.MethodOptions
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	0, // [0:2] is the sub-list for extension extendee
+	0, // 2: tenant.v1.required_project_permission:extendee -> google.protobuf.MethodOptions
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	0, // [0:3] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
@@ -81,7 +94,7 @@ func file_tenant_v1_organization_options_proto_init() {
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tenant_v1_organization_options_proto_rawDesc), len(file_tenant_v1_organization_options_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
-			NumExtensions: 2,
+			NumExtensions: 3,
 			NumServices:   0,
 		},
 		GoTypes:           file_tenant_v1_organization_options_proto_goTypes,

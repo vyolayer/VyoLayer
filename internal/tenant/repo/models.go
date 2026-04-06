@@ -26,6 +26,9 @@ type (
 
 	// API Key
 	APIKey = modelv1.ApiKey
+
+	// Tenant Infra
+	TenantInfra = modelv1.TenantInfra
 )
 
 const (

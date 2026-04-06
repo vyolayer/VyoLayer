@@ -6,15 +6,17 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/vyolayer/vyolayer/internal/tenant/domain"
+	"github.com/vyolayer/vyolayer/internal/tenant/infra"
 	tenantrepo "github.com/vyolayer/vyolayer/internal/tenant/repo"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
 	"github.com/vyolayer/vyolayer/pkg/logger"
+	"github.com/vyolayer/vyolayer/pkg/tenant"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type OrganizationUseCase interface {
-	Create(ctx context.Context, name, description string) (*domain.Organization, *domain.OrganizationMember, error)
+	Create(ctx context.Context, userID uuid.UUID, name, description string) (*domain.Organization, *domain.OrganizationMember, error)
 	Update(ctx context.Context, orgID uuid.UUID, name, description string) (*domain.Organization, error)
 	Archive(ctx context.Context, orgID uuid.UUID, confirmName string) error
 	Restore(ctx context.Context, orgID uuid.UUID) error
@@ -30,56 +32,58 @@ type OrganizationUseCase interface {
 }
 
 type OrganizationUseCaseImpl struct {
-	logger         *logger.AppLogger
-	orgRepo        tenantrepo.OrganizationRepository
-	memberRepo     tenantrepo.OrganizationMemberRepository
-	memberRoleRepo tenantrepo.MemberOrganizationRoleRepository
-	roleRepo       tenantrepo.OrganizationRoleRepository
-	permRepo       tenantrepo.OrganizationPermissionRepository
+	logger            *logger.AppLogger
+	tenantProvisioner infra.TenantProvisioner
+	orgRepo           tenantrepo.OrganizationRepository
+	memberRepo        tenantrepo.OrganizationMemberRepository
+	memberRoleRepo    tenantrepo.MemberOrganizationRoleRepository
+	roleRepo          tenantrepo.OrganizationRoleRepository
+	permRepo          tenantrepo.OrganizationPermissionRepository
+	projectRepo       domain.ProjectRepository
+	projectMemberRepo domain.ProjectMemberRepository
+	tenantInfraRepo   domain.TenantInfraRepository
 }
 
 func NewOrganizationUseCase(
 	logger *logger.AppLogger,
+	tenantProvisioner infra.TenantProvisioner,
 	orgRepo tenantrepo.OrganizationRepository,
 	memberRepo tenantrepo.OrganizationMemberRepository,
 	memberRoleRepo tenantrepo.MemberOrganizationRoleRepository,
 	roleRepo tenantrepo.OrganizationRoleRepository,
 	permRepo tenantrepo.OrganizationPermissionRepository,
+	projectRepo domain.ProjectRepository,
+	projectMemberRepo domain.ProjectMemberRepository,
+	tenantInfraRepo domain.TenantInfraRepository,
 ) OrganizationUseCase {
 	return &OrganizationUseCaseImpl{
-		logger:         logger,
-		orgRepo:        orgRepo,
-		memberRepo:     memberRepo,
-		memberRoleRepo: memberRoleRepo,
-		roleRepo:       roleRepo,
-		permRepo:       permRepo,
+		logger:            logger,
+		tenantProvisioner: tenantProvisioner,
+		orgRepo:           orgRepo,
+		memberRepo:        memberRepo,
+		memberRoleRepo:    memberRoleRepo,
+		roleRepo:          roleRepo,
+		permRepo:          permRepo,
+		projectRepo:       projectRepo,
+		projectMemberRepo: projectMemberRepo,
+		tenantInfraRepo:   tenantInfraRepo,
 	}
 }
 
 func (uc *OrganizationUseCaseImpl) Create(
 	ctx context.Context,
+	userID uuid.UUID,
 	name, description string,
 ) (*domain.Organization, *domain.OrganizationMember, error) {
-	userId, err := ctxutil.ExtractIAMUserUUID(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	// Get owner role id
 	ownerRole, err := uc.roleRepo.GetByName(ctx, "owner")
 	if err != nil {
 		return nil, nil, err
 	}
 
-	org := domain.NewOrganization(userId, name, description)
-	member := domain.NewOrganizationMember(org.ID, userId)
+	org := domain.NewOrganization(userID, name, description)
+	member := domain.NewOrganizationMember(org.ID, userID)
 	memberRole := domain.NewMemberOrganizationRole(org.ID, member.ID, ownerRole.ID, member.ID)
-
-	uc.logger.Debug("Organization creating", map[string]any{
-		"org":        org,
-		"member":     member,
-		"memberRole": memberRole,
-	})
 
 	// Create organization and member in a transaction
 	tx, err := uc.orgRepo.BeginTx(ctx)
@@ -92,25 +96,60 @@ func (uc *OrganizationUseCaseImpl) Create(
 	if err != nil {
 		return nil, nil, err
 	}
-	uc.logger.Debug("Organization created", "")
 
 	err = uc.memberRepo.AddMember(ctx, tx, member)
 	if err != nil {
 		return nil, nil, err
 	}
-	uc.logger.Debug("Organization member added", "")
 
 	err = uc.memberRoleRepo.AddRole(ctx, tx, memberRole)
 	if err != nil {
 		return nil, nil, err
 	}
-	uc.logger.Debug("Organization member role added", "")
+
+	// get tenant infra
+	tenantInfra, err := uc.tenantInfraRepo.GetByOrgID(ctx, org.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if tenantInfra == nil {
+
+		schemaGenerator := tenant.NewDatabaseSchema(
+			org.ID.String(),
+			org.Slug,
+		)
+		schema, err := schemaGenerator.GenerateSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		tenantInfra = domain.NewTenantInfra(org.ID, schema)
+		err = uc.tenantInfraRepo.Create(ctx, tx, tenantInfra)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		// Provision tenant
+		err = uc.tenantProvisioner.Provision(ctx, schema)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		time.Sleep(1 * time.Second)
+
+		if err := uc.tenantInfraRepo.UpdateStatus(ctx, tx, tenantInfra.ID, domain.TenantInfraStatusReady); err != nil {
+			uc.logger.Error("failed to update tenant infra status", map[string]any{
+				"orgID": org.ID,
+				"error": err.Error(),
+			})
+		}
+	}
 
 	err = uc.orgRepo.CommitTx(tx)
 	if err != nil {
 		return nil, nil, err
 	}
-	uc.logger.Debug("Organization committed", "")
 
 	return org, member, nil
 }

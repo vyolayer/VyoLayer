@@ -162,7 +162,7 @@ func (r *organizationMemberRepo) GetByOrgIdAndEmail(ctx context.Context, orgID u
 	var model OrganizationMember
 
 	err := r.db.WithContext(ctx).
-		Joins("JOIN iam.users u ON u.id = tenant.organization_members.user_id").
+		Joins("JOIN users u ON u.id = organization_members.user_id").
 		Where("organization_id = ? AND u.email = ?", orgID, email).
 		First(&model).Error
 

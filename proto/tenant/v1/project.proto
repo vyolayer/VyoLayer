@@ -4,26 +4,71 @@ package tenant.v1;
 
 import "buf/validate/validate.proto";
 import "tenant/v1/common.proto";
+import "tenant/v1/organization_options.proto";
+
+
+option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
 option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
 service ProjectService {
   // Project CRUD
-  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse);
-  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
-  rpc GetProject(GetProjectRequest) returns (ProjectResponse);
-  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
-  rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse);
-  rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse);
-  rpc DeleteProject(DeleteProjectRequest) returns (TenantSuccessResponse);
+  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse) {
+    option (tenant.v1.required_org_permission) = "project.create";
+  };
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+  };
+  rpc GetProject(GetProjectRequest) returns (ProjectResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+    option (tenant.v1.required_project_permission) = "project.read";
+  };
+  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse) {
+    option (tenant.v1.required_org_permission) = "project.update";
+    option (tenant.v1.required_project_permission) = "project.update";
+  };
+  // rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
+  //   option (tenant.v1.required_org_permission) = "project.delete";
+  //   option (tenant.v1.required_project_permission) = "project.delete";
+  // };
+  // rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
+  //   option (tenant.v1.required_org_permission) = "project.delete";
+  //   option (tenant.v1.required_project_permission) = "project.delete";
+  // };
+  rpc DeleteProject(DeleteProjectRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.required_org_permission) = "project.delete";
+    option (tenant.v1.required_project_permission) = "project.delete";
+  };
 
   // Members
-  rpc ListMembers(ListProjectMembersRequest) returns (ListProjectMembersResponse);
-  rpc GetCurrentMember(ListProjectMembersRequest) returns (ProjectMemberResponse);
-  rpc AddMember(AddProjectMemberRequest) returns (ProjectMemberResponse);
-  rpc ChangeMemberRole(ChangeProjectMemberRoleRequest) returns (TenantSuccessResponse);
-  rpc RemoveMember(RemoveProjectMemberRequest) returns (TenantSuccessResponse);
-  rpc LeaveProject(ProjectIdRequest) returns (TenantSuccessResponse);
+  rpc ListMembers(ListProjectMembersRequest) returns (ListProjectMembersResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+    option (tenant.v1.required_project_permission) = "project.read";
+  };
+  rpc GetMember(GetProjectMemberRequest) returns (ProjectMemberResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+    option (tenant.v1.required_project_permission) = "project.read";
+  };
+  rpc GetCurrentMember(ListProjectMembersRequest) returns (ProjectMemberResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+    option (tenant.v1.required_project_permission) = "project.read";
+  };
+  rpc AddMember(AddProjectMemberRequest) returns (ProjectMemberResponse) {
+    option (tenant.v1.required_org_permission) = "project.update";
+    option (tenant.v1.required_project_permission) = "project.update";
+  };
+  rpc ChangeMemberRole(ChangeProjectMemberRoleRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.required_org_permission) = "project.update";
+    option (tenant.v1.required_project_permission) = "project.update";
+  };
+  rpc RemoveMember(RemoveProjectMemberRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.required_org_permission) = "project.delete";
+    option (tenant.v1.required_project_permission) = "project.delete";
+  };
+  rpc LeaveProject(ProjectIdRequest) returns (TenantSuccessResponse) {
+    option (tenant.v1.required_org_permission) = "project.delete";
+    option (tenant.v1.required_project_permission) = "project.delete";
+  };
 }
 
 // --------------------
@@ -68,15 +113,15 @@ message UpdateProjectRequest {
   optional string description = 4 [(buf.validate.field).string.max_len = 500];
 }
 
-message ArchiveProjectRequest {
-  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
-}
+// message ArchiveProjectRequest {
+//   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+//   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+// }
 
-message RestoreProjectRequest {
-  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
-  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
-}
+// message RestoreProjectRequest {
+//   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+//   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+// }
 
 message DeleteProjectRequest {
   string organization_id = 1 [(buf.validate.field).string.min_len = 1];
@@ -128,6 +173,12 @@ message ListProjectMembersResponse {
   repeated ProjectMember members         = 1;
   int32                  total_count     = 2;
   string                 next_page_token = 3;
+}
+
+message GetProjectMemberRequest {
+  string organization_id = 1 [(buf.validate.field).string.min_len = 1];
+  string project_id      = 2 [(buf.validate.field).string.min_len = 1];
+  string member_id       = 3 [(buf.validate.field).string.min_len = 1];
 }
 
 message ProjectMemberResponse {

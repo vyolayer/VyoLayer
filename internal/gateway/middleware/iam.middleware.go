@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
@@ -12,9 +13,13 @@ import (
 
 func IamJWTVerify(jwt jwt.IamJWT) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		t, err := extractIamJWTFormCookie(c)
-		if err != nil {
-			return err
+		t := extractIamJWTFormCookie(c)
+		if t == "" {
+			t = extractIamJWTFormHeader(c)
+		}
+
+		if t == "" {
+			return errors.Unauthorized("Auth token is required")
 		}
 
 		user, err := jwt.VerifyAccessToken(t)
@@ -35,10 +40,20 @@ func IamJWTVerify(jwt jwt.IamJWT) fiber.Handler {
 	}
 }
 
-func extractIamJWTFormCookie(c *fiber.Ctx) (string, error) {
-	token := c.Cookies("__vyo_iam_auth")
-	if token == "" {
-		return "", errors.Unauthorized("Auth token is required")
+func extractIamJWTFormCookie(c *fiber.Ctx) string {
+	return c.Cookies("__vyo_iam_auth")
+}
+
+func extractIamJWTFormHeader(c *fiber.Ctx) string {
+	str := c.Get("Authorization")
+	if str == "" {
+		return ""
 	}
-	return token, nil
+
+	parts := strings.Split(str, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return ""
+	}
+
+	return parts[1]
 }

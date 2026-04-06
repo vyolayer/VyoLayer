@@ -15,12 +15,14 @@ import (
 
 // Clients holds all gRPC client connections for the gateway.
 type Clients struct {
-	AccountClient               accountV1.AccountServiceClient
-	IamAuthClient               iamV1.AuthServiceClient
-	IamUserClient               iamV1.UserServiceClient
+	AccountClient accountV1.AccountServiceClient
+	IamAuthClient iamV1.AuthServiceClient
+	IamUserClient iamV1.UserServiceClient
+	// Tenant
 	TenantOrganizationClient    tenantV1.OrganizationServiceClient
 	TenantOrganizationInvClient tenantV1.OrganizationInvitationServiceClient
 	TenantOrganizationMemClient tenantV1.OrganizationMemberServiceClient
+	TenantProjectClient         tenantV1.ProjectServiceClient
 
 	// Keep references to close them later
 	accountConn *grpc.ClientConn
@@ -68,6 +70,7 @@ func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.D
 		TenantOrganizationClient:    tenantV1.NewOrganizationServiceClient(tenantConn),
 		TenantOrganizationInvClient: tenantV1.NewOrganizationInvitationServiceClient(tenantConn),
 		TenantOrganizationMemClient: tenantV1.NewOrganizationMemberServiceClient(tenantConn),
+		TenantProjectClient:         tenantV1.NewProjectServiceClient(tenantConn),
 
 		accountConn: accountConn,
 		iamConn:     iamConn,

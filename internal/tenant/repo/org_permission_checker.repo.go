@@ -36,10 +36,10 @@ func (c *optimizedPermissionChecker) HasPermission(ctx context.Context, orgID, u
 
 	// 2. Execute the highly specific raw query
 	err := c.db.WithContext(ctx).
-		Table("tenant.organization_members AS om").
-		Joins("JOIN tenant.member_organization_roles AS mor ON mor.member_id = om.id").
-		Joins("JOIN tenant.organization_role_permissions AS orp ON orp.role_id = mor.role_id").
-		Joins("JOIN tenant.organization_permissions AS op ON op.id = orp.permission_id").
+		Table("organization_members AS om").
+		Joins("JOIN member_organization_roles AS mor ON mor.member_id = om.id").
+		Joins("JOIN organization_role_permissions AS orp ON orp.role_id = mor.role_id").
+		Joins("JOIN organization_permissions AS op ON op.id = orp.permission_id").
 		Where("om.organization_id = ?", orgID).
 		Where("om.user_id = ?", userID).
 		Where("om.removed_at IS NULL").  // Ensure member is not removed
@@ -62,7 +62,7 @@ func (c *optimizedPermissionChecker) IsMember(ctx context.Context, orgID, userID
 	var count int64
 
 	err := c.db.WithContext(ctx).
-		Table("tenant.organization_members").
+		Table("organization_members").
 		Where("organization_id = ? AND user_id = ?", orgID, userID).
 		Where("removed_at IS NULL").
 		Where("deleted_at IS NULL"). // Explicitly catch soft deletes

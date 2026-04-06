@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 )
 
 // --- Project
@@ -17,8 +18,7 @@ type Project struct {
 	Slug        string `gorm:"size:100;not null;uniqueIndex:idx_project_org_slug,priority:1"`
 	Description string `gorm:"type:text"`
 
-	IsActive bool `gorm:"default:true;index"`
-
+	IsActive  bool      `gorm:"default:true;index"`
 	CreatedBy uuid.UUID `gorm:"type:uuid;not null;index"`
 
 	MaxAPIKeys uint8 `gorm:"column:max_api_keys;default:5;check:max_api_keys > 0 AND max_api_keys <= 10"`
@@ -29,7 +29,7 @@ type Project struct {
 }
 
 func (Project) TableName() string {
-	return "tenant.projects"
+	return "projects"
 }
 
 // --- Project Member
@@ -39,8 +39,10 @@ type ProjectMember struct {
 	ProjectID uuid.UUID `gorm:"type:uuid;not null;uniqueIndex:idx_project_member_unique,priority:1"`
 	Project   Project   `gorm:"foreignKey:ProjectID;constraints:OnDelete:CASCADE"`
 
-	UserID uuid.UUID `gorm:"type:uuid;not null;uniqueIndex:idx_project_member_unique,priority:2"`
-	Role   string    `gorm:"size:20;not null;default:'member';index"`
+	UserID uuid.UUID       `gorm:"type:uuid;not null;uniqueIndex:idx_project_member_unique,priority:2"`
+	User   iammodelv1.User `gorm:"foreignKey:UserID;references:ID"`
+
+	Role string `gorm:"size:20;not null;default:'member';index"`
 
 	AddedBy uuid.UUID `gorm:"type:uuid;not null"`
 
@@ -50,7 +52,7 @@ type ProjectMember struct {
 }
 
 func (ProjectMember) TableName() string {
-	return "tenant.project_members"
+	return "project_members"
 }
 
 func (pm *ProjectMember) IsRemoved() bool {

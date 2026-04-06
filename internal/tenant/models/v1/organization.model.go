@@ -35,7 +35,7 @@ type Organization struct {
 }
 
 func (Organization) TableName() string {
-	return "tenant.organizations"
+	return "organizations"
 }
 
 // --- Organization Member
@@ -58,7 +58,7 @@ type OrganizationMember struct {
 }
 
 func (OrganizationMember) TableName() string {
-	return "tenant.organization_members"
+	return "organization_members"
 }
 
 func (om *OrganizationMember) IsActive() bool {
@@ -86,7 +86,7 @@ type OrganizationMemberInvitation struct {
 }
 
 func (OrganizationMemberInvitation) TableName() string {
-	return "tenant.organization_member_invitations"
+	return "organization_member_invitations"
 }
 
 func (omi *OrganizationMemberInvitation) IsExpired() bool {
@@ -112,7 +112,7 @@ type OrganizationRole struct {
 }
 
 func (OrganizationRole) TableName() string {
-	return "tenant.organization_roles"
+	return "organization_roles"
 }
 
 // --- Organization Permission
@@ -128,7 +128,7 @@ type OrganizationPermission struct {
 }
 
 func (OrganizationPermission) TableName() string {
-	return "tenant.organization_permissions"
+	return "organization_permissions"
 }
 
 type OrganizationRolePermission struct {
@@ -141,7 +141,7 @@ type OrganizationRolePermission struct {
 }
 
 func (OrganizationRolePermission) TableName() string {
-	return "tenant.organization_role_permissions"
+	return "organization_role_permissions"
 }
 
 // --- Member Organization Role
@@ -159,5 +159,5 @@ type MemberOrganizationRole struct {
 }
 
 func (MemberOrganizationRole) TableName() string {
-	return "tenant.member_organization_roles"
+	return "member_organization_roles"
 }

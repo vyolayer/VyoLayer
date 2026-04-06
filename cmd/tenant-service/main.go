@@ -7,6 +7,10 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/vyolayer/vyolayer/internal/tenant/config"
+<<<<<<< HEAD
+	"github.com/vyolayer/vyolayer/internal/tenant/infra"
+=======
+>>>>>>> origin/main
 	"github.com/vyolayer/vyolayer/internal/tenant/middleware"
 	tenantrepo "github.com/vyolayer/vyolayer/internal/tenant/repo"
 	"github.com/vyolayer/vyolayer/internal/tenant/server"
@@ -76,6 +80,27 @@ func run() error {
 		db,
 		appLogger.WithContext("Org Member Invitation Repo"),
 	)
+	tenantInfraRepo := tenantrepo.NewTenantInfraRepo(
+		db,
+		appLogger.WithContext("Tenant Infra Repo"),
+	)
+	projectRepo := tenantrepo.NewProjectRepository(
+		db,
+		appLogger.WithContext("Project Repo"),
+	)
+	projectMemberRepo := tenantrepo.NewProjectMemberRepository(
+		db,
+		appLogger.WithContext("Project Member Repo"),
+	)
+
+	// Infra
+	dbProvisioner := infra.NewPostgresProvisioner(db)
+	dbMigrator := infra.NewMigrator(db)
+
+	tenantProvisioner := infra.NewTenantProvisioner(
+		dbProvisioner,
+		dbMigrator,
+	)
 
 	// ── Middleware ─────────────────────────────────────────────────────────
 	middlewarePBAC := tenantrepo.NewOptimizedPermissionChecker(
@@ -91,11 +116,15 @@ func run() error {
 	// ── Use Cases ────────────────────────────────────────────────────────────
 	orgUC := usecase.NewOrganizationUseCase(
 		appLogger.WithContext("Org UseCase"),
+		tenantProvisioner,
 		orgRepo,
 		orgMemberRepo,
 		orgMemberRoleRepo,
 		orgRoleRepo,
 		orgPermRepo,
+		projectRepo,
+		projectMemberRepo,
+		tenantInfraRepo,
 	)
 	orgMemberUC := usecase.NewOrganizationMemberUseCase(
 		appLogger.WithContext("Org Member UseCase"),
@@ -109,11 +138,23 @@ func run() error {
 		orgMemberRoleRepo,
 		orgInvitationRepo,
 	)
+	projectUC := usecase.NewProjectUseCase(
+		appLogger.WithContext("Project UseCase"),
+		projectRepo,
+		tenantInfraRepo,
+	)
+	projectMemberUC := usecase.NewProjectMemberUseCase(
+		appLogger.WithContext("Project Member UseCase"),
+		projectMemberRepo,
+		projectRepo,
+	)
 
 	// ── gRPC handlers ─────────────────────────────────────────────────────────
 	OrgH := tenantGrpc.NewOrganizationHandler(
 		appLogger.WithContext("Org Handler"),
 		orgUC,
+		projectUC,
+		projectMemberUC,
 	)
 
 	OrgMemberH := tenantGrpc.NewOrganizationMemberHandler(
@@ -125,12 +166,20 @@ func run() error {
 		appLogger.WithContext("Org Invitation Handler"),
 		orgInvitationUC,
 	)
+	ProjectH := tenantGrpc.NewProjectHandler(
+		appLogger.WithContext("Project Handler"),
+		orgUC,
+		orgMemberUC,
+		projectUC,
+		projectMemberUC,
+	)
 
 	// ── Server ────────────────────────────────────────────────────────────────
 	grpcSrv := server.NewGRPCServer(cfg.GRPC.GRPCPort, appLogger, cachePBAC)
 	tenantV1.RegisterOrganizationServiceServer(grpcSrv.Engine, OrgH)
 	tenantV1.RegisterOrganizationMemberServiceServer(grpcSrv.Engine, OrgMemberH)
 	tenantV1.RegisterOrganizationInvitationServiceServer(grpcSrv.Engine, OrgInvitationH)
+	tenantV1.RegisterProjectServiceServer(grpcSrv.Engine, ProjectH)
 
 	return grpcSrv.Start()
 }

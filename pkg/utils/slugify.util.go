@@ -43,6 +43,15 @@ func (s *Slugify) AddPrefix(prefix string) *Slugify {
 	return s
 }
 
+func (s *Slugify) AddSuffix(suffix string) *Slugify {
+	if s.slug == "" {
+		s.Slugify()
+	}
+
+	s.slug = s.slug + "-" + suffix
+	return s
+}
+
 func (s *Slugify) String() string {
 	return s.slug
 }

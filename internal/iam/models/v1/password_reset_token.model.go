@@ -16,4 +16,4 @@ type PasswordResetToken struct {
 	CreatedAt time.Time `gorm:"<-:create;type:timestamp;default:CURRENT_TIMESTAMP"`
 }
 
-func (PasswordResetToken) TableName() string { return "iam.password_reset_tokens" }
+func (PasswordResetToken) TableName() string { return "password_reset_tokens" }

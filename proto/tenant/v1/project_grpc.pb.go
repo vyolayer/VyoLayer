@@ -23,10 +23,9 @@ const (
 	ProjectService_ListProjects_FullMethodName     = "/tenant.v1.ProjectService/ListProjects"
 	ProjectService_GetProject_FullMethodName       = "/tenant.v1.ProjectService/GetProject"
 	ProjectService_UpdateProject_FullMethodName    = "/tenant.v1.ProjectService/UpdateProject"
-	ProjectService_ArchiveProject_FullMethodName   = "/tenant.v1.ProjectService/ArchiveProject"
-	ProjectService_RestoreProject_FullMethodName   = "/tenant.v1.ProjectService/RestoreProject"
 	ProjectService_DeleteProject_FullMethodName    = "/tenant.v1.ProjectService/DeleteProject"
 	ProjectService_ListMembers_FullMethodName      = "/tenant.v1.ProjectService/ListMembers"
+	ProjectService_GetMember_FullMethodName        = "/tenant.v1.ProjectService/GetMember"
 	ProjectService_GetCurrentMember_FullMethodName = "/tenant.v1.ProjectService/GetCurrentMember"
 	ProjectService_AddMember_FullMethodName        = "/tenant.v1.ProjectService/AddMember"
 	ProjectService_ChangeMemberRole_FullMethodName = "/tenant.v1.ProjectService/ChangeMemberRole"
@@ -43,11 +42,19 @@ type ProjectServiceClient interface {
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
-	ArchiveProject(ctx context.Context, in *ArchiveProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
-	RestoreProject(ctx context.Context, in *RestoreProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
+	//	rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
+	//	  option (tenant.v1.required_org_permission) = "project.delete";
+	//	  option (tenant.v1.required_project_permission) = "project.delete";
+	//	};
+	//
+	//	rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
+	//	  option (tenant.v1.required_org_permission) = "project.delete";
+	//	  option (tenant.v1.required_project_permission) = "project.delete";
+	//	};
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	// Members
 	ListMembers(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ListProjectMembersResponse, error)
+	GetMember(ctx context.Context, in *GetProjectMemberRequest, opts ...grpc.CallOption) (*ProjectMemberResponse, error)
 	GetCurrentMember(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ProjectMemberResponse, error)
 	AddMember(ctx context.Context, in *AddProjectMemberRequest, opts ...grpc.CallOption) (*ProjectMemberResponse, error)
 	ChangeMemberRole(ctx context.Context, in *ChangeProjectMemberRoleRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
@@ -103,26 +110,6 @@ func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProj
 	return out, nil
 }
 
-func (c *projectServiceClient) ArchiveProject(ctx context.Context, in *ArchiveProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, ProjectService_ArchiveProject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *projectServiceClient) RestoreProject(ctx context.Context, in *RestoreProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TenantSuccessResponse)
-	err := c.cc.Invoke(ctx, ProjectService_RestoreProject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *projectServiceClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TenantSuccessResponse)
@@ -137,6 +124,16 @@ func (c *projectServiceClient) ListMembers(ctx context.Context, in *ListProjectM
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListProjectMembersResponse)
 	err := c.cc.Invoke(ctx, ProjectService_ListMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetMember(ctx context.Context, in *GetProjectMemberRequest, opts ...grpc.CallOption) (*ProjectMemberResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectMemberResponse)
+	err := c.cc.Invoke(ctx, ProjectService_GetMember_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -202,11 +199,19 @@ type ProjectServiceServer interface {
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	GetProject(context.Context, *GetProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
-	ArchiveProject(context.Context, *ArchiveProjectRequest) (*TenantSuccessResponse, error)
-	RestoreProject(context.Context, *RestoreProjectRequest) (*TenantSuccessResponse, error)
+	//	rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
+	//	  option (tenant.v1.required_org_permission) = "project.delete";
+	//	  option (tenant.v1.required_project_permission) = "project.delete";
+	//	};
+	//
+	//	rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
+	//	  option (tenant.v1.required_org_permission) = "project.delete";
+	//	  option (tenant.v1.required_project_permission) = "project.delete";
+	//	};
 	DeleteProject(context.Context, *DeleteProjectRequest) (*TenantSuccessResponse, error)
 	// Members
 	ListMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error)
+	GetMember(context.Context, *GetProjectMemberRequest) (*ProjectMemberResponse, error)
 	GetCurrentMember(context.Context, *ListProjectMembersRequest) (*ProjectMemberResponse, error)
 	AddMember(context.Context, *AddProjectMemberRequest) (*ProjectMemberResponse, error)
 	ChangeMemberRole(context.Context, *ChangeProjectMemberRoleRequest) (*TenantSuccessResponse, error)
@@ -234,17 +239,14 @@ func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProject
 func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateProject not implemented")
 }
-func (UnimplementedProjectServiceServer) ArchiveProject(context.Context, *ArchiveProjectRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ArchiveProject not implemented")
-}
-func (UnimplementedProjectServiceServer) RestoreProject(context.Context, *RestoreProjectRequest) (*TenantSuccessResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RestoreProject not implemented")
-}
 func (UnimplementedProjectServiceServer) DeleteProject(context.Context, *DeleteProjectRequest) (*TenantSuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteProject not implemented")
 }
 func (UnimplementedProjectServiceServer) ListMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMembers not implemented")
+}
+func (UnimplementedProjectServiceServer) GetMember(context.Context, *GetProjectMemberRequest) (*ProjectMemberResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMember not implemented")
 }
 func (UnimplementedProjectServiceServer) GetCurrentMember(context.Context, *ListProjectMembersRequest) (*ProjectMemberResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCurrentMember not implemented")
@@ -354,42 +356,6 @@ func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_ArchiveProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ArchiveProjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProjectServiceServer).ArchiveProject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProjectService_ArchiveProject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).ArchiveProject(ctx, req.(*ArchiveProjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProjectService_RestoreProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RestoreProjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProjectServiceServer).RestoreProject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProjectService_RestoreProject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).RestoreProject(ctx, req.(*RestoreProjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ProjectService_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteProjectRequest)
 	if err := dec(in); err != nil {
@@ -422,6 +388,24 @@ func _ProjectService_ListMembers_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServiceServer).ListMembers(ctx, req.(*ListProjectMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProjectService_GetMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetMember(ctx, req.(*GetProjectMemberRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -540,20 +524,16 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProjectService_UpdateProject_Handler,
 		},
 		{
-			MethodName: "ArchiveProject",
-			Handler:    _ProjectService_ArchiveProject_Handler,
-		},
-		{
-			MethodName: "RestoreProject",
-			Handler:    _ProjectService_RestoreProject_Handler,
-		},
-		{
 			MethodName: "DeleteProject",
 			Handler:    _ProjectService_DeleteProject_Handler,
 		},
 		{
 			MethodName: "ListMembers",
 			Handler:    _ProjectService_ListMembers_Handler,
+		},
+		{
+			MethodName: "GetMember",
+			Handler:    _ProjectService_GetMember_Handler,
 		},
 		{
 			MethodName: "GetCurrentMember",

@@ -22,7 +22,7 @@ type ServiceUserSession struct {
 }
 
 func (ServiceUserSession) TableName() string {
-	return "account_service.session"
+	return "session"
 }
 
 func (s ServiceUserSession) IsValid() bool {

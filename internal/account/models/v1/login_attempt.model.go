@@ -22,5 +22,5 @@ type ServiceUserLoginAttempt struct {
 }
 
 func (ServiceUserLoginAttempt) TableName() string {
-	return "account_service.login_attempt"
+	return "login_attempt"
 }

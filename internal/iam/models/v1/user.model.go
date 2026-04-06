@@ -27,7 +27,7 @@ type User struct {
 }
 
 func (u User) TableName() string {
-	return "iam.users"
+	return "users"
 }
 
 // Avatar is a struct that contains the avatar URL and fallback character and color
@@ -45,5 +45,5 @@ type Avatar struct {
 }
 
 func (a Avatar) TableName() string {
-	return "iam.avatars"
+	return "avatars"
 }

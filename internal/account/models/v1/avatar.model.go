@@ -10,5 +10,5 @@ type ServiceUserAvatar struct {
 }
 
 func (ServiceUserAvatar) TableName() string {
-	return "account_service.user_avatar"
+	return "user_avatar"
 }

@@ -16,4 +16,4 @@ type VerificationToken struct {
 	CreatedAt time.Time `gorm:"<-:create;type:timestamp;default:CURRENT_TIMESTAMP"`
 }
 
-func (VerificationToken) TableName() string { return "iam.verification_tokens" }
+func (VerificationToken) TableName() string { return "verification_tokens" }

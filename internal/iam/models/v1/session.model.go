@@ -25,5 +25,5 @@ type Session struct {
 }
 
 func (s Session) TableName() string {
-	return "iam.sessions"
+	return "sessions"
 }

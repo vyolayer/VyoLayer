@@ -270,6 +270,19 @@ func (h *IAMAuthGatewayHandler) resetPassword(c *fiber.Ctx) error {
 
 // ── Profile (/me) ─────────────────────────────────────────────────────────────────
 
+type UserDTO struct {
+	ID              string `json:"id,omitempty"`
+	Email           string `json:"email,omitempty"`
+	FullName        string `json:"full_name,omitempty"`
+	Status          string `json:"status,omitempty"`
+	IsEmailVerified bool   `json:"is_email_verified,omitempty"`
+	JoinedAt        string `json:"joined_at,omitempty"`
+}
+
+type GetMeResponse struct {
+	User *UserDTO `json:"user,omitempty"`
+}
+
 // getMe returns the authenticated user's profile by forwarding to the IAM UserService.
 func (h *IAMAuthGatewayHandler) getMe(c *fiber.Ctx) error {
 	ctx, cancel := grpcCtx(c)
@@ -280,7 +293,20 @@ func (h *IAMAuthGatewayHandler) getMe(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	return response.Success(c, resp)
+	userDTO := &UserDTO{
+		ID:              resp.User.Id,
+		Email:           resp.User.Email,
+		FullName:        resp.User.FullName,
+		Status:          resp.User.Status,
+		IsEmailVerified: resp.User.IsEmailVerified,
+		JoinedAt:        resp.User.JoinedAt,
+	}
+
+	respDTO := &GetMeResponse{
+		User: userDTO,
+	}
+
+	return response.Success(c, respDTO)
 }
 
 // updateMe updates the authenticated user's profile.

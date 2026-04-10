@@ -545,9 +545,9 @@ func (x *ForgotPasswordRequest) GetEmail() string {
 
 type ResetPasswordRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Token           string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	NewPassword     string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	ConfirmPassword string                 `protobuf:"bytes,4,opt,name=confirm_password,json=confirmPassword,proto3" json:"confirm_password,omitempty"`
+	Token           string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	NewPassword     string                 `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	ConfirmPassword string                 `protobuf:"bytes,3,opt,name=confirm_password,json=confirmPassword,proto3" json:"confirm_password,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -607,15 +607,15 @@ var File_iam_v1_auth_proto protoreflect.FileDescriptor
 
 const file_iam_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11iam/v1/auth.proto\x12\x06iam.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13iam/v1/common.proto\"{\n" +
+	"\x11iam/v1/auth.proto\x12\x06iam.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13iam/v1/common.proto\"\x7f\n" +
 	"\x0fRegisterRequest\x12\x1d\n" +
-	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12#\n" +
-	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\bpassword\x12$\n" +
-	"\tfull_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x182R\bfullName\"p\n" +
+	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12%\n" +
+	"\bpassword\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\bpassword\x12&\n" +
+	"\tfull_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\bfullName\"r\n" +
 	"\x10RegisterResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
-	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12$\n" +
-	"\tfull_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18dR\bfullName\"3\n" +
+	"\x05email\x18\x02 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12&\n" +
+	"\tfull_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x18dR\bfullName\"3\n" +
 	"\x12VerifyEmailRequest\x12\x1d\n" +
 	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\"?\n" +
 	"\x1eResendVerificationEmailRequest\x12\x1d\n" +
@@ -639,9 +639,9 @@ const file_iam_v1_auth_proto_rawDesc = "" +
 	"\x15ForgotPasswordRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"\x97\x01\n" +
 	"\x14ResetPasswordRequest\x12\x1d\n" +
-	"\x05token\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\x12,\n" +
-	"\fnew_password\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\vnewPassword\x122\n" +
-	"\x10confirm_password\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0fconfirmPassword2\xa0\x05\n" +
+	"\x05token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05token\x12,\n" +
+	"\fnew_password\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\b\x18\x14R\vnewPassword\x122\n" +
+	"\x10confirm_password\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0fconfirmPassword2\xa0\x05\n" +
 	"\vAuthService\x12=\n" +
 	"\bRegister\x12\x17.iam.v1.RegisterRequest\x1a\x18.iam.v1.RegisterResponse\x12E\n" +
 	"\vVerifyEmail\x12\x1a.iam.v1.VerifyEmailRequest\x1a\x1a.iam.v1.IAMSuccessResponse\x12]\n" +

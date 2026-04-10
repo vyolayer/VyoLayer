@@ -22,7 +22,7 @@ type OrganizationUseCase interface {
 	Restore(ctx context.Context, orgID uuid.UUID) error
 	Delete(ctx context.Context, orgID uuid.UUID, confirmName string) error
 	GetById(ctx context.Context, id uuid.UUID) (*domain.OrganizationWithMember, error)
-	GetBySlug(ctx context.Context, slug string) (*domain.Organization, error)
+	GetBySlug(ctx context.Context, slug string) (*domain.OrganizationWithMember, error)
 	List(ctx context.Context, userID uuid.UUID, offset, limit int) ([]*domain.Organization, int, error)
 	TransferOwnership(ctx context.Context, orgID uuid.UUID, currentUserID uuid.UUID, newOwnerMemberID uuid.UUID) error
 
@@ -241,8 +241,13 @@ func (uc *OrganizationUseCaseImpl) GetById(ctx context.Context, id uuid.UUID) (*
 	return uc.orgRepo.GetByIDWithMember(ctx, id)
 }
 
-func (uc *OrganizationUseCaseImpl) GetBySlug(ctx context.Context, slug string) (*domain.Organization, error) {
-	return uc.orgRepo.GetBySlug(ctx, slug)
+func (uc *OrganizationUseCaseImpl) GetBySlug(ctx context.Context, slug string) (*domain.OrganizationWithMember, error) {
+	org, err := uc.orgRepo.GetBySlug(ctx, slug)
+	if err != nil {
+		return nil, err
+	}
+
+	return uc.GetById(ctx, org.ID)
 }
 
 func (uc *OrganizationUseCaseImpl) List(ctx context.Context, userID uuid.UUID, offset, limit int) ([]*domain.Organization, int, error) {

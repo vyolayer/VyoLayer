@@ -137,6 +137,30 @@ func (h *OrganizationHandler) GetOrganizationById(
 	}, nil
 }
 
+func (h *OrganizationHandler) GetBySlug(
+	ctx context.Context,
+	req *tenantV1.OrganizationSlugRequest,
+) (*tenantV1.OrganizationResponse, error) {
+	slug := req.GetSlug()
+	orgWithMembers, err := h.orgUC.GetBySlug(ctx, slug)
+	if err != nil {
+		return nil, err
+	}
+
+	orgDto := mapOrganizationWithMembersToProto(orgWithMembers)
+
+	membersDto := make([]*tenantV1.OrganizationMember, 0, len(orgWithMembers.Members))
+	for _, m := range orgWithMembers.Members {
+		memberDto := mapOrganizationMemberToProto(&m)
+		membersDto = append(membersDto, memberDto)
+	}
+
+	return &tenantV1.OrganizationResponse{
+		Organization: orgDto,
+		Members:      membersDto,
+	}, nil
+}
+
 // Update Organization
 func (h *OrganizationHandler) UpdateOrganization(
 	ctx context.Context,

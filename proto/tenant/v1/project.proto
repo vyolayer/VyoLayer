@@ -9,8 +9,6 @@ import "tenant/v1/organization_options.proto";
 
 option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
 
-option go_package = "github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1";
-
 service ProjectService {
   // Project CRUD
   rpc CreateProject(CreateProjectRequest) returns (ProjectResponse) {

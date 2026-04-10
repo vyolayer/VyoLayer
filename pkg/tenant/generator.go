@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 const (
@@ -41,7 +42,7 @@ func (d *DatabaseSchemaImpl) GenerateSchema() (string, error) {
 		t = t[:6]
 	}
 
-	s = d.tenantSlug
+	s = strings.ReplaceAll(d.tenantSlug, "-", "")
 	if len(s) > 6 {
 		s = s[:6]
 	}

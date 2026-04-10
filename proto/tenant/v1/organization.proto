@@ -20,11 +20,14 @@ service OrganizationService {
   rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse) {
     option (tenant.v1.skip_org_check) = true;
   };
-
+  
   // --- Organization Management ---
   rpc GetOrganizationById(TenantOrganizationIDRequest) returns (OrganizationResponse) {
     option (tenant.v1.required_org_permission) = "organization.read";
   };
+  rpc GetBySlug(OrganizationSlugRequest) returns (OrganizationResponse) {
+    option (tenant.v1.skip_org_check) = true;
+  }
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (OrganizationResponse) {
     option (tenant.v1.required_org_permission) = "organization.update";
   };
@@ -59,6 +62,12 @@ message CreateOrganizationRequest {
     max_len: 50
   }];
   string description = 2 [(buf.validate.field).string.max_len = 250];
+}
+
+message OrganizationSlugRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 3
+  }];
 }
 
 message UpdateOrganizationRequest {

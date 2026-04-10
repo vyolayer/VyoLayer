@@ -3,18 +3,17 @@ package main
 import (
 	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
-
-	"github.com/vyolayer/vyolayer/internal/config"
-	"github.com/vyolayer/vyolayer/internal/platform/database"
+	"github.com/vyolayer/vyolayer/pkg/postgres"
 )
 
 func main() {
-	cfg, err := config.Load("config/config.dev.yaml")
-	if err != nil {
-		panic(err)
-	}
+	// cfg, err := config.Load("config/config.dev.yaml")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	dsn := "postgres://vyolayer_user:vyolayer_password@localhost:4444/vyolayer_db?sslmode=disable"
 
-	db, err := database.Init(&cfg.Database)
+	db, err := postgres.NewConnectionFromDSN(dsn)
 	if err != nil {
 		panic(err)
 	}

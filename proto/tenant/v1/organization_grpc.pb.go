@@ -23,6 +23,7 @@ const (
 	OrganizationService_OnboardOrganization_FullMethodName = "/tenant.v1.OrganizationService/OnboardOrganization"
 	OrganizationService_ListOrganizations_FullMethodName   = "/tenant.v1.OrganizationService/ListOrganizations"
 	OrganizationService_GetOrganizationById_FullMethodName = "/tenant.v1.OrganizationService/GetOrganizationById"
+	OrganizationService_GetBySlug_FullMethodName           = "/tenant.v1.OrganizationService/GetBySlug"
 	OrganizationService_UpdateOrganization_FullMethodName  = "/tenant.v1.OrganizationService/UpdateOrganization"
 	OrganizationService_ArchiveOrganization_FullMethodName = "/tenant.v1.OrganizationService/ArchiveOrganization"
 	OrganizationService_RestoreOrganization_FullMethodName = "/tenant.v1.OrganizationService/RestoreOrganization"
@@ -42,6 +43,7 @@ type OrganizationServiceClient interface {
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	// --- Organization Management ---
 	GetOrganizationById(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
+	GetBySlug(ctx context.Context, in *OrganizationSlugRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
 	UpdateOrganization(ctx context.Context, in *UpdateOrganizationRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
 	ArchiveOrganization(ctx context.Context, in *ArchiveOrganizationRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	RestoreOrganization(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
@@ -94,6 +96,16 @@ func (c *organizationServiceClient) GetOrganizationById(ctx context.Context, in 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(OrganizationResponse)
 	err := c.cc.Invoke(ctx, OrganizationService_GetOrganizationById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationServiceClient) GetBySlug(ctx context.Context, in *OrganizationSlugRequest, opts ...grpc.CallOption) (*OrganizationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_GetBySlug_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -180,6 +192,7 @@ type OrganizationServiceServer interface {
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	// --- Organization Management ---
 	GetOrganizationById(context.Context, *TenantOrganizationIDRequest) (*OrganizationResponse, error)
+	GetBySlug(context.Context, *OrganizationSlugRequest) (*OrganizationResponse, error)
 	UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*OrganizationResponse, error)
 	ArchiveOrganization(context.Context, *ArchiveOrganizationRequest) (*TenantSuccessResponse, error)
 	RestoreOrganization(context.Context, *TenantOrganizationIDRequest) (*TenantSuccessResponse, error)
@@ -209,6 +222,9 @@ func (UnimplementedOrganizationServiceServer) ListOrganizations(context.Context,
 }
 func (UnimplementedOrganizationServiceServer) GetOrganizationById(context.Context, *TenantOrganizationIDRequest) (*OrganizationResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOrganizationById not implemented")
+}
+func (UnimplementedOrganizationServiceServer) GetBySlug(context.Context, *OrganizationSlugRequest) (*OrganizationResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetBySlug not implemented")
 }
 func (UnimplementedOrganizationServiceServer) UpdateOrganization(context.Context, *UpdateOrganizationRequest) (*OrganizationResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateOrganization not implemented")
@@ -320,6 +336,24 @@ func _OrganizationService_GetOrganizationById_Handler(srv interface{}, ctx conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServiceServer).GetOrganizationById(ctx, req.(*TenantOrganizationIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrganizationService_GetBySlug_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrganizationSlugRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).GetBySlug(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_GetBySlug_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).GetBySlug(ctx, req.(*OrganizationSlugRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -472,6 +506,10 @@ var OrganizationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrganizationById",
 			Handler:    _OrganizationService_GetOrganizationById_Handler,
+		},
+		{
+			MethodName: "GetBySlug",
+			Handler:    _OrganizationService_GetBySlug_Handler,
 		},
 		{
 			MethodName: "UpdateOrganization",

@@ -32,8 +32,8 @@ func New(port string) *Server {
 	app.Use(m.ErrorHandler())
 	app.Use(m.RequestLogger())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization, X-Workspace-ID, X-Vyo-Key",
+		AllowOrigins:     "http://localhost:3000",
+		AllowCredentials: true,
 	}))
 
 	// Inject custom middleware to propagate headers to gRPC requests

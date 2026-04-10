@@ -77,6 +77,50 @@ func (x *CreateOrganizationRequest) GetDescription() string {
 	return ""
 }
 
+type OrganizationSlugRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationSlugRequest) Reset() {
+	*x = OrganizationSlugRequest{}
+	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationSlugRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationSlugRequest) ProtoMessage() {}
+
+func (x *OrganizationSlugRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationSlugRequest.ProtoReflect.Descriptor instead.
+func (*OrganizationSlugRequest) Descriptor() ([]byte, []int) {
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *OrganizationSlugRequest) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
 type UpdateOrganizationRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
@@ -88,7 +132,7 @@ type UpdateOrganizationRequest struct {
 
 func (x *UpdateOrganizationRequest) Reset() {
 	*x = UpdateOrganizationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	mi := &file_tenant_v1_organization_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -100,7 +144,7 @@ func (x *UpdateOrganizationRequest) String() string {
 func (*UpdateOrganizationRequest) ProtoMessage() {}
 
 func (x *UpdateOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[1]
+	mi := &file_tenant_v1_organization_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +157,7 @@ func (x *UpdateOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*UpdateOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{1}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *UpdateOrganizationRequest) GetOrganizationId() string {
@@ -147,7 +191,7 @@ type ArchiveOrganizationRequest struct {
 
 func (x *ArchiveOrganizationRequest) Reset() {
 	*x = ArchiveOrganizationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	mi := &file_tenant_v1_organization_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -159,7 +203,7 @@ func (x *ArchiveOrganizationRequest) String() string {
 func (*ArchiveOrganizationRequest) ProtoMessage() {}
 
 func (x *ArchiveOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[2]
+	mi := &file_tenant_v1_organization_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -172,7 +216,7 @@ func (x *ArchiveOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ArchiveOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*ArchiveOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{2}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ArchiveOrganizationRequest) GetOrganizationId() string {
@@ -199,7 +243,7 @@ type DeleteOrganizationRequest struct {
 
 func (x *DeleteOrganizationRequest) Reset() {
 	*x = DeleteOrganizationRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[3]
+	mi := &file_tenant_v1_organization_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -211,7 +255,7 @@ func (x *DeleteOrganizationRequest) String() string {
 func (*DeleteOrganizationRequest) ProtoMessage() {}
 
 func (x *DeleteOrganizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[3]
+	mi := &file_tenant_v1_organization_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -224,7 +268,7 @@ func (x *DeleteOrganizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteOrganizationRequest.ProtoReflect.Descriptor instead.
 func (*DeleteOrganizationRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{3}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DeleteOrganizationRequest) GetOrganizationId() string {
@@ -250,7 +294,7 @@ type GetOrganizationByIdRequest struct {
 
 func (x *GetOrganizationByIdRequest) Reset() {
 	*x = GetOrganizationByIdRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[4]
+	mi := &file_tenant_v1_organization_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -262,7 +306,7 @@ func (x *GetOrganizationByIdRequest) String() string {
 func (*GetOrganizationByIdRequest) ProtoMessage() {}
 
 func (x *GetOrganizationByIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[4]
+	mi := &file_tenant_v1_organization_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -275,7 +319,7 @@ func (x *GetOrganizationByIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrganizationByIdRequest.ProtoReflect.Descriptor instead.
 func (*GetOrganizationByIdRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{4}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetOrganizationByIdRequest) GetOrganizationId() string {
@@ -294,7 +338,7 @@ type GetOrganizationBySlugRequest struct {
 
 func (x *GetOrganizationBySlugRequest) Reset() {
 	*x = GetOrganizationBySlugRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[5]
+	mi := &file_tenant_v1_organization_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -306,7 +350,7 @@ func (x *GetOrganizationBySlugRequest) String() string {
 func (*GetOrganizationBySlugRequest) ProtoMessage() {}
 
 func (x *GetOrganizationBySlugRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[5]
+	mi := &file_tenant_v1_organization_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -319,7 +363,7 @@ func (x *GetOrganizationBySlugRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrganizationBySlugRequest.ProtoReflect.Descriptor instead.
 func (*GetOrganizationBySlugRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{5}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetOrganizationBySlugRequest) GetSlug() string {
@@ -339,7 +383,7 @@ type ListOrganizationsRequest struct {
 
 func (x *ListOrganizationsRequest) Reset() {
 	*x = ListOrganizationsRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[6]
+	mi := &file_tenant_v1_organization_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -351,7 +395,7 @@ func (x *ListOrganizationsRequest) String() string {
 func (*ListOrganizationsRequest) ProtoMessage() {}
 
 func (x *ListOrganizationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[6]
+	mi := &file_tenant_v1_organization_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -364,7 +408,7 @@ func (x *ListOrganizationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrganizationsRequest.ProtoReflect.Descriptor instead.
 func (*ListOrganizationsRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{6}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListOrganizationsRequest) GetPageSize() int32 {
@@ -392,7 +436,7 @@ type TransferOwnershipRequest struct {
 
 func (x *TransferOwnershipRequest) Reset() {
 	*x = TransferOwnershipRequest{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	mi := &file_tenant_v1_organization_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -404,7 +448,7 @@ func (x *TransferOwnershipRequest) String() string {
 func (*TransferOwnershipRequest) ProtoMessage() {}
 
 func (x *TransferOwnershipRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[7]
+	mi := &file_tenant_v1_organization_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -417,7 +461,7 @@ func (x *TransferOwnershipRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransferOwnershipRequest.ProtoReflect.Descriptor instead.
 func (*TransferOwnershipRequest) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{7}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TransferOwnershipRequest) GetOrganizationId() string {
@@ -455,7 +499,7 @@ type ListOrganizationsResponse struct {
 
 func (x *ListOrganizationsResponse) Reset() {
 	*x = ListOrganizationsResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[8]
+	mi := &file_tenant_v1_organization_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +511,7 @@ func (x *ListOrganizationsResponse) String() string {
 func (*ListOrganizationsResponse) ProtoMessage() {}
 
 func (x *ListOrganizationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[8]
+	mi := &file_tenant_v1_organization_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +524,7 @@ func (x *ListOrganizationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrganizationsResponse.ProtoReflect.Descriptor instead.
 func (*ListOrganizationsResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{8}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListOrganizationsResponse) GetOrganizations() []*Organization {
@@ -514,7 +558,7 @@ type OrganizationResponse struct {
 
 func (x *OrganizationResponse) Reset() {
 	*x = OrganizationResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[9]
+	mi := &file_tenant_v1_organization_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -526,7 +570,7 @@ func (x *OrganizationResponse) String() string {
 func (*OrganizationResponse) ProtoMessage() {}
 
 func (x *OrganizationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[9]
+	mi := &file_tenant_v1_organization_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +583,7 @@ func (x *OrganizationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrganizationResponse.ProtoReflect.Descriptor instead.
 func (*OrganizationResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{9}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *OrganizationResponse) GetOrganization() *Organization {
@@ -581,7 +625,7 @@ type Organization struct {
 
 func (x *Organization) Reset() {
 	*x = Organization{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[10]
+	mi := &file_tenant_v1_organization_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -593,7 +637,7 @@ func (x *Organization) String() string {
 func (*Organization) ProtoMessage() {}
 
 func (x *Organization) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[10]
+	mi := &file_tenant_v1_organization_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,7 +650,7 @@ func (x *Organization) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Organization.ProtoReflect.Descriptor instead.
 func (*Organization) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{10}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Organization) GetId() string {
@@ -716,7 +760,7 @@ type ListOrganizationRolesResponse struct {
 
 func (x *ListOrganizationRolesResponse) Reset() {
 	*x = ListOrganizationRolesResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[11]
+	mi := &file_tenant_v1_organization_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -728,7 +772,7 @@ func (x *ListOrganizationRolesResponse) String() string {
 func (*ListOrganizationRolesResponse) ProtoMessage() {}
 
 func (x *ListOrganizationRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[11]
+	mi := &file_tenant_v1_organization_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -741,7 +785,7 @@ func (x *ListOrganizationRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrganizationRolesResponse.ProtoReflect.Descriptor instead.
 func (*ListOrganizationRolesResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{11}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListOrganizationRolesResponse) GetRoles() []*OrganizationRole {
@@ -760,7 +804,7 @@ type ListOrganizationPermissionsResponse struct {
 
 func (x *ListOrganizationPermissionsResponse) Reset() {
 	*x = ListOrganizationPermissionsResponse{}
-	mi := &file_tenant_v1_organization_proto_msgTypes[12]
+	mi := &file_tenant_v1_organization_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -772,7 +816,7 @@ func (x *ListOrganizationPermissionsResponse) String() string {
 func (*ListOrganizationPermissionsResponse) ProtoMessage() {}
 
 func (x *ListOrganizationPermissionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tenant_v1_organization_proto_msgTypes[12]
+	mi := &file_tenant_v1_organization_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -785,7 +829,7 @@ func (x *ListOrganizationPermissionsResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use ListOrganizationPermissionsResponse.ProtoReflect.Descriptor instead.
 func (*ListOrganizationPermissionsResponse) Descriptor() ([]byte, []int) {
-	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{12}
+	return file_tenant_v1_organization_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListOrganizationPermissionsResponse) GetPermissions() []*OrganizationPermission {
@@ -802,7 +846,9 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\x1ctenant/v1/organization.proto\x12\ttenant.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16tenant/v1/common.proto\x1a$tenant/v1/organization_options.proto\x1a#tenant/v1/organization_member.proto\"f\n" +
 	"\x19CreateOrganizationRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182R\x04name\x12*\n" +
-	"\vdescription\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01R\vdescription\"\xbb\x01\n" +
+	"\vdescription\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xfa\x01R\vdescription\"6\n" +
+	"\x17OrganizationSlugRequest\x12\x1b\n" +
+	"\x04slug\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x03R\x04slug\"\xbb\x01\n" +
 	"\x19UpdateOrganizationRequest\x120\n" +
 	"\x0forganization_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0eorganizationId\x12\"\n" +
 	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x03\x182H\x00R\x04name\x88\x01\x01\x12/\n" +
@@ -859,12 +905,14 @@ const file_tenant_v1_organization_proto_rawDesc = "" +
 	"\x1dListOrganizationRolesResponse\x121\n" +
 	"\x05roles\x18\x01 \x03(\v2\x1b.tenant.v1.OrganizationRoleR\x05roles\"j\n" +
 	"#ListOrganizationPermissionsResponse\x12C\n" +
-	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions2\xf1\t\n" +
+	"\vpermissions\x18\x01 \x03(\v2!.tenant.v1.OrganizationPermissionR\vpermissions2\xc8\n" +
+	"\n" +
 	"\x13OrganizationService\x12`\n" +
 	"\x12CreateOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x03\xc8>\x01\x12a\n" +
 	"\x13OnboardOrganization\x12$.tenant.v1.CreateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x03\xc8>\x01\x12c\n" +
 	"\x11ListOrganizations\x12#.tenant.v1.ListOrganizationsRequest\x1a$.tenant.v1.ListOrganizationsResponse\"\x03\xc8>\x01\x12t\n" +
-	"\x13GetOrganizationById\x12&.tenant.v1.TenantOrganizationIDRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x14\xd2>\x11organization.read\x12s\n" +
+	"\x13GetOrganizationById\x12&.tenant.v1.TenantOrganizationIDRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x14\xd2>\x11organization.read\x12U\n" +
+	"\tGetBySlug\x12\".tenant.v1.OrganizationSlugRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x03\xc8>\x01\x12s\n" +
 	"\x12UpdateOrganization\x12$.tenant.v1.UpdateOrganizationRequest\x1a\x1f.tenant.v1.OrganizationResponse\"\x16\xd2>\x13organization.update\x12v\n" +
 	"\x13ArchiveOrganization\x12%.tenant.v1.ArchiveOrganizationRequest\x1a .tenant.v1.TenantSuccessResponse\"\x16\xd2>\x13organization.delete\x12w\n" +
 	"\x13RestoreOrganization\x12&.tenant.v1.TenantOrganizationIDRequest\x1a .tenant.v1.TenantSuccessResponse\"\x16\xd2>\x13organization.update\x12t\n" +
@@ -885,57 +933,60 @@ func file_tenant_v1_organization_proto_rawDescGZIP() []byte {
 	return file_tenant_v1_organization_proto_rawDescData
 }
 
-var file_tenant_v1_organization_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_tenant_v1_organization_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_tenant_v1_organization_proto_goTypes = []any{
 	(*CreateOrganizationRequest)(nil),           // 0: tenant.v1.CreateOrganizationRequest
-	(*UpdateOrganizationRequest)(nil),           // 1: tenant.v1.UpdateOrganizationRequest
-	(*ArchiveOrganizationRequest)(nil),          // 2: tenant.v1.ArchiveOrganizationRequest
-	(*DeleteOrganizationRequest)(nil),           // 3: tenant.v1.DeleteOrganizationRequest
-	(*GetOrganizationByIdRequest)(nil),          // 4: tenant.v1.GetOrganizationByIdRequest
-	(*GetOrganizationBySlugRequest)(nil),        // 5: tenant.v1.GetOrganizationBySlugRequest
-	(*ListOrganizationsRequest)(nil),            // 6: tenant.v1.ListOrganizationsRequest
-	(*TransferOwnershipRequest)(nil),            // 7: tenant.v1.TransferOwnershipRequest
-	(*ListOrganizationsResponse)(nil),           // 8: tenant.v1.ListOrganizationsResponse
-	(*OrganizationResponse)(nil),                // 9: tenant.v1.OrganizationResponse
-	(*Organization)(nil),                        // 10: tenant.v1.Organization
-	(*ListOrganizationRolesResponse)(nil),       // 11: tenant.v1.ListOrganizationRolesResponse
-	(*ListOrganizationPermissionsResponse)(nil), // 12: tenant.v1.ListOrganizationPermissionsResponse
-	(*OrganizationMember)(nil),                  // 13: tenant.v1.OrganizationMember
-	(*OrganizationRole)(nil),                    // 14: tenant.v1.OrganizationRole
-	(*OrganizationPermission)(nil),              // 15: tenant.v1.OrganizationPermission
-	(*TenantOrganizationIDRequest)(nil),         // 16: tenant.v1.TenantOrganizationIDRequest
-	(*TenantSuccessResponse)(nil),               // 17: tenant.v1.TenantSuccessResponse
+	(*OrganizationSlugRequest)(nil),             // 1: tenant.v1.OrganizationSlugRequest
+	(*UpdateOrganizationRequest)(nil),           // 2: tenant.v1.UpdateOrganizationRequest
+	(*ArchiveOrganizationRequest)(nil),          // 3: tenant.v1.ArchiveOrganizationRequest
+	(*DeleteOrganizationRequest)(nil),           // 4: tenant.v1.DeleteOrganizationRequest
+	(*GetOrganizationByIdRequest)(nil),          // 5: tenant.v1.GetOrganizationByIdRequest
+	(*GetOrganizationBySlugRequest)(nil),        // 6: tenant.v1.GetOrganizationBySlugRequest
+	(*ListOrganizationsRequest)(nil),            // 7: tenant.v1.ListOrganizationsRequest
+	(*TransferOwnershipRequest)(nil),            // 8: tenant.v1.TransferOwnershipRequest
+	(*ListOrganizationsResponse)(nil),           // 9: tenant.v1.ListOrganizationsResponse
+	(*OrganizationResponse)(nil),                // 10: tenant.v1.OrganizationResponse
+	(*Organization)(nil),                        // 11: tenant.v1.Organization
+	(*ListOrganizationRolesResponse)(nil),       // 12: tenant.v1.ListOrganizationRolesResponse
+	(*ListOrganizationPermissionsResponse)(nil), // 13: tenant.v1.ListOrganizationPermissionsResponse
+	(*OrganizationMember)(nil),                  // 14: tenant.v1.OrganizationMember
+	(*OrganizationRole)(nil),                    // 15: tenant.v1.OrganizationRole
+	(*OrganizationPermission)(nil),              // 16: tenant.v1.OrganizationPermission
+	(*TenantOrganizationIDRequest)(nil),         // 17: tenant.v1.TenantOrganizationIDRequest
+	(*TenantSuccessResponse)(nil),               // 18: tenant.v1.TenantSuccessResponse
 }
 var file_tenant_v1_organization_proto_depIdxs = []int32{
-	10, // 0: tenant.v1.ListOrganizationsResponse.organizations:type_name -> tenant.v1.Organization
-	10, // 1: tenant.v1.OrganizationResponse.organization:type_name -> tenant.v1.Organization
-	13, // 2: tenant.v1.OrganizationResponse.members:type_name -> tenant.v1.OrganizationMember
-	14, // 3: tenant.v1.ListOrganizationRolesResponse.roles:type_name -> tenant.v1.OrganizationRole
-	15, // 4: tenant.v1.ListOrganizationPermissionsResponse.permissions:type_name -> tenant.v1.OrganizationPermission
+	11, // 0: tenant.v1.ListOrganizationsResponse.organizations:type_name -> tenant.v1.Organization
+	11, // 1: tenant.v1.OrganizationResponse.organization:type_name -> tenant.v1.Organization
+	14, // 2: tenant.v1.OrganizationResponse.members:type_name -> tenant.v1.OrganizationMember
+	15, // 3: tenant.v1.ListOrganizationRolesResponse.roles:type_name -> tenant.v1.OrganizationRole
+	16, // 4: tenant.v1.ListOrganizationPermissionsResponse.permissions:type_name -> tenant.v1.OrganizationPermission
 	0,  // 5: tenant.v1.OrganizationService.CreateOrganization:input_type -> tenant.v1.CreateOrganizationRequest
 	0,  // 6: tenant.v1.OrganizationService.OnboardOrganization:input_type -> tenant.v1.CreateOrganizationRequest
-	6,  // 7: tenant.v1.OrganizationService.ListOrganizations:input_type -> tenant.v1.ListOrganizationsRequest
-	16, // 8: tenant.v1.OrganizationService.GetOrganizationById:input_type -> tenant.v1.TenantOrganizationIDRequest
-	1,  // 9: tenant.v1.OrganizationService.UpdateOrganization:input_type -> tenant.v1.UpdateOrganizationRequest
-	2,  // 10: tenant.v1.OrganizationService.ArchiveOrganization:input_type -> tenant.v1.ArchiveOrganizationRequest
-	16, // 11: tenant.v1.OrganizationService.RestoreOrganization:input_type -> tenant.v1.TenantOrganizationIDRequest
-	3,  // 12: tenant.v1.OrganizationService.DeleteOrganization:input_type -> tenant.v1.DeleteOrganizationRequest
-	7,  // 13: tenant.v1.OrganizationService.TransferOwnership:input_type -> tenant.v1.TransferOwnershipRequest
-	16, // 14: tenant.v1.OrganizationService.GetAllPermissions:input_type -> tenant.v1.TenantOrganizationIDRequest
-	16, // 15: tenant.v1.OrganizationService.GetAllRoles:input_type -> tenant.v1.TenantOrganizationIDRequest
-	9,  // 16: tenant.v1.OrganizationService.CreateOrganization:output_type -> tenant.v1.OrganizationResponse
-	9,  // 17: tenant.v1.OrganizationService.OnboardOrganization:output_type -> tenant.v1.OrganizationResponse
-	8,  // 18: tenant.v1.OrganizationService.ListOrganizations:output_type -> tenant.v1.ListOrganizationsResponse
-	9,  // 19: tenant.v1.OrganizationService.GetOrganizationById:output_type -> tenant.v1.OrganizationResponse
-	9,  // 20: tenant.v1.OrganizationService.UpdateOrganization:output_type -> tenant.v1.OrganizationResponse
-	17, // 21: tenant.v1.OrganizationService.ArchiveOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	17, // 22: tenant.v1.OrganizationService.RestoreOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	17, // 23: tenant.v1.OrganizationService.DeleteOrganization:output_type -> tenant.v1.TenantSuccessResponse
-	17, // 24: tenant.v1.OrganizationService.TransferOwnership:output_type -> tenant.v1.TenantSuccessResponse
-	12, // 25: tenant.v1.OrganizationService.GetAllPermissions:output_type -> tenant.v1.ListOrganizationPermissionsResponse
-	11, // 26: tenant.v1.OrganizationService.GetAllRoles:output_type -> tenant.v1.ListOrganizationRolesResponse
-	16, // [16:27] is the sub-list for method output_type
-	5,  // [5:16] is the sub-list for method input_type
+	7,  // 7: tenant.v1.OrganizationService.ListOrganizations:input_type -> tenant.v1.ListOrganizationsRequest
+	17, // 8: tenant.v1.OrganizationService.GetOrganizationById:input_type -> tenant.v1.TenantOrganizationIDRequest
+	1,  // 9: tenant.v1.OrganizationService.GetBySlug:input_type -> tenant.v1.OrganizationSlugRequest
+	2,  // 10: tenant.v1.OrganizationService.UpdateOrganization:input_type -> tenant.v1.UpdateOrganizationRequest
+	3,  // 11: tenant.v1.OrganizationService.ArchiveOrganization:input_type -> tenant.v1.ArchiveOrganizationRequest
+	17, // 12: tenant.v1.OrganizationService.RestoreOrganization:input_type -> tenant.v1.TenantOrganizationIDRequest
+	4,  // 13: tenant.v1.OrganizationService.DeleteOrganization:input_type -> tenant.v1.DeleteOrganizationRequest
+	8,  // 14: tenant.v1.OrganizationService.TransferOwnership:input_type -> tenant.v1.TransferOwnershipRequest
+	17, // 15: tenant.v1.OrganizationService.GetAllPermissions:input_type -> tenant.v1.TenantOrganizationIDRequest
+	17, // 16: tenant.v1.OrganizationService.GetAllRoles:input_type -> tenant.v1.TenantOrganizationIDRequest
+	10, // 17: tenant.v1.OrganizationService.CreateOrganization:output_type -> tenant.v1.OrganizationResponse
+	10, // 18: tenant.v1.OrganizationService.OnboardOrganization:output_type -> tenant.v1.OrganizationResponse
+	9,  // 19: tenant.v1.OrganizationService.ListOrganizations:output_type -> tenant.v1.ListOrganizationsResponse
+	10, // 20: tenant.v1.OrganizationService.GetOrganizationById:output_type -> tenant.v1.OrganizationResponse
+	10, // 21: tenant.v1.OrganizationService.GetBySlug:output_type -> tenant.v1.OrganizationResponse
+	10, // 22: tenant.v1.OrganizationService.UpdateOrganization:output_type -> tenant.v1.OrganizationResponse
+	18, // 23: tenant.v1.OrganizationService.ArchiveOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	18, // 24: tenant.v1.OrganizationService.RestoreOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	18, // 25: tenant.v1.OrganizationService.DeleteOrganization:output_type -> tenant.v1.TenantSuccessResponse
+	18, // 26: tenant.v1.OrganizationService.TransferOwnership:output_type -> tenant.v1.TenantSuccessResponse
+	13, // 27: tenant.v1.OrganizationService.GetAllPermissions:output_type -> tenant.v1.ListOrganizationPermissionsResponse
+	12, // 28: tenant.v1.OrganizationService.GetAllRoles:output_type -> tenant.v1.ListOrganizationRolesResponse
+	17, // [17:29] is the sub-list for method output_type
+	5,  // [5:17] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -949,15 +1000,15 @@ func file_tenant_v1_organization_proto_init() {
 	file_tenant_v1_common_proto_init()
 	file_tenant_v1_organization_options_proto_init()
 	file_tenant_v1_organization_member_proto_init()
-	file_tenant_v1_organization_proto_msgTypes[1].OneofWrappers = []any{}
-	file_tenant_v1_organization_proto_msgTypes[10].OneofWrappers = []any{}
+	file_tenant_v1_organization_proto_msgTypes[2].OneofWrappers = []any{}
+	file_tenant_v1_organization_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tenant_v1_organization_proto_rawDesc), len(file_tenant_v1_organization_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

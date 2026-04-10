@@ -48,13 +48,17 @@ func protoMemberToDTO(m *tenantV1.OrganizationMember) *dto.TOrganizationMember {
 		roleNames[i] = r.GetName()
 	}
 	return &dto.TOrganizationMember{
-		ID:       m.GetId(),
-		UserID:   m.GetUserId(),
-		FullName: m.GetFullName(),
-		Email:    m.GetEmail(),
-		Status:   m.GetStatus(),
-		JoinedAt: m.GetJoinedAt(),
-		Roles:    roleNames,
+		ID:            m.GetId(),
+		UserID:        m.GetUserId(),
+		FullName:      m.GetFullName(),
+		Email:         m.GetEmail(),
+		Status:        m.GetStatus(),
+		JoinedAt:      m.GetJoinedAt(),
+		InvitedAt:     m.GetInvitedAt(),
+		InvitedBy:     m.GetInvitedBy(),
+		DeactivatedBy: m.GetDeactivatedBy(),
+		DeactivatedAt: m.GetDeactivatedAt(),
+		Roles:         roleNames,
 	}
 }
 

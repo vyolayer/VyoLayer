@@ -20,6 +20,7 @@ const (
 var (
 	ErrInvalidBody  = errors.BadRequest("invalid request body")
 	ErrInvalidOrgID = errors.BadRequest("invalid organization id")
+	ErrInvalidSlug  = errors.BadRequest("invalid slug")
 )
 
 type OrganizationHandler struct {
@@ -49,6 +50,8 @@ func (h *OrganizationHandler) RegisterRoutes(router fiber.Router) {
 		Post("/onboarding", h.onboarding).
 		Post("/", h.create).
 		Get("/", h.list)
+
+	org.Get("slug/:slug", h.getBySlug)
 
 	// All routes below require a valid organizationID in the path
 	orgGroup := org.Group("/:organizationID", middleware.ValidateOrganizationID())
@@ -137,6 +140,45 @@ func (h *OrganizationHandler) getById(c *fiber.Ctx) error {
 	}
 
 	h.logger.Debug("Organization fetched by id", resp)
+
+	return response.SuccessWithMessage(
+		c,
+		fiber.StatusOK,
+		"organization fetched successfully",
+		&dto.Organization{
+			Organization: orgDto,
+			Members:      memberListDto,
+		},
+	)
+}
+
+func (h *OrganizationHandler) getBySlug(c *fiber.Ctx) error {
+	var (
+		slug string
+		in   tenantV1.OrganizationSlugRequest
+	)
+
+	slug = c.Params("slug")
+	if slug == "" {
+		return response.Error(c, ErrInvalidSlug)
+	}
+	in.Slug = slug
+
+	resp, err := h.client.GetBySlug(c.UserContext(), &in)
+	if err != nil {
+		return response.Error(c, errors.FromGRPC(err))
+	}
+
+	org := resp.GetOrganization()
+	orgDto := protoOrgToDTO(org)
+
+	members := resp.GetMembers()
+	memberListDto := make([]*dto.TOrganizationMember, len(members))
+	for i, m := range members {
+		memberListDto[i] = protoMemberToDTO(m)
+	}
+
+	h.logger.Debug("Organization fetched by slug", resp)
 
 	return response.SuccessWithMessage(
 		c,

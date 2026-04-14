@@ -9,14 +9,22 @@
     "email": "subhop.me@gmail.com"
   },
   "scripts": {
-    "dev-console": "pnpm --filter=console-app dev",
-    "dev-api": "make run",
-    "predev": "make docker-up",
-    "dev": "concurrently -n \"API,CONSOLE\" -c \"blue,magenta\" \"pnpm dev-api\" \"pnpm dev-console\"",
-    "docker-up": "make docker-up",
-    "docker-down": "make docker-down",
-    "docker-start": "make docker-start",
-    "docker-stop": "make docker-stop"
+    "buf": "cd proto && buf generate",
+    "db:migrate": "go run cmd/migrate/main.go",
+    "db:seed": "go run cmd/seed/main.go",
+    "start:iam": "go run cmd/iam-service/main.go",
+    "start:tenant": "go run cmd/tenant-service/main.go",
+    "start:account": "go run cmd/account-service/main.go",
+    "start:gateway": "go run cmd/gateway/main.go",
+    "dev:iam": "air -c internal/iam/.air.iam.toml",
+    "dev:tenant": "air -c internal/tenant/.air.tenant.toml",
+    "dev:account": "air -c internal/account/.air.account.toml",
+    "dev:gateway": "air -c internal/gateway/.air.gateway.toml",
+    "dev:all": "concurrently -n IAM,TENANT,ACCOUNT,GATEWAY -c blue,green,yellow,magenta \"npm run dev:iam\" \"npm run dev:tenant\" \"npm run dev:account\" \"npm run dev:gateway\"",
+    "db:docker:up": "docker-compose -f docker/docker-compose.dev.yml up -d",
+    "db:docker:down": "docker-compose -f docker/docker-compose.dev.yml down",
+    "db:docker:start": "docker-compose -f docker/docker-compose.dev.yml start",
+    "db:docker:stop": "docker-compose -f docker/docker-compose.dev.yml stop"
   },
   "keywords": [
     "vyolayer",
@@ -28,7 +36,6 @@
     "audit logs",
     "api keys"
   ],
-  "packageManager": "pnpm@10.30.0",
   "devDependencies": {
     "concurrently": "^9.2.1"
   }

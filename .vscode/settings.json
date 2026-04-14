@@ -12,5 +12,25 @@
   "protoc.options": ["--proto_path=./proto"],
   "protobuf.externalLinter.enabled": true,
   "protobuf.externalLinter.linter": "buf",
-  "protobuf.externalLinter.bufPath": "/home/subhajit/go/bin/buf"
+  "protobuf.externalLinter.bufPath": "/home/subhajit/go/bin/buf",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#743dc8",
+    "activityBar.background": "#743dc8",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#ce8251",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#743dc8",
+    "statusBar.background": "#5d2ea4",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#743dc8",
+    "statusBarItem.remoteBackground": "#5d2ea4",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#5d2ea4",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#5d2ea499",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#5d2ea4"
 }

@@ -198,6 +198,7 @@ type User struct {
 	Status          string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"` // "active" | "inactive"
 	IsEmailVerified bool                   `protobuf:"varint,5,opt,name=is_email_verified,json=isEmailVerified,proto3" json:"is_email_verified,omitempty"`
 	JoinedAt        string                 `protobuf:"bytes,6,opt,name=joined_at,json=joinedAt,proto3" json:"joined_at,omitempty"` // RFC3339 string
+	Avatar          *Avatar                `protobuf:"bytes,7,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -274,6 +275,81 @@ func (x *User) GetJoinedAt() string {
 	return ""
 }
 
+func (x *User) GetAvatar() *Avatar {
+	if x != nil {
+		return x.Avatar
+	}
+	return nil
+}
+
+type Avatar struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	FallbackChar  string                 `protobuf:"bytes,3,opt,name=fallback_char,json=fallbackChar,proto3" json:"fallback_char,omitempty"`
+	FallbackColor string                 `protobuf:"bytes,4,opt,name=fallback_color,json=fallbackColor,proto3" json:"fallback_color,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Avatar) Reset() {
+	*x = Avatar{}
+	mi := &file_iam_v1_user_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Avatar) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Avatar) ProtoMessage() {}
+
+func (x *Avatar) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_v1_user_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Avatar.ProtoReflect.Descriptor instead.
+func (*Avatar) Descriptor() ([]byte, []int) {
+	return file_iam_v1_user_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Avatar) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Avatar) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *Avatar) GetFallbackChar() string {
+	if x != nil {
+		return x.FallbackChar
+	}
+	return ""
+}
+
+func (x *Avatar) GetFallbackColor() string {
+	if x != nil {
+		return x.FallbackColor
+	}
+	return ""
+}
+
 var File_iam_v1_user_proto protoreflect.FileDescriptor
 
 const file_iam_v1_user_proto_rawDesc = "" +
@@ -285,14 +361,20 @@ const file_iam_v1_user_proto_rawDesc = "" +
 	"\x0fUpdateMeRequest\x12$\n" +
 	"\tfull_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18dR\bfullName\"4\n" +
 	"\x10UpdateMeResponse\x12 \n" +
-	"\x04user\x18\x01 \x01(\v2\f.iam.v1.UserR\x04user\"\xaa\x01\n" +
+	"\x04user\x18\x01 \x01(\v2\f.iam.v1.UserR\x04user\"\xd2\x01\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tfull_name\x18\x02 \x01(\tR\bfullName\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\tR\x06status\x12*\n" +
 	"\x11is_email_verified\x18\x05 \x01(\bR\x0fisEmailVerified\x12\x1b\n" +
-	"\tjoined_at\x18\x06 \x01(\tR\bjoinedAt2\x82\x01\n" +
+	"\tjoined_at\x18\x06 \x01(\tR\bjoinedAt\x12&\n" +
+	"\x06avatar\x18\a \x01(\v2\x0e.iam.v1.AvatarR\x06avatar\"v\n" +
+	"\x06Avatar\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12#\n" +
+	"\rfallback_char\x18\x03 \x01(\tR\ffallbackChar\x12%\n" +
+	"\x0efallback_color\x18\x04 \x01(\tR\rfallbackColor2\x82\x01\n" +
 	"\vUserService\x124\n" +
 	"\x05GetMe\x12\x14.iam.v1.GetMeRequest\x1a\x15.iam.v1.GetMeResponse\x12=\n" +
 	"\bUpdateMe\x12\x17.iam.v1.UpdateMeRequest\x1a\x18.iam.v1.UpdateMeResponseB1Z/github.com/vyolayer/vyolayer/proto/iam/v1;iAMV1b\x06proto3"
@@ -309,26 +391,28 @@ func file_iam_v1_user_proto_rawDescGZIP() []byte {
 	return file_iam_v1_user_proto_rawDescData
 }
 
-var file_iam_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_iam_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_iam_v1_user_proto_goTypes = []any{
 	(*GetMeRequest)(nil),     // 0: iam.v1.GetMeRequest
 	(*GetMeResponse)(nil),    // 1: iam.v1.GetMeResponse
 	(*UpdateMeRequest)(nil),  // 2: iam.v1.UpdateMeRequest
 	(*UpdateMeResponse)(nil), // 3: iam.v1.UpdateMeResponse
 	(*User)(nil),             // 4: iam.v1.User
+	(*Avatar)(nil),           // 5: iam.v1.Avatar
 }
 var file_iam_v1_user_proto_depIdxs = []int32{
 	4, // 0: iam.v1.GetMeResponse.user:type_name -> iam.v1.User
 	4, // 1: iam.v1.UpdateMeResponse.user:type_name -> iam.v1.User
-	0, // 2: iam.v1.UserService.GetMe:input_type -> iam.v1.GetMeRequest
-	2, // 3: iam.v1.UserService.UpdateMe:input_type -> iam.v1.UpdateMeRequest
-	1, // 4: iam.v1.UserService.GetMe:output_type -> iam.v1.GetMeResponse
-	3, // 5: iam.v1.UserService.UpdateMe:output_type -> iam.v1.UpdateMeResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	5, // 2: iam.v1.User.avatar:type_name -> iam.v1.Avatar
+	0, // 3: iam.v1.UserService.GetMe:input_type -> iam.v1.GetMeRequest
+	2, // 4: iam.v1.UserService.UpdateMe:input_type -> iam.v1.UpdateMeRequest
+	1, // 5: iam.v1.UserService.GetMe:output_type -> iam.v1.GetMeResponse
+	3, // 6: iam.v1.UserService.UpdateMe:output_type -> iam.v1.UpdateMeResponse
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_iam_v1_user_proto_init() }
@@ -342,7 +426,7 @@ func file_iam_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_v1_user_proto_rawDesc), len(file_iam_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

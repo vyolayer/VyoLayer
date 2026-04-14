@@ -33,7 +33,7 @@ type OrganizationMemberServiceClient interface {
 	// No permission needed—if they pass the standard interceptor, they are a member and can view themselves.
 	GetCurrentMember(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*OrganizationMemberWithRBACResponse, error)
 	GetAllMembersByOrg(ctx context.Context, in *TenantOrganizationIDRequest, opts ...grpc.CallOption) (*ListOrganizationMembersResponse, error)
-	GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberResponse, error)
+	GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberWithRBACResponse, error)
 	RemoveMember(ctx context.Context, in *RemoveOrganizationMemberRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	ChangeMemberRole(ctx context.Context, in *ChangeOrganizationMemberRoleRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 }
@@ -66,9 +66,9 @@ func (c *organizationMemberServiceClient) GetAllMembersByOrg(ctx context.Context
 	return out, nil
 }
 
-func (c *organizationMemberServiceClient) GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberResponse, error) {
+func (c *organizationMemberServiceClient) GetMemberById(ctx context.Context, in *GetOrganizationMemberByIdRequest, opts ...grpc.CallOption) (*OrganizationMemberWithRBACResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrganizationMemberResponse)
+	out := new(OrganizationMemberWithRBACResponse)
 	err := c.cc.Invoke(ctx, OrganizationMemberService_GetMemberById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ type OrganizationMemberServiceServer interface {
 	// No permission needed—if they pass the standard interceptor, they are a member and can view themselves.
 	GetCurrentMember(context.Context, *TenantOrganizationIDRequest) (*OrganizationMemberWithRBACResponse, error)
 	GetAllMembersByOrg(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationMembersResponse, error)
-	GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberResponse, error)
+	GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberWithRBACResponse, error)
 	RemoveMember(context.Context, *RemoveOrganizationMemberRequest) (*TenantSuccessResponse, error)
 	ChangeMemberRole(context.Context, *ChangeOrganizationMemberRoleRequest) (*TenantSuccessResponse, error)
 	mustEmbedUnimplementedOrganizationMemberServiceServer()
@@ -122,7 +122,7 @@ func (UnimplementedOrganizationMemberServiceServer) GetCurrentMember(context.Con
 func (UnimplementedOrganizationMemberServiceServer) GetAllMembersByOrg(context.Context, *TenantOrganizationIDRequest) (*ListOrganizationMembersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllMembersByOrg not implemented")
 }
-func (UnimplementedOrganizationMemberServiceServer) GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberResponse, error) {
+func (UnimplementedOrganizationMemberServiceServer) GetMemberById(context.Context, *GetOrganizationMemberByIdRequest) (*OrganizationMemberWithRBACResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMemberById not implemented")
 }
 func (UnimplementedOrganizationMemberServiceServer) RemoveMember(context.Context, *RemoveOrganizationMemberRequest) (*TenantSuccessResponse, error) {

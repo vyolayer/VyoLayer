@@ -15,7 +15,7 @@ service OrganizationMemberService {
   rpc GetAllMembersByOrg(TenantOrganizationIDRequest) returns (ListOrganizationMembersResponse) {
     option (tenant.v1.required_org_permission) = "member.list";
   };
-  rpc GetMemberById(GetOrganizationMemberByIdRequest) returns (OrganizationMemberResponse) {
+  rpc GetMemberById(GetOrganizationMemberByIdRequest) returns (OrganizationMemberWithRBACResponse) {
     option (tenant.v1.required_org_permission) = "member.view";
   };
   rpc RemoveMember(RemoveOrganizationMemberRequest) returns (TenantSuccessResponse) {

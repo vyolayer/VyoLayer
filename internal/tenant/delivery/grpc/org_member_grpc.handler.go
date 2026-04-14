@@ -41,7 +41,9 @@ func (h *OrganizationMemberHandler) GetCurrentMember(
 	memberDto := mapOrganizationMemberWithRolesAndPermissionsToProto(member)
 
 	return &tenantV1.OrganizationMemberWithRBACResponse{
-		Member: memberDto,
+		Member:      memberDto.GetMember(),
+		Roles:       memberDto.GetRoles(),
+		Permissions: memberDto.GetPermissions(),
 	}, nil
 }
 
@@ -69,7 +71,7 @@ func (h *OrganizationMemberHandler) GetAllMembersByOrg(
 func (h *OrganizationMemberHandler) GetMemberById(
 	ctx context.Context,
 	req *tenantV1.GetOrganizationMemberByIdRequest,
-) (*tenantV1.OrganizationMemberResponse, error) {
+) (*tenantV1.OrganizationMemberWithRBACResponse, error) {
 	orgID, _ := uuid.Parse(req.GetOrganizationId())
 	memberID, _ := uuid.Parse(req.GetMemberId())
 	member, err := h.orgMemberUC.GetById(ctx, orgID, memberID)
@@ -79,8 +81,10 @@ func (h *OrganizationMemberHandler) GetMemberById(
 
 	memberDto := mapOrganizationMemberWithRolesAndPermissionsToProto(member)
 
-	return &tenantV1.OrganizationMemberResponse{
-		Member: memberDto,
+	return &tenantV1.OrganizationMemberWithRBACResponse{
+		Member:      memberDto.GetMember(),
+		Roles:       memberDto.GetRoles(),
+		Permissions: memberDto.GetPermissions(),
 	}, nil
 }
 

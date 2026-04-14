@@ -32,6 +32,13 @@ message User {
   string status = 4; // "active" | "inactive"
   bool is_email_verified = 5;
   string joined_at = 6; // RFC3339 string
+  Avatar avatar = 7;
 }
 
+message Avatar {
+  int64 id = 1;
+  string url = 2;
+  string fallback_char = 3;
+  string fallback_color = 4;
+}
 

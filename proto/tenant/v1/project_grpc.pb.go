@@ -42,15 +42,14 @@ type ProjectServiceClient interface {
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
-	//	rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
-	//	  option (tenant.v1.required_org_permission) = "project.delete";
-	//	  option (tenant.v1.required_project_permission) = "project.delete";
-	//	};
-	//
-	//	rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
-	//	  option (tenant.v1.required_org_permission) = "project.delete";
-	//	  option (tenant.v1.required_project_permission) = "project.delete";
-	//	};
+	// rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
+	//   option (tenant.v1.required_org_permission) = "project.delete";
+	//   option (tenant.v1.required_project_permission) = "project.delete";
+	// };
+	// rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
+	//   option (tenant.v1.required_org_permission) = "project.delete";
+	//   option (tenant.v1.required_project_permission) = "project.delete";
+	// };
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*TenantSuccessResponse, error)
 	// Members
 	ListMembers(ctx context.Context, in *ListProjectMembersRequest, opts ...grpc.CallOption) (*ListProjectMembersResponse, error)
@@ -199,15 +198,14 @@ type ProjectServiceServer interface {
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	GetProject(context.Context, *GetProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
-	//	rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
-	//	  option (tenant.v1.required_org_permission) = "project.delete";
-	//	  option (tenant.v1.required_project_permission) = "project.delete";
-	//	};
-	//
-	//	rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
-	//	  option (tenant.v1.required_org_permission) = "project.delete";
-	//	  option (tenant.v1.required_project_permission) = "project.delete";
-	//	};
+	// rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
+	//   option (tenant.v1.required_org_permission) = "project.delete";
+	//   option (tenant.v1.required_project_permission) = "project.delete";
+	// };
+	// rpc RestoreProject(RestoreProjectRequest) returns (TenantSuccessResponse) {
+	//   option (tenant.v1.required_org_permission) = "project.delete";
+	//   option (tenant.v1.required_project_permission) = "project.delete";
+	// };
 	DeleteProject(context.Context, *DeleteProjectRequest) (*TenantSuccessResponse, error)
 	// Members
 	ListMembers(context.Context, *ListProjectMembersRequest) (*ListProjectMembersResponse, error)

@@ -527,11 +527,11 @@ const file_tenant_v1_organization_member_proto_rawDesc = "" +
 	"\v_invited_byB\r\n" +
 	"\v_invited_atB\x11\n" +
 	"\x0f_deactivated_byB\x11\n" +
-	"\x0f_deactivated_at2\xdd\x04\n" +
+	"\x0f_deactivated_at2\xe5\x04\n" +
 	"\x19OrganizationMemberService\x12i\n" +
 	"\x10GetCurrentMember\x12&.tenant.v1.TenantOrganizationIDRequest\x1a-.tenant.v1.OrganizationMemberWithRBACResponse\x12x\n" +
-	"\x12GetAllMembersByOrg\x12&.tenant.v1.TenantOrganizationIDRequest\x1a*.tenant.v1.ListOrganizationMembersResponse\"\x0e\xd2>\vmember.list\x12s\n" +
-	"\rGetMemberById\x12+.tenant.v1.GetOrganizationMemberByIdRequest\x1a%.tenant.v1.OrganizationMemberResponse\"\x0e\xd2>\vmember.view\x12n\n" +
+	"\x12GetAllMembersByOrg\x12&.tenant.v1.TenantOrganizationIDRequest\x1a*.tenant.v1.ListOrganizationMembersResponse\"\x0e\xd2>\vmember.list\x12{\n" +
+	"\rGetMemberById\x12+.tenant.v1.GetOrganizationMemberByIdRequest\x1a-.tenant.v1.OrganizationMemberWithRBACResponse\"\x0e\xd2>\vmember.view\x12n\n" +
 	"\fRemoveMember\x12*.tenant.v1.RemoveOrganizationMemberRequest\x1a .tenant.v1.TenantSuccessResponse\"\x10\xd2>\rmember.remove\x12v\n" +
 	"\x10ChangeMemberRole\x12..tenant.v1.ChangeOrganizationMemberRoleRequest\x1a .tenant.v1.TenantSuccessResponse\"\x10\xd2>\rmember.updateB7Z5github.com/vyolayer/vyolayer/proto/tenant/v1;tenantV1b\x06proto3"
 
@@ -575,7 +575,7 @@ var file_tenant_v1_organization_member_proto_depIdxs = []int32{
 	2,  // 10: tenant.v1.OrganizationMemberService.ChangeMemberRole:input_type -> tenant.v1.ChangeOrganizationMemberRoleRequest
 	4,  // 11: tenant.v1.OrganizationMemberService.GetCurrentMember:output_type -> tenant.v1.OrganizationMemberWithRBACResponse
 	3,  // 12: tenant.v1.OrganizationMemberService.GetAllMembersByOrg:output_type -> tenant.v1.ListOrganizationMembersResponse
-	5,  // 13: tenant.v1.OrganizationMemberService.GetMemberById:output_type -> tenant.v1.OrganizationMemberResponse
+	4,  // 13: tenant.v1.OrganizationMemberService.GetMemberById:output_type -> tenant.v1.OrganizationMemberWithRBACResponse
 	10, // 14: tenant.v1.OrganizationMemberService.RemoveMember:output_type -> tenant.v1.TenantSuccessResponse
 	10, // 15: tenant.v1.OrganizationMemberService.ChangeMemberRole:output_type -> tenant.v1.TenantSuccessResponse
 	11, // [11:16] is the sub-list for method output_type

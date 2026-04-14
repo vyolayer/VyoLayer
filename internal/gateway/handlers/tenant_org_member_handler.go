@@ -55,11 +55,32 @@ func (h *OrganizationMemberHandler) getCurrentMember(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	member := resp.GetMember()
+	if member == nil {
+		return response.Error(c, errors.NotFound("member not found"))
+	}
+
+	permsDto := make([]string, len(resp.GetPermissions()))
+	for i, p := range resp.GetPermissions() {
+		permsDto[i] = p.GetCode()
+	}
+
+	rolesDto := make([]string, len(resp.GetRoles()))
+	for i, r := range resp.GetRoles() {
+		rolesDto[i] = r.GetName()
+	}
+
+	memberDto := &dto.TOrganizationMemberWithRBAC{
+		TOrganizationMember: *protoMemberToDTO(member),
+		Roles:               rolesDto,
+		Perms:               permsDto,
+	}
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"member fetched successfully",
-		protoMemberToDTO(resp.GetMember()),
+		memberDto,
 	)
 }
 

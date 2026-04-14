@@ -95,11 +95,8 @@ func mapOrganizationMemberWithRolesToProto(member *domain.OrganizationMemberWith
 	return protoMember
 }
 
-func mapOrganizationMemberWithRolesAndPermissionsToProto(member *domain.OrganizationMemberWithRolesAndPermissions) *tenantV1.OrganizationMember {
-	protoMember := mapOrganizationMemberWithRolesToProto(&domain.OrganizationMemberWithRoles{
-		OrganizationMember: member.OrganizationMember,
-		Roles:              member.Roles,
-	})
+func mapOrganizationMemberWithRolesAndPermissionsToProto(member *domain.OrganizationMemberWithRolesAndPermissions) *tenantV1.OrganizationMemberWithRBACResponse {
+	var protoMember *tenantV1.OrganizationMemberWithRBACResponse
 
 	permissions := make([]*tenantV1.OrganizationPermission, len(member.Permissions))
 	for i, permission := range member.Permissions {
@@ -112,6 +109,23 @@ func mapOrganizationMemberWithRolesAndPermissionsToProto(member *domain.Organiza
 			Group:    permission.Group,
 		}
 	}
+
+	protoMember = &tenantV1.OrganizationMemberWithRBACResponse{
+		Member:      mapOrganizationMemberToProto(&member.OrganizationMember),
+		Roles:       make([]*tenantV1.OrganizationRole, len(member.Roles)),
+		Permissions: make([]*tenantV1.OrganizationPermission, len(member.Permissions)),
+	}
+
+	for i, role := range member.Roles {
+		protoMember.Roles[i] = &tenantV1.OrganizationRole{
+			Id:           role.ID.String(),
+			Name:         role.Name,
+			Description:  role.Description,
+			IsSystemRole: role.IsSystem,
+			IsDefault:    role.IsDefault,
+		}
+	}
+	protoMember.Permissions = permissions
 	return protoMember
 }
 

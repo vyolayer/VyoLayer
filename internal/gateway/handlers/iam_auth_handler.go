@@ -271,12 +271,20 @@ func (h *IAMAuthGatewayHandler) resetPassword(c *fiber.Ctx) error {
 // ── Profile (/me) ─────────────────────────────────────────────────────────────────
 
 type UserDTO struct {
-	ID              string `json:"id,omitempty"`
-	Email           string `json:"email,omitempty"`
-	FullName        string `json:"full_name,omitempty"`
-	Status          string `json:"status,omitempty"`
-	IsEmailVerified bool   `json:"is_email_verified,omitempty"`
-	JoinedAt        string `json:"joined_at,omitempty"`
+	ID              string    `json:"id,omitempty"`
+	Email           string    `json:"email,omitempty"`
+	FullName        string    `json:"full_name,omitempty"`
+	Status          string    `json:"status,omitempty"`
+	IsEmailVerified bool      `json:"is_email_verified,omitempty"`
+	JoinedAt        string    `json:"joined_at,omitempty"`
+	Avatar          AvatarDTO `json:"avatar,omitzero"`
+}
+
+type AvatarDTO struct {
+	ID            int64  `json:"id,omitempty"`
+	Url           string `json:"url,omitempty"`
+	FallbackChar  string `json:"fallback_char,omitempty"`
+	FallbackColor string `json:"fallback_color,omitempty"`
 }
 
 type GetMeResponse struct {
@@ -293,18 +301,31 @@ func (h *IAMAuthGatewayHandler) getMe(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	user := resp.GetUser()
+	avatar := user.GetAvatar()
+
+	avatarDTO := &AvatarDTO{
+		ID:            avatar.GetId(),
+		Url:           avatar.GetUrl(),
+		FallbackChar:  avatar.GetFallbackChar(),
+		FallbackColor: avatar.GetFallbackColor(),
+	}
+
 	userDTO := &UserDTO{
-		ID:              resp.User.Id,
-		Email:           resp.User.Email,
-		FullName:        resp.User.FullName,
-		Status:          resp.User.Status,
-		IsEmailVerified: resp.User.IsEmailVerified,
-		JoinedAt:        resp.User.JoinedAt,
+		ID:              user.GetId(),
+		Email:           user.GetEmail(),
+		FullName:        user.GetFullName(),
+		Status:          user.GetStatus(),
+		IsEmailVerified: user.GetIsEmailVerified(),
+		JoinedAt:        user.GetJoinedAt(),
+		Avatar:          *avatarDTO,
 	}
 
 	respDTO := &GetMeResponse{
 		User: userDTO,
 	}
+
+	log.Print("Get user :: ", respDTO)
 
 	return response.Success(c, respDTO)
 }

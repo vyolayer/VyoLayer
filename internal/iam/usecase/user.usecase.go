@@ -37,6 +37,13 @@ func (uc *UserUsecase) GetMe(ctx context.Context) (*iAMV1.User, error) {
 		return nil, status.Error(codes.NotFound, "user not found")
 	}
 
+	avatar := &iAMV1.Avatar{
+		Id:            user.Avatar.ID,
+		Url:           user.Avatar.URL,
+		FallbackChar:  user.Avatar.FallbackChar,
+		FallbackColor: user.Avatar.FallbackColor,
+	}
+
 	u := &iAMV1.User{
 		Id:              user.ID.String(),
 		Email:           user.GetEmail(),
@@ -44,6 +51,10 @@ func (uc *UserUsecase) GetMe(ctx context.Context) (*iAMV1.User, error) {
 		Status:          user.GetStatus(),
 		IsEmailVerified: user.IsEmailVerified,
 		JoinedAt:        user.Timestamps.CreatedAt.UTC().Format(time.RFC3339),
+	}
+
+	if user.Avatar != nil {
+		u.Avatar = avatar
 	}
 
 	uc.log.Info("(UserUsecase.GetMe): ", u)

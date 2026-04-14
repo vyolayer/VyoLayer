@@ -34,6 +34,7 @@ func NewUserRepository(client *gorm.DB, log *logger.AppLogger) IAMUserRepository
 func (r *iAmUserRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.IAMUser, error) {
 	var u m.User
 	if err := r.client.WithContext(ctx).
+		Preload("Avatar").
 		Where("id = ?", id).
 		First(&u).Error; err != nil {
 		return nil, ConvertDBError(err, "Failed to find user")
@@ -41,12 +42,21 @@ func (r *iAmUserRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain
 
 	r.log.Debug("Found user", u)
 
-	return domain.ReconstructIAMUser(
+	user := domain.ReconstructIAMUser(
 		u.ID,
 		u.Email, u.PasswordHash, u.FullName,
 		u.IsEmailVerified, u.Status,
 		u.CreatedAt, u.UpdatedAt,
-	), nil
+	)
+	avatar := domain.IAMUserAvatar{
+		ID:            u.Avatar.ID,
+		URL:           u.Avatar.URL,
+		FallbackChar:  u.Avatar.FallbackChar,
+		FallbackColor: u.Avatar.FallbackColor,
+	}
+	user.InitAvatar(&avatar)
+
+	return user, nil
 }
 
 func (r *iAmUserRepository) FindByEmail(ctx context.Context, email string) (*domain.IAMUser, error) {
@@ -108,11 +118,11 @@ func (r *iAmUserRepository) Create(ctx context.Context, user *domain.IAMUser) er
 // Update persists mutated fields (FullName, PasswordHash, Status) to the database.
 func (r *iAmUserRepository) Update(ctx context.Context, user *domain.IAMUser) error {
 	updates := map[string]any{
-		"full_name":        user.FullName,
-		"password_hash":    user.Password.String(),
+		"full_name":         user.FullName,
+		"password_hash":     user.Password.String(),
 		"is_email_verified": user.IsEmailVerified,
-		"status":           user.Status.String(),
-		"updated_at":       time.Now(),
+		"status":            user.Status.String(),
+		"updated_at":        time.Now(),
 	}
 
 	result := r.client.WithContext(ctx).

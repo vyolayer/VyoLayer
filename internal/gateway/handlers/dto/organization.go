@@ -30,12 +30,27 @@ type TOrganizationMember struct {
 	DeactivatedAt  string   `json:"deactivated_at,omitempty"`
 }
 
+type TOrganizationMemberWithRBAC struct {
+	TOrganizationMember
+	Roles []string `json:"roles,omitempty"`
+	Perms []string `json:"perms,omitempty"`
+}
+
 type TOrganizationRole struct {
 	ID           string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
 	Description  string `json:"description,omitempty"`
 	IsSystemRole bool   `json:"is_system_role,omitempty"`
 	IsDefault    bool   `json:"is_default,omitempty"`
+}
+
+type TOrganizationPerm struct {
+	ID           string `json:"id,omitempty"`
+	Resource     string `json:"resource,omitempty"`
+	Action       string `json:"action,omitempty"`
+	Code         string `json:"code,omitempty"`
+	Group        string `json:"group,omitempty"`
+	IsSystemPerm bool   `json:"is_system_perm,omitempty"`
 }
 
 type TOrganizationInvitation struct {

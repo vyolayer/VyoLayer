@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/vyolayer/vyolayer/internal/gateway/handlers"
+	"github.com/vyolayer/vyolayer/internal/gateway/handlers/console"
 	"github.com/vyolayer/vyolayer/internal/gateway/server"
 	"github.com/vyolayer/vyolayer/internal/gateway/service"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
@@ -60,6 +61,12 @@ func NewRegistrars(
 		handlers.NewProjectHandler(
 			logger,
 			clients.TenantProjectClient,
+			iamJWT,
+		),
+
+		console.NewProjectServiceHandler(
+			logger,
+			clients.ConsoleProjectServiceManifestClient,
 			iamJWT,
 		),
 	}

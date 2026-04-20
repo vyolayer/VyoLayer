@@ -8,6 +8,7 @@ import (
 	"github.com/vyolayer/vyolayer/pkg/grpcutil"
 	"github.com/vyolayer/vyolayer/pkg/logger"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
+	consoleV1 "github.com/vyolayer/vyolayer/proto/console/v1"
 	iamV1 "github.com/vyolayer/vyolayer/proto/iam/v1"
 	tenantV1 "github.com/vyolayer/vyolayer/proto/tenant/v1"
 	"google.golang.org/grpc"
@@ -18,6 +19,10 @@ type Clients struct {
 	AccountClient accountV1.AccountServiceClient
 	IamAuthClient iamV1.AuthServiceClient
 	IamUserClient iamV1.UserServiceClient
+
+	// Console
+	ConsoleProjectServiceManifestClient consoleV1.ProjectServiceManifestClient
+
 	// Tenant
 	TenantOrganizationClient    tenantV1.OrganizationServiceClient
 	TenantOrganizationInvClient tenantV1.OrganizationInvitationServiceClient
@@ -28,6 +33,7 @@ type Clients struct {
 	accountConn *grpc.ClientConn
 	iamConn     *grpc.ClientConn
 	tenantConn  *grpc.ClientConn
+	consoleConn *grpc.ClientConn
 }
 
 func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.Duration) (*Clients, error) {
@@ -63,18 +69,30 @@ func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.D
 		return nil, tenanterr
 	}
 
+	// Connent to console service
+	consoleConn, consoleerr := grpcutil.NewClient(grpcutil.ClientConfig{
+		Address: cfg.ConsoleServiceAddr,
+		Timeout: grpcTimeout,
+	})
+	if consoleerr != nil {
+		logger.Warn("Failed to connect to console service", consoleerr)
+		return nil, consoleerr
+	}
+
 	return &Clients{
-		AccountClient:               accountV1.NewAccountServiceClient(accountConn),
-		IamAuthClient:               iamV1.NewAuthServiceClient(iamConn),
-		IamUserClient:               iamV1.NewUserServiceClient(iamConn),
-		TenantOrganizationClient:    tenantV1.NewOrganizationServiceClient(tenantConn),
-		TenantOrganizationInvClient: tenantV1.NewOrganizationInvitationServiceClient(tenantConn),
-		TenantOrganizationMemClient: tenantV1.NewOrganizationMemberServiceClient(tenantConn),
-		TenantProjectClient:         tenantV1.NewProjectServiceClient(tenantConn),
+		AccountClient:                       accountV1.NewAccountServiceClient(accountConn),
+		IamAuthClient:                       iamV1.NewAuthServiceClient(iamConn),
+		IamUserClient:                       iamV1.NewUserServiceClient(iamConn),
+		TenantOrganizationClient:            tenantV1.NewOrganizationServiceClient(tenantConn),
+		TenantOrganizationInvClient:         tenantV1.NewOrganizationInvitationServiceClient(tenantConn),
+		TenantOrganizationMemClient:         tenantV1.NewOrganizationMemberServiceClient(tenantConn),
+		TenantProjectClient:                 tenantV1.NewProjectServiceClient(tenantConn),
+		ConsoleProjectServiceManifestClient: consoleV1.NewProjectServiceManifestClient(consoleConn),
 
 		accountConn: accountConn,
 		iamConn:     iamConn,
 		tenantConn:  tenantConn,
+		consoleConn: consoleConn,
 	}, nil
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	consolemodel "github.com/vyolayer/vyolayer/internal/console/model"
 	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
 	"github.com/vyolayer/vyolayer/pkg/postgres"
@@ -76,6 +77,15 @@ func main() {
 		tenantmodelv1.ProjectMember{},
 
 		tenantmodelv1.ApiKey{},
+
+		// Console models
+		consolemodel.Service{},
+		consolemodel.ProjectService{},
+		consolemodel.ServiceResource{},
+		consolemodel.ServiceResourceColumn{},
+		consolemodel.ServiceResourceAction{},
+		consolemodel.ServiceResourceFilter{},
+		consolemodel.ProjectResourceOverride{},
 
 		// Account service models
 		// accountmodelv1.ServiceUser{},

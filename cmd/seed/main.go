@@ -5,6 +5,8 @@ import (
 
 	"github.com/vyolayer/vyolayer/pkg/postgres"
 	"github.com/vyolayer/vyolayer/pkg/postgres/seed"
+
+	consoleseed "github.com/vyolayer/vyolayer/internal/console/seed"
 )
 
 func main() {
@@ -24,6 +26,11 @@ func main() {
 	// Run Seeder
 	if err := seed.Run(db); err != nil {
 		log.Fatalf("Failed to seed database: %v", err)
+	}
+
+	// Run Platform Auth Resources Seeder
+	if err := consoleseed.SeedAuthResources(db); err != nil {
+		log.Fatalf("Failed to seed platform auth resources: %v", err)
 	}
 
 	log.Println("✅ Database seeded successfully!")

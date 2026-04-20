@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package console.v1;
+
+option go_package = "github.com/subho/vyolayer/VyoLayer/proto/console/v1;consolev1";
+
+import "google/protobuf/empty.proto";
+
+service ProjectServiceManifest {
+  rpc GetProjectServiceManifest(GetProjectServiceManifestRequest) returns (GetProjectServiceManifestResponse);
+  rpc ListProjectServices(ListProjectServicesRequest) returns (ListProjectServicesResponse);
+}
+
+message GetProjectServiceManifestRequest {
+  string project_id = 1;
+  string service_key = 2;
+}
+
+message GetProjectServiceManifestResponse {
+  bool success = 1;
+  ManifestData data = 2;
+}
+
+message ManifestData {
+  string key = 1;
+  string name = 2;
+  string description = 3;
+  string status = 4;
+  string plan = 5;
+  string icon = 6;
+  repeated ResourceData resources = 7;
+}
+
+message ResourceData {
+  string key = 1;
+  string label = 2;
+  string route = 3;
+  string icon = 4;
+  repeated ColumnData columns = 5;
+  repeated ActionData actions = 6;
+  repeated FilterData filters = 7;
+}
+
+message ColumnData {
+  string key = 1;
+  string label = 2;
+  string type = 3;
+  bool sortable = 4;
+  bool visible = 5;
+}
+
+message ActionData {
+  string key = 1;
+  string label = 2;
+  string scope = 3;
+  string variant = 4;
+  bool danger = 5;
+}
+
+message FilterData {
+  string key = 1;
+  string label = 2;
+  string type = 3;
+}
+
+message ListProjectServicesRequest {
+  string project_id = 1;
+}
+
+message ListProjectServicesResponse {
+  bool success = 1;
+  repeated ProjectServiceData data = 2;
+}
+
+message ProjectServiceData {
+  string key = 1;
+  string name = 2;
+  string status = 3;
+  string plan = 4;
+  string icon = 5;
+  string description = 6;
+}

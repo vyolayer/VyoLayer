@@ -1,8 +1,6 @@
-package dto
+package tenant
 
-// ─── Project ──────────────────────────────────────────────────────────────────
-
-type TProject struct {
+type Project struct {
 	ID             string `json:"id,omitempty"`
 	OrganizationID string `json:"organization_id,omitempty"`
 	Name           string `json:"name,omitempty"`
@@ -16,7 +14,7 @@ type TProject struct {
 	CreatedAt      string `json:"created_at,omitempty"`
 }
 
-type TProjectMember struct {
+type ProjectMember struct {
 	ID        string  `json:"id,omitempty"`
 	UserID    string  `json:"user_id,omitempty"`
 	Email     string  `json:"email,omitempty"`
@@ -28,18 +26,18 @@ type TProjectMember struct {
 }
 
 type ProjectResponse struct {
-	Project *TProject         `json:"project,omitempty"`
-	Members []*TProjectMember `json:"members,omitempty"`
+	Project *Project         `json:"project,omitempty"`
+	Members []*ProjectMember `json:"members,omitempty"`
 }
 
-type ListProjects struct {
-	Projects      []*TProject `json:"projects,omitempty"`
-	TotalCount    int32       `json:"total_count,omitempty"`
-	NextPageToken string      `json:"next_page_token,omitempty"`
+type ListProjectsResponse struct {
+	Projects      []*Project `json:"projects,omitempty"`
+	TotalCount    int32      `json:"total_count,omitempty"`
+	NextPageToken string     `json:"next_page_token,omitempty"`
 }
 
-type ListProjectMembers struct {
-	Members       []*TProjectMember `json:"members,omitempty"`
-	TotalCount    int32             `json:"total_count,omitempty"`
-	NextPageToken string            `json:"next_page_token,omitempty"`
+type ListProjectMembersResponse struct {
+	Members       []*ProjectMember `json:"members,omitempty"`
+	TotalCount    int32            `json:"total_count,omitempty"`
+	NextPageToken string           `json:"next_page_token,omitempty"`
 }

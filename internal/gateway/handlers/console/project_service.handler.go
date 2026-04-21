@@ -1,6 +1,8 @@
 package console
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
 	"github.com/vyolayer/vyolayer/pkg/errors"
@@ -10,6 +12,10 @@ import (
 	consolev1 "github.com/vyolayer/vyolayer/proto/console/v1"
 
 	dto "github.com/vyolayer/vyolayer/internal/shared/dto/console"
+)
+
+const (
+	grpcTimeout = 10 * time.Second
 )
 
 type ProjectServiceHandler struct {
@@ -24,19 +30,20 @@ func NewProjectServiceHandler(
 	iamJWT jwt.IamJWT,
 ) *ProjectServiceHandler {
 	return &ProjectServiceHandler{
-		logger: logger.WithContext("ProjectService Handler"),
+		logger: logger.WithContext("ConsoleProjectServiceHandler"),
 		client: client,
 		iamJWT: iamJWT,
 	}
 }
 
 func (h *ProjectServiceHandler) RegisterRoutes(router fiber.Router) {
-	grpcCtxMiddleware := NewGrpcCtxMiddleware(grpcTimeout)
-	router.Use(grpcCtxMiddleware.Handler())
-	router.Use(middleware.IamJWTVerify(h.iamJWT))
+	// grpc ctx timeout
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(grpcTimeout)
 
 	// /console/projects/:projectID/services
 	services := router.Group("/console/projects/:projectID/services")
+	services.Use(grpcCtxMiddleware.Handler())
+	services.Use(middleware.IamJWTVerify(h.iamJWT))
 	services.Use(middleware.ValidateProjectID())
 
 	services.Get("/", h.list)

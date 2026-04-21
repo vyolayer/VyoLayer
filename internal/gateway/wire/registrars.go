@@ -1,8 +1,11 @@
 package wire
 
 import (
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers/console"
+	accounthandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/account"
+	consolehandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/console"
+	healthhandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/health"
+	iamhandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/iam"
+	tenanthandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/tenant"
 	"github.com/vyolayer/vyolayer/internal/gateway/server"
 	"github.com/vyolayer/vyolayer/internal/gateway/service"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
@@ -18,53 +21,55 @@ func NewRegistrars(
 	iamJWT jwt.IamJWT,
 ) []server.RouteRegistrar {
 	return []server.RouteRegistrar{
-		handlers.NewHealthHandler(),
+		healthhandler.NewHealthHandler(),
 
 		// Account routes
-		handlers.NewAccountHandler(
+		accounthandler.NewAccountHandler(
 			clients.AccountClient,
 			cookieSrv,
 			accountJWT,
+			logger,
 		),
 
 		// IAM routes
-		handlers.NewIAMAuthGatewayHandler(
+		iamhandler.NewIAMAuthGatewayHandler(
 			clients.IamAuthClient,
 			clients.IamUserClient,
 			iamCookieSrv,
 			iamJWT,
+			logger,
 		),
 
 		// Tenant routes
 		// Tenant Organization routes
-		handlers.NewOrganizationHandler(
+		tenanthandler.NewOrganizationHandler(
 			logger,
 			clients.TenantOrganizationClient,
 			iamJWT,
 		),
 
 		// Tenant Organization Member routes
-		handlers.NewOrganizationMemberHandler(
+		tenanthandler.NewOrganizationMemberHandler(
 			logger,
 			clients.TenantOrganizationMemClient,
 			iamJWT,
 		),
 
 		// Tenant Organization Invitation routes
-		handlers.NewOrganizationInvitationHandler(
+		tenanthandler.NewOrganizationInvitationHandler(
 			logger,
 			clients.TenantOrganizationInvClient,
 			iamJWT,
 		),
 
 		// Tenant Project & Project Member routes
-		handlers.NewProjectHandler(
+		tenanthandler.NewProjectHandler(
 			logger,
 			clients.TenantProjectClient,
 			iamJWT,
 		),
 
-		console.NewProjectServiceHandler(
+		consolehandler.NewProjectServiceHandler(
 			logger,
 			clients.ConsoleProjectServiceManifestClient,
 			iamJWT,

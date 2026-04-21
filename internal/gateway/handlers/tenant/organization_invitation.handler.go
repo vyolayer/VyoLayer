@@ -1,9 +1,9 @@
-package handlers
+package tenant
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers/dto"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
+	dto "github.com/vyolayer/vyolayer/internal/shared/dto/tenant"
 	"github.com/vyolayer/vyolayer/pkg/ctxutil"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
@@ -33,10 +33,10 @@ func NewOrganizationInvitationHandler(
 }
 
 func (h *OrganizationInvitationHandler) RegisterRoutes(router fiber.Router) {
-	router.Use(grpcCtxMiddleware(tenantGRPCTimeout))
-	router.Use(middleware.IamJWTVerify(h.iamJWT))
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(tenantGRPCTimeout).Handler()
 
 	org := router.Group("/organizations")
+	org.Use(grpcCtxMiddleware, middleware.IamJWTVerify(h.iamJWT))
 
 	// Invitation routes that don't require an org context (accept uses token, pending is user-scoped)
 	org.Post("/invitations/accept", h.acceptInvitation)
@@ -56,6 +56,7 @@ func (h *OrganizationInvitationHandler) RegisterRoutes(router fiber.Router) {
 }
 
 func (h *OrganizationInvitationHandler) createInvitation(c *fiber.Ctx) error {
+
 	var req tenantV1.CreateInvitationRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, ErrInvalidBody)
@@ -71,6 +72,7 @@ func (h *OrganizationInvitationHandler) createInvitation(c *fiber.Ctx) error {
 }
 
 func (h *OrganizationInvitationHandler) listInvitations(c *fiber.Ctx) error {
+
 	req := tenantV1.ListInvitationsRequest{
 		OrganizationId: getOrgIDFromLocals(c),
 		PageSize:       int32(c.QueryInt("page_size", 0)),
@@ -82,7 +84,7 @@ func (h *OrganizationInvitationHandler) listInvitations(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	invitationsDto := make([]*dto.TOrganizationInvitation, len(resp.GetInvitations()))
+	invitationsDto := make([]*dto.OrganizationInvitation, len(resp.GetInvitations()))
 	for i, inv := range resp.GetInvitations() {
 		invitationsDto[i] = protoInvitationToDTO(inv)
 	}
@@ -91,7 +93,7 @@ func (h *OrganizationInvitationHandler) listInvitations(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"invitations fetched successfully",
-		&dto.ListOrganizationInvitations{Invitations: invitationsDto},
+		&dto.ListOrganizationInvitationsResponse{Invitations: invitationsDto},
 	)
 }
 
@@ -121,7 +123,7 @@ func (h *OrganizationInvitationHandler) getPendingByOrgID(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	invitationsDto := make([]*dto.TOrganizationInvitationForOrg, len(resp.GetInvitations()))
+	invitationsDto := make([]*dto.OrganizationInvitationForOrg, len(resp.GetInvitations()))
 	for i, inv := range resp.GetInvitations() {
 		invitationsDto[i] = protoInvitationForOrgToDTO(inv)
 	}
@@ -130,7 +132,7 @@ func (h *OrganizationInvitationHandler) getPendingByOrgID(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"pending invitations fetched successfully",
-		&dto.ListOrganizationInvitationsForOrg{Invitations: invitationsDto},
+		&dto.ListOrganizationInvitationsForOrgResponse{Invitations: invitationsDto},
 	)
 }
 
@@ -151,7 +153,7 @@ func (h *OrganizationInvitationHandler) getPendingByUser(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	invitationsDto := make([]*dto.TOrganizationInvitation, len(resp.GetInvitations()))
+	invitationsDto := make([]*dto.OrganizationInvitation, len(resp.GetInvitations()))
 	for i, inv := range resp.GetInvitations() {
 		invitationsDto[i] = protoInvitationToDTO(inv)
 	}
@@ -160,7 +162,7 @@ func (h *OrganizationInvitationHandler) getPendingByUser(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"pending invitations fetched successfully",
-		&dto.ListOrganizationInvitations{Invitations: invitationsDto},
+		&dto.ListOrganizationInvitationsResponse{Invitations: invitationsDto},
 	)
 }
 

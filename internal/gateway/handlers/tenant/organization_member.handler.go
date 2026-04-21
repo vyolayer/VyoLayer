@@ -1,9 +1,9 @@
-package handlers
+package tenant
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers/dto"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
+	dto "github.com/vyolayer/vyolayer/internal/shared/dto/tenant"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/logger"
@@ -30,11 +30,14 @@ func NewOrganizationMemberHandler(
 }
 
 func (h *OrganizationMemberHandler) RegisterRoutes(router fiber.Router) {
-	router.Use(grpcCtxMiddleware(tenantGRPCTimeout))
-	router.Use(middleware.IamJWTVerify(h.iamJWT))
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(tenantGRPCTimeout).Handler()
 
 	orgMemberGroup := router.Group("/organizations/:organizationID/members")
-	orgMemberGroup.Use(middleware.ValidateOrganizationID())
+	orgMemberGroup.Use(
+		grpcCtxMiddleware,
+		middleware.IamJWTVerify(h.iamJWT),
+		middleware.ValidateOrganizationID(),
+	)
 
 	// Members
 	orgMemberGroup.
@@ -70,10 +73,10 @@ func (h *OrganizationMemberHandler) getCurrentMember(c *fiber.Ctx) error {
 		rolesDto[i] = r.GetName()
 	}
 
-	memberDto := &dto.TOrganizationMemberWithRBAC{
-		TOrganizationMember: *protoMemberToDTO(member),
-		Roles:               rolesDto,
-		Perms:               permsDto,
+	memberDto := &dto.OrganizationMemberWithRBACResponse{
+		OrganizationMember: *protoMemberToDTO(member),
+		Roles:              rolesDto,
+		Perms:              permsDto,
 	}
 
 	return response.SuccessWithMessage(
@@ -94,7 +97,7 @@ func (h *OrganizationMemberHandler) listMembers(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	membersDto := make([]*dto.TOrganizationMember, len(resp.GetMembers()))
+	membersDto := make([]*dto.OrganizationMember, len(resp.GetMembers()))
 	for i, m := range resp.GetMembers() {
 		membersDto[i] = protoMemberToDTO(m)
 	}
@@ -103,7 +106,7 @@ func (h *OrganizationMemberHandler) listMembers(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"members fetched successfully",
-		&dto.ListOrganizationMembers{
+		&dto.ListOrganizationMembersResponse{
 			Members:    membersDto,
 			TotalCount: resp.GetTotalCount(),
 		},
@@ -121,11 +124,18 @@ func (h *OrganizationMemberHandler) getMemberByID(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	member := resp.GetMember()
+	if member == nil {
+		return response.Error(c, errors.NotFound("member not found"))
+	}
+
+	memberDto := protoMemberToDTO(member)
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"member fetched successfully",
-		protoMemberToDTO(resp.GetMember()),
+		memberDto,
 	)
 }
 

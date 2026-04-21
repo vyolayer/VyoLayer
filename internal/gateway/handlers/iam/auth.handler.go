@@ -1,35 +1,30 @@
-package handlers
+package iam
 
 import (
 	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
 	"github.com/vyolayer/vyolayer/internal/gateway/service"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
+	"github.com/vyolayer/vyolayer/pkg/logger"
 	"github.com/vyolayer/vyolayer/pkg/response"
+
 	iamV1 "github.com/vyolayer/vyolayer/proto/iam/v1"
 )
 
 const (
-	StrictRateLimit   = 5
-	StandardRateLimit = 100
-	RateLimitWindow   = 1 * time.Minute
+	grpcTimeout = 10 * time.Second
 )
 
-var (
-	ErrTooManyRequests = errors.New("Too many requests, please slow down")
-)
-
-// IAMAuthGatewayHandler routes HTTP requests to the IAM gRPC service.
 type IAMAuthGatewayHandler struct {
 	auth   iamV1.AuthServiceClient
 	user   iamV1.UserServiceClient
 	cookie *service.IAMCookieService
 	iamJWT jwt.IamJWT
+	logger *logger.AppLogger
 }
 
 func NewIAMAuthGatewayHandler(
@@ -37,41 +32,27 @@ func NewIAMAuthGatewayHandler(
 	user iamV1.UserServiceClient,
 	cookie *service.IAMCookieService,
 	iamJWT jwt.IamJWT,
+	logger *logger.AppLogger,
 ) *IAMAuthGatewayHandler {
 	return &IAMAuthGatewayHandler{
 		auth:   auth,
 		user:   user,
 		cookie: cookie,
 		iamJWT: iamJWT,
+		logger: logger.WithContext("IAMAuthGatewayHandler"),
 	}
-}
-
-// ── Rate limiters ────────────────────────────────────────────────────────
-func (h *IAMAuthGatewayHandler) rateLimiter() (fiber.Handler, fiber.Handler) {
-	// Sensitive unauthenticated endpoints: max 5 req / min per IP.
-	strictLimiter := limiter.New(limiter.Config{
-		Max:          StrictRateLimit,
-		Expiration:   RateLimitWindow,
-		KeyGenerator: func(c *fiber.Ctx) string { return c.IP() },
-		LimitReached: func(c *fiber.Ctx) error { return response.Error(c, ErrTooManyRequests) },
-	})
-
-	// Standard authenticated / low-risk endpoints: max 100 req / min per IP.
-	standardLimiter := limiter.New(limiter.Config{
-		Max:          StandardRateLimit,
-		Expiration:   RateLimitWindow,
-		KeyGenerator: func(c *fiber.Ctx) string { return c.IP() },
-		LimitReached: func(c *fiber.Ctx) error { return response.Error(c, ErrTooManyRequests) },
-	})
-
-	return strictLimiter, standardLimiter
 }
 
 // RegisterRoutes mounts all IAM routes under /iam.
 func (h *IAMAuthGatewayHandler) RegisterRoutes(router fiber.Router) {
-	iam := router.Group("/iam")
+	// grpc ctx timeout
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(grpcTimeout)
 
-	strictLimiter, standardLimiter := h.rateLimiter()
+	strictLimiter := middleware.NewRateLimiter(10, 1*time.Minute).Handler()
+	standardLimiter := middleware.NewRateLimiter(100, 1*time.Minute).Handler()
+
+	iam := router.Group("/iam")
+	iam.Use(grpcCtxMiddleware.Handler())
 
 	// ── Public auth endpoints ────────────────────────────────────────────────
 	iam.Post("/register", strictLimiter, h.register)
@@ -92,21 +73,19 @@ func (h *IAMAuthGatewayHandler) RegisterRoutes(router fiber.Router) {
 	// me.Patch("/", h.updateMe)
 	// me.Post("/change-password", h.changePassword)
 
-	log.Println("[IAM] routes registered")
+	h.logger.Info("IAM routes registered", "")
 }
 
 // ── Registration ────────────────────────────────────────────────────────────────
 
 func (h *IAMAuthGatewayHandler) register(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.RegisterRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	if _, err := h.auth.Register(ctx, &req); err != nil {
+	if _, err := h.auth.Register(c.UserContext(), &req); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -114,15 +93,13 @@ func (h *IAMAuthGatewayHandler) register(c *fiber.Ctx) error {
 }
 
 func (h *IAMAuthGatewayHandler) verifyEmail(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	token := c.Query("token")
 	if token == "" {
 		return response.Error(c, errors.BadRequest("token is required"))
 	}
 
-	if _, err := h.auth.VerifyEmail(ctx, &iamV1.VerifyEmailRequest{Token: token}); err != nil {
+	if _, err := h.auth.VerifyEmail(c.UserContext(), &iamV1.VerifyEmailRequest{Token: token}); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -130,15 +107,13 @@ func (h *IAMAuthGatewayHandler) verifyEmail(c *fiber.Ctx) error {
 }
 
 func (h *IAMAuthGatewayHandler) resendVerificationEmail(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.ResendVerificationEmailRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	if _, err := h.auth.ResendVerificationEmail(ctx, &req); err != nil {
+	if _, err := h.auth.ResendVerificationEmail(c.UserContext(), &req); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -148,15 +123,13 @@ func (h *IAMAuthGatewayHandler) resendVerificationEmail(c *fiber.Ctx) error {
 // ── Session ─────────────────────────────────────────────────────────────────────
 
 func (h *IAMAuthGatewayHandler) login(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.LoginRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	sess, err := h.auth.Login(ctx, &req)
+	sess, err := h.auth.Login(c.UserContext(), &req)
 	if err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
@@ -180,15 +153,13 @@ func (h *IAMAuthGatewayHandler) login(c *fiber.Ctx) error {
 }
 
 func (h *IAMAuthGatewayHandler) logout(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	st := h.cookie.GetSessionToken(c)
 	if st == "" {
 		return response.Error(c, errors.Unauthorized("unauthorized"))
 	}
 
-	if _, err := h.auth.Logout(ctx, &iamV1.LogoutRequest{SessionToken: st}); err != nil {
+	if _, err := h.auth.Logout(c.UserContext(), &iamV1.LogoutRequest{SessionToken: st}); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -201,8 +172,6 @@ func (h *IAMAuthGatewayHandler) logout(c *fiber.Ctx) error {
 }
 
 func (h *IAMAuthGatewayHandler) refreshSession(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	st := h.cookie.GetSessionToken(c)
 	log.Println(st)
@@ -210,7 +179,7 @@ func (h *IAMAuthGatewayHandler) refreshSession(c *fiber.Ctx) error {
 		return response.Error(c, errors.Unauthorized("unauthorized"))
 	}
 
-	sess, err := h.auth.RefreshSession(ctx, &iamV1.RefreshSessionRequest{SessionToken: st})
+	sess, err := h.auth.RefreshSession(c.UserContext(), &iamV1.RefreshSessionRequest{SessionToken: st})
 	if err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
@@ -236,15 +205,13 @@ func (h *IAMAuthGatewayHandler) refreshSession(c *fiber.Ctx) error {
 // ── Password ─────────────────────────────────────────────────────────────────────
 
 func (h *IAMAuthGatewayHandler) forgotPassword(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.ForgotPasswordRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	if _, err := h.auth.ForgotPassword(ctx, &req); err != nil {
+	if _, err := h.auth.ForgotPassword(c.UserContext(), &req); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -253,15 +220,13 @@ func (h *IAMAuthGatewayHandler) forgotPassword(c *fiber.Ctx) error {
 }
 
 func (h *IAMAuthGatewayHandler) resetPassword(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.ResetPasswordRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	if _, err := h.auth.ResetPassword(ctx, &req); err != nil {
+	if _, err := h.auth.ResetPassword(c.UserContext(), &req); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
@@ -293,10 +258,8 @@ type GetMeResponse struct {
 
 // getMe returns the authenticated user's profile by forwarding to the IAM UserService.
 func (h *IAMAuthGatewayHandler) getMe(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
-	resp, err := h.user.GetMe(ctx, &iamV1.GetMeRequest{})
+	resp, err := h.user.GetMe(c.UserContext(), &iamV1.GetMeRequest{})
 	if err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
@@ -332,15 +295,13 @@ func (h *IAMAuthGatewayHandler) getMe(c *fiber.Ctx) error {
 
 // updateMe updates the authenticated user's profile.
 func (h *IAMAuthGatewayHandler) updateMe(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.UpdateMeRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	resp, err := h.user.UpdateMe(ctx, &req)
+	resp, err := h.user.UpdateMe(c.UserContext(), &req)
 	if err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
@@ -350,15 +311,13 @@ func (h *IAMAuthGatewayHandler) updateMe(c *fiber.Ctx) error {
 
 // changePassword changes the password for the authenticated user.
 func (h *IAMAuthGatewayHandler) changePassword(c *fiber.Ctx) error {
-	ctx, cancel := grpcCtx(c)
-	defer cancel()
 
 	var req iamV1.ChangePasswordRequest
 	if err := c.BodyParser(&req); err != nil {
 		return response.Error(c, errors.BadRequest("invalid request body"))
 	}
 
-	if _, err := h.auth.ChangePassword(ctx, &req); err != nil {
+	if _, err := h.auth.ChangePassword(c.UserContext(), &req); err != nil {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 

@@ -1,9 +1,9 @@
-package handlers
+package tenant
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers/dto"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
+	dto "github.com/vyolayer/vyolayer/internal/shared/dto/tenant"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/logger"
@@ -48,12 +48,15 @@ func NewProjectHandler(
 //	DELETE /organizations/:organizationID/projects/:projectID/members/:memberID
 //	DELETE /organizations/:organizationID/projects/:projectID/members/leave
 func (h *ProjectHandler) RegisterRoutes(router fiber.Router) {
-	router.Use(grpcCtxMiddleware(tenantGRPCTimeout))
-	router.Use(middleware.IamJWTVerify(h.iamJWT))
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(tenantGRPCTimeout)
 
 	// /organizations/:organizationID/projects
 	projects := router.Group("/organizations/:organizationID/projects")
-	projects.Use(middleware.ValidateOrganizationID())
+	projects.Use(
+		grpcCtxMiddleware.Handler(),
+		middleware.IamJWTVerify(h.iamJWT),
+		middleware.ValidateOrganizationID(),
+	)
 
 	// Collection routes
 	projects.Get("/", h.listProjects)
@@ -138,7 +141,7 @@ func (h *ProjectHandler) listProjects(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	projects := make([]*dto.TProject, len(resp.GetProjects()))
+	projects := make([]*dto.Project, len(resp.GetProjects()))
 	for i, p := range resp.GetProjects() {
 		projects[i] = protoProjectToDTO(p)
 	}
@@ -147,7 +150,7 @@ func (h *ProjectHandler) listProjects(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"projects fetched successfully",
-		&dto.ListProjects{
+		&dto.ListProjectsResponse{
 			Projects:      projects,
 			TotalCount:    resp.GetTotalCount(),
 			NextPageToken: resp.GetNextPageToken(),
@@ -207,7 +210,7 @@ func (h *ProjectHandler) listMembers(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	members := make([]*dto.TProjectMember, len(resp.GetMembers()))
+	members := make([]*dto.ProjectMember, len(resp.GetMembers()))
 	for i, m := range resp.GetMembers() {
 		members[i] = protoProjectMemberToDTO(m)
 	}
@@ -216,7 +219,7 @@ func (h *ProjectHandler) listMembers(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"members fetched successfully",
-		&dto.ListProjectMembers{
+		&dto.ListProjectMembersResponse{
 			Members:       members,
 			TotalCount:    resp.GetTotalCount(),
 			NextPageToken: resp.GetNextPageToken(),

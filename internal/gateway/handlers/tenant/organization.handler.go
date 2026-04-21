@@ -1,11 +1,11 @@
-package handlers
+package tenant
 
 import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/vyolayer/vyolayer/internal/gateway/handlers/dto"
 	"github.com/vyolayer/vyolayer/internal/gateway/middleware"
+	dto "github.com/vyolayer/vyolayer/internal/shared/dto/tenant"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
 	"github.com/vyolayer/vyolayer/pkg/logger"
@@ -42,10 +42,12 @@ func NewOrganizationHandler(
 }
 
 func (h *OrganizationHandler) RegisterRoutes(router fiber.Router) {
-	router.Use(grpcCtxMiddleware(tenantGRPCTimeout))
-	router.Use(middleware.IamJWTVerify(h.iamJWT))
+	grpcCtxMiddleware := middleware.NewGrpcCtxMiddleware(tenantGRPCTimeout).Handler()
 
 	org := router.Group("/organizations")
+	org.Use(grpcCtxMiddleware)
+	org.Use(middleware.IamJWTVerify(h.iamJWT))
+
 	org.
 		Post("/onboarding", h.onboarding).
 		Post("/", h.create).
@@ -91,7 +93,7 @@ func (h *OrganizationHandler) create(c *fiber.Ctx) error {
 		c,
 		fiber.StatusCreated,
 		"organization created successfully",
-		&dto.CreateOrganization{
+		&dto.CreateOrganizationResponse{
 			Name:        req.GetName(),
 			Description: req.GetDescription(),
 		},
@@ -112,11 +114,16 @@ func (h *OrganizationHandler) onboarding(c *fiber.Ctx) error {
 
 	h.logger.Debug("Organization onboarded", resp)
 
+	dtoResp := protoOrgResponseToDTO(resp)
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusCreated,
 		"organization onboarded successfully",
-		resp,
+		&dto.OnboardOrganizationResponse{
+			Organization: dtoResp.Organization,
+			Members:      dtoResp.Members,
+		},
 	)
 }
 
@@ -130,25 +137,14 @@ func (h *OrganizationHandler) getById(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	org := resp.GetOrganization()
-	orgDto := protoOrgToDTO(org)
-
-	members := resp.GetMembers()
-	memberListDto := make([]*dto.TOrganizationMember, len(members))
-	for i, m := range members {
-		memberListDto[i] = protoMemberToDTO(m)
-	}
-
 	h.logger.Debug("Organization fetched by id", resp)
+	orgDto := protoOrgResponseToDTO(resp)
 
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"organization fetched successfully",
-		&dto.Organization{
-			Organization: orgDto,
-			Members:      memberListDto,
-		},
+		orgDto,
 	)
 }
 
@@ -169,25 +165,14 @@ func (h *OrganizationHandler) getBySlug(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	org := resp.GetOrganization()
-	orgDto := protoOrgToDTO(org)
-
-	members := resp.GetMembers()
-	memberListDto := make([]*dto.TOrganizationMember, len(members))
-	for i, m := range members {
-		memberListDto[i] = protoMemberToDTO(m)
-	}
-
 	h.logger.Debug("Organization fetched by slug", resp)
+	orgDto := protoOrgResponseToDTO(resp)
 
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"organization fetched successfully",
-		&dto.Organization{
-			Organization: orgDto,
-			Members:      memberListDto,
-		},
+		orgDto,
 	)
 }
 
@@ -202,7 +187,7 @@ func (h *OrganizationHandler) list(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
-	orgsDto := make([]*dto.TOrganization, len(resp.GetOrganizations()))
+	orgsDto := make([]*dto.Organization, len(resp.GetOrganizations()))
 	for i, org := range resp.GetOrganizations() {
 		orgsDto[i] = protoOrgToDTO(org)
 	}
@@ -211,7 +196,7 @@ func (h *OrganizationHandler) list(c *fiber.Ctx) error {
 		c,
 		fiber.StatusOK,
 		"organizations fetched successfully",
-		&dto.ListOrganizations{
+		&dto.ListOrganizationsResponse{
 			Organizations: orgsDto,
 			TotalCount:    resp.GetTotalCount(),
 			NextPageToken: resp.GetNextPageToken(),
@@ -231,11 +216,13 @@ func (h *OrganizationHandler) update(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	orgDto := protoOrgResponseToDTO(resp)
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"organization updated successfully",
-		protoOrgToDTO(resp.GetOrganization()),
+		orgDto,
 	)
 }
 
@@ -306,11 +293,16 @@ func (h *OrganizationHandler) listRoles(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	rolesDto := make([]*dto.OrganizationRole, len(resp.GetRoles()))
+	for i, r := range resp.GetRoles() {
+		rolesDto[i] = protoOrgRoleToDTO(r)
+	}
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"organization roles fetched successfully",
-		resp.GetRoles(),
+		rolesDto,
 	)
 }
 
@@ -324,10 +316,15 @@ func (h *OrganizationHandler) listPermissions(c *fiber.Ctx) error {
 		return response.Error(c, errors.FromGRPC(err))
 	}
 
+	permsDto := make([]*dto.OrganizationPerm, len(resp.GetPermissions()))
+	for i, p := range resp.GetPermissions() {
+		permsDto[i] = protoPermToDTO(p)
+	}
+
 	return response.SuccessWithMessage(
 		c,
 		fiber.StatusOK,
 		"organization permissions fetched successfully",
-		resp.GetPermissions(),
+		permsDto,
 	)
 }

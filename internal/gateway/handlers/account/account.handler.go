@@ -10,6 +10,7 @@ import (
 	"github.com/vyolayer/vyolayer/internal/shared/middleware"
 	"github.com/vyolayer/vyolayer/pkg/errors"
 	"github.com/vyolayer/vyolayer/pkg/jwt"
+	"github.com/vyolayer/vyolayer/pkg/logger"
 	"github.com/vyolayer/vyolayer/pkg/response"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
 )
@@ -19,6 +20,7 @@ type AccountHandler struct {
 	client     accountV1.AccountServiceClient
 	cookieSv   *service.AccountTokenService
 	accountJWT jwt.AccountJWT
+	logger     *logger.AppLogger
 }
 
 // NewAccountHandler creates a new AccountHandler injecting the gRPC client
@@ -26,18 +28,19 @@ func NewAccountHandler(
 	client accountV1.AccountServiceClient,
 	cookieSv *service.AccountTokenService,
 	accountJWT jwt.AccountJWT,
+	logger *logger.AppLogger,
 ) *AccountHandler {
 	return &AccountHandler{
 		client:     client,
 		cookieSv:   cookieSv,
 		accountJWT: accountJWT,
+		logger:     logger.WithContext("AccountHandler"),
 	}
 }
 
 // RegisterRoutes registers the account routes on the provided router
 func (h *AccountHandler) RegisterRoutes(router fiber.Router) {
 	r := router.Group("/account")
-	log.Println("Account routes registered")
 
 	r.Post("/sign-up", h.register)
 	r.Post("/verify-email", h.verifyEmail)
@@ -60,6 +63,8 @@ func (h *AccountHandler) RegisterRoutes(router fiber.Router) {
 	ra.Post("/sessions/revoke-all", h.revokeAllSessions)
 
 	ra.Post("change-password", h.changePassword)
+
+	h.logger.Info("Account routes registered", "")
 }
 
 // register handles user registration

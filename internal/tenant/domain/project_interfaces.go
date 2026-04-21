@@ -11,8 +11,10 @@ import (
 type ProjectRepository interface {
 	Create(ctx context.Context, tx *gorm.DB, project *Project) error
 
+	GetByID(ctx context.Context, projectID uuid.UUID) (*Project, error)
+
 	// Scoped by OrgID to ensure data isolation
-	GetByID(ctx context.Context, orgID, projectID uuid.UUID) (*Project, error)
+	GetByOrgID(ctx context.Context, orgID, projectID uuid.UUID) (*Project, error)
 	List(ctx context.Context, orgID uuid.UUID, limit, offset int32) ([]*Project, int32, error)
 
 	Update(ctx context.Context, project *Project) error
@@ -44,6 +46,9 @@ type ProjectMemberRepository interface {
 type ProjectUseCase interface {
 	Create(ctx context.Context, orgID, createdBy uuid.UUID, name, description string) (*Project, error)
 
+	GetByID(ctx context.Context, projectID uuid.UUID) (*Project, error)
+
+	// Scoped by OrgID to ensure data isolation
 	Get(ctx context.Context, orgID, projectID uuid.UUID) (*Project, error)
 	List(ctx context.Context, orgID uuid.UUID, limit, offset int32) ([]*Project, int32, error)
 

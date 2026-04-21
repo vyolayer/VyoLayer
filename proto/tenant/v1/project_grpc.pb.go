@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ProjectService_CreateProject_FullMethodName    = "/tenant.v1.ProjectService/CreateProject"
 	ProjectService_ListProjects_FullMethodName     = "/tenant.v1.ProjectService/ListProjects"
+	ProjectService_GetById_FullMethodName          = "/tenant.v1.ProjectService/GetById"
 	ProjectService_GetProject_FullMethodName       = "/tenant.v1.ProjectService/GetProject"
 	ProjectService_UpdateProject_FullMethodName    = "/tenant.v1.ProjectService/UpdateProject"
 	ProjectService_DeleteProject_FullMethodName    = "/tenant.v1.ProjectService/DeleteProject"
@@ -40,6 +41,7 @@ type ProjectServiceClient interface {
 	// Project CRUD
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
+	GetById(ctx context.Context, in *GetProjectByIdRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	GetProject(ctx context.Context, in *GetProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	// rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
@@ -83,6 +85,16 @@ func (c *projectServiceClient) ListProjects(ctx context.Context, in *ListProject
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListProjectsResponse)
 	err := c.cc.Invoke(ctx, ProjectService_ListProjects_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetById(ctx context.Context, in *GetProjectByIdRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectResponse)
+	err := c.cc.Invoke(ctx, ProjectService_GetById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -196,6 +208,7 @@ type ProjectServiceServer interface {
 	// Project CRUD
 	CreateProject(context.Context, *CreateProjectRequest) (*ProjectResponse, error)
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
+	GetById(context.Context, *GetProjectByIdRequest) (*ProjectResponse, error)
 	GetProject(context.Context, *GetProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
 	// rpc ArchiveProject(ArchiveProjectRequest) returns (TenantSuccessResponse) {
@@ -230,6 +243,9 @@ func (UnimplementedProjectServiceServer) CreateProject(context.Context, *CreateP
 }
 func (UnimplementedProjectServiceServer) ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) GetById(context.Context, *GetProjectByIdRequest) (*ProjectResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetById not implemented")
 }
 func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetProject not implemented")
@@ -314,6 +330,24 @@ func _ProjectService_ListProjects_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServiceServer).ListProjects(ctx, req.(*ListProjectsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProjectService_GetById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetById(ctx, req.(*GetProjectByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -512,6 +546,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListProjects",
 			Handler:    _ProjectService_ListProjects_Handler,
+		},
+		{
+			MethodName: "GetById",
+			Handler:    _ProjectService_GetById_Handler,
 		},
 		{
 			MethodName: "GetProject",

@@ -43,7 +43,7 @@ func (u *projectMemberUC) AddMember(ctx context.Context, orgID, projectID, userI
 	}
 
 	// Get Project
-	project, err := u.projRepo.GetByID(ctx, orgID, projectID)
+	project, err := u.projRepo.GetByOrgID(ctx, orgID, projectID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "project not found")
 	}

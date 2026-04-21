@@ -81,15 +81,27 @@ func (h *ProjectHandler) CreateProject(ctx context.Context, req *tenantV1.Create
 	}
 
 	// add member
-	member, err := h.projectMemberUC.AddMember(ctx, orgID, project.ID, userID, orgMember.ID, "project_admin")
-	if err != nil {
+	if _, err := h.projectMemberUC.AddMember(ctx, orgID, project.ID, userID, orgMember.ID, "project_admin"); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return &tenantV1.ProjectResponse{
 		Project: mapProjectToProto(project),
-		Members: []*tenantV1.ProjectMember{mapProjectMemberToProto(member)},
 	}, nil
+}
+
+func (h *ProjectHandler) GetByID(ctx context.Context, req *tenantV1.ProjectIdRequest) (*tenantV1.ProjectResponse, error) {
+	projectID, err := uuid.Parse(req.GetProjectId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid project id format")
+	}
+
+	project, err := h.projectUC.GetByID(ctx, projectID)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &tenantV1.ProjectResponse{Project: mapProjectToProto(project)}, nil
 }
 
 func (h *ProjectHandler) GetProject(ctx context.Context, req *tenantV1.GetProjectRequest) (*tenantV1.ProjectResponse, error) {

@@ -54,8 +54,19 @@ func (u *projectUC) Create(ctx context.Context, orgID, createdBy uuid.UUID, name
 	return project, nil
 }
 
+func (u *projectUC) GetByID(ctx context.Context, projectID uuid.UUID) (*domain.Project, error) {
+	project, err := u.projectRepo.GetByID(ctx, projectID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to fetch project: %s", err.Error())
+	}
+	if project == nil {
+		return nil, status.Error(codes.NotFound, "project not found")
+	}
+	return project, nil
+}
+
 func (u *projectUC) Get(ctx context.Context, orgID, projectID uuid.UUID) (*domain.Project, error) {
-	project, err := u.projectRepo.GetByID(ctx, orgID, projectID)
+	project, err := u.projectRepo.GetByOrgID(ctx, orgID, projectID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch project: %s", err.Error())
 	}
@@ -79,7 +90,7 @@ func (u *projectUC) List(ctx context.Context, orgID uuid.UUID, limit, offset int
 
 func (u *projectUC) Update(ctx context.Context, orgID, projectID uuid.UUID, name, description *string) (*domain.Project, error) {
 	// Fetch existing project first to ensure it exists and we own it
-	project, err := u.projectRepo.GetByID(ctx, orgID, projectID)
+	project, err := u.projectRepo.GetByOrgID(ctx, orgID, projectID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch project for update: %s", err.Error())
 	}
@@ -109,7 +120,7 @@ func (u *projectUC) Update(ctx context.Context, orgID, projectID uuid.UUID, name
 
 func (u *projectUC) Delete(ctx context.Context, orgID, projectID uuid.UUID, confirmName string) error {
 	// Fetch the project to validate the confirmation name
-	project, err := u.projectRepo.GetByID(ctx, orgID, projectID)
+	project, err := u.projectRepo.GetByOrgID(ctx, orgID, projectID)
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to fetch project for deletion: %s", err.Error())
 	}

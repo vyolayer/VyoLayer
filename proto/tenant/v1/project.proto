@@ -17,6 +17,9 @@ service ProjectService {
   rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
     option (tenant.v1.required_org_permission) = "project.read";
   };
+  rpc GetById(GetProjectByIdRequest) returns (ProjectResponse) {
+    option (tenant.v1.required_org_permission) = "project.read";
+  }
   rpc GetProject(GetProjectRequest) returns (ProjectResponse) {
     option (tenant.v1.required_org_permission) = "project.read";
     option (tenant.v1.required_project_permission) = "project.read";
@@ -135,7 +138,15 @@ message ProjectIdRequest {
   string project_id      = 2 [(buf.validate.field).string.min_len = 1];
 }
 
+message GetProjectByIdRequest {
+  string project_id = 1 [(buf.validate.field).string.min_len = 1];  
+}
+
 message ProjectResponse {
+  Project project = 1;
+}
+
+message ProjectWithMembersResponse {
   Project                project = 1;
   repeated ProjectMember members = 2;
 }

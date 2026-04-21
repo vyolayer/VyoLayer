@@ -57,8 +57,27 @@ func (r *projectRepo) Create(ctx context.Context, tx *gorm.DB, project *domain.P
 	return nil
 }
 
+func (r *projectRepo) GetByID(ctx context.Context, projectID uuid.UUID) (*domain.Project, error) {
+
+	var model Project
+
+	err := r.db.WithContext(ctx).
+		Where("id = ?", projectID).
+		First(&model).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil // Or return a specific domain.ErrNotFound
+		}
+		r.logger.ErrorWithErr("failed to get project", err)
+		return nil, err
+	}
+
+	return toProjectDomain(&model), nil
+}
+
 // GetByID fetches a project, strictly scoped to the Organization
-func (r *projectRepo) GetByID(ctx context.Context, orgID, projectID uuid.UUID) (*domain.Project, error) {
+func (r *projectRepo) GetByOrgID(ctx context.Context, orgID, projectID uuid.UUID) (*domain.Project, error) {
 	var model Project
 
 	err := r.db.WithContext(ctx).

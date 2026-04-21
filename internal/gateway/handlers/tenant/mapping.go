@@ -170,14 +170,8 @@ func protoProjectResponseToDTO(resp *tenantV1.ProjectResponse) *tenantdto.Projec
 		return nil
 	}
 
-	members := make([]*tenantdto.ProjectMember, len(resp.GetMembers()))
-	for i, m := range resp.GetMembers() {
-		members[i] = protoProjectMemberToDTO(m)
-	}
-
 	return &tenantdto.ProjectResponse{
 		Project: protoProjectToDTO(resp.GetProject()),
-		Members: members,
 	}
 }
 

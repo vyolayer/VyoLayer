@@ -8,6 +8,7 @@ import (
 	"github.com/vyolayer/vyolayer/pkg/grpcutil"
 	"github.com/vyolayer/vyolayer/pkg/logger"
 	accountV1 "github.com/vyolayer/vyolayer/proto/account/v1"
+	apikeyv1 "github.com/vyolayer/vyolayer/proto/apikey/v1"
 	consoleV1 "github.com/vyolayer/vyolayer/proto/console/v1"
 	iamV1 "github.com/vyolayer/vyolayer/proto/iam/v1"
 	tenantV1 "github.com/vyolayer/vyolayer/proto/tenant/v1"
@@ -29,11 +30,15 @@ type Clients struct {
 	TenantOrganizationMemClient tenantV1.OrganizationMemberServiceClient
 	TenantProjectClient         tenantV1.ProjectServiceClient
 
+	// Apikey
+	ApikeyServiceClient apikeyv1.APIKeyServiceClient
+
 	// Keep references to close them later
 	accountConn *grpc.ClientConn
 	iamConn     *grpc.ClientConn
 	tenantConn  *grpc.ClientConn
 	consoleConn *grpc.ClientConn
+	apikeyConn  *grpc.ClientConn
 }
 
 func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.Duration) (*Clients, error) {
@@ -79,6 +84,16 @@ func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.D
 		return nil, consoleerr
 	}
 
+	// Connent to apikey service
+	apikeyConn, apikeyerr := grpcutil.NewClient(grpcutil.ClientConfig{
+		Address: cfg.APIKeyServiceAddr,
+		Timeout: grpcTimeout,
+	})
+	if apikeyerr != nil {
+		logger.Warn("Failed to connect to apikey service", apikeyerr)
+		return nil, apikeyerr
+	}
+
 	return &Clients{
 		AccountClient:                       accountV1.NewAccountServiceClient(accountConn),
 		IamAuthClient:                       iamV1.NewAuthServiceClient(iamConn),
@@ -88,11 +103,13 @@ func NewClients(logger *logger.AppLogger, cfg *config.Config, grpcTimeout time.D
 		TenantOrganizationMemClient:         tenantV1.NewOrganizationMemberServiceClient(tenantConn),
 		TenantProjectClient:                 tenantV1.NewProjectServiceClient(tenantConn),
 		ConsoleProjectServiceManifestClient: consoleV1.NewProjectServiceManifestClient(consoleConn),
+		ApikeyServiceClient:                 apikeyv1.NewAPIKeyServiceClient(apikeyConn),
 
 		accountConn: accountConn,
 		iamConn:     iamConn,
 		tenantConn:  tenantConn,
 		consoleConn: consoleConn,
+		apikeyConn:  apikeyConn,
 	}, nil
 }
 

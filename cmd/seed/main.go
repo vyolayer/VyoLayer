@@ -28,6 +28,11 @@ func main() {
 		log.Fatalf("Failed to seed database: %v", err)
 	}
 
+	// Run Console Auth Resources Seeder
+	if err := consoleseed.SeedManifests(db); err != nil {
+		log.Fatalf("Failed to seed console auth resources: %v", err)
+	}
+
 	// Run Platform Auth Resources Seeder
 	if err := consoleseed.SeedAuthResources(db); err != nil {
 		log.Fatalf("Failed to seed platform auth resources: %v", err)

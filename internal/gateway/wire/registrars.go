@@ -2,6 +2,7 @@ package wire
 
 import (
 	accounthandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/account"
+	apikeyhandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/apikey"
 	consolehandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/console"
 	healthhandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/health"
 	iamhandler "github.com/vyolayer/vyolayer/internal/gateway/handlers/iam"
@@ -72,6 +73,12 @@ func NewRegistrars(
 		consolehandler.NewProjectServiceHandler(
 			logger,
 			clients.ConsoleProjectServiceManifestClient,
+			iamJWT,
+		),
+
+		apikeyhandler.NewHandler(
+			logger,
+			clients.ApikeyServiceClient,
 			iamJWT,
 		),
 	}

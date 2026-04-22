@@ -1,9 +1,11 @@
 package main
 
 import (
+	apikeymodelv1 "github.com/vyolayer/vyolayer/internal/apikeys/models/v1"
 	consolemodel "github.com/vyolayer/vyolayer/internal/console/model"
 	iammodelv1 "github.com/vyolayer/vyolayer/internal/iam/models/v1"
 	tenantmodelv1 "github.com/vyolayer/vyolayer/internal/tenant/models/v1"
+
 	"github.com/vyolayer/vyolayer/pkg/postgres"
 )
 
@@ -76,7 +78,7 @@ func main() {
 		tenantmodelv1.Project{},
 		tenantmodelv1.ProjectMember{},
 
-		tenantmodelv1.ApiKey{},
+		// tenantmodelv1.ApiKey{},
 
 		// Console models
 		consolemodel.Service{},
@@ -86,6 +88,14 @@ func main() {
 		consolemodel.ServiceResourceAction{},
 		consolemodel.ServiceResourceFilter{},
 		consolemodel.ProjectResourceOverride{},
+
+		// ApiKey models
+		apikeymodelv1.APIKey{},
+		apikeymodelv1.APIKeyScope{},
+		apikeymodelv1.APIKeyRateLimit{},
+		apikeymodelv1.APIKeyAuditLog{},
+		apikeymodelv1.APIKeyUsageLog{},
+		// models.ApiKeyUsageLog{},
 
 		// Account service models
 		// accountmodelv1.ServiceUser{},

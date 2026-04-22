@@ -12,6 +12,7 @@ type Config struct {
 	IAMServiceAddr     string
 	TenantServiceAddr  string
 	ConsoleServiceAddr string
+	APIKeyServiceAddr  string
 	AccountJWT         AccountJWTConfig
 	IAMJWT             IAMJWTConfig
 }
@@ -37,6 +38,7 @@ func Load() *Config {
 		IAMServiceAddr:     getEnv("APP_SERVICE_ADDR", "localhost:50052"),
 		TenantServiceAddr:  getEnv("TENANT_SERVICE_ADDR", "localhost:50053"),
 		ConsoleServiceAddr: getEnv("CONSOLE_SERVICE_ADDR", "localhost:50054"),
+		APIKeyServiceAddr:  getEnv("API_KEY_SERVICE_ADDR", "localhost:50055"),
 		AccountJWT: AccountJWTConfig{
 			AccessTokenSecret:  getEnv("ACCESS_TOKEN_SECRET", "access_token_secret"),
 			RefreshTokenSecret: getEnv("REFRESH_TOKEN_SECRET", "refresh_token_secret"),

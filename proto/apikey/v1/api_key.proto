@@ -1,0 +1,294 @@
+syntax = "proto3";
+
+package apikey.v1;
+
+import "google/protobuf/timestamp.proto";
+import "buf/validate/validate.proto";
+
+option go_package = "github.com/vyolayer/vyolayer/proto/apikey/v1;apikeyv1";
+
+/*
+ ==================================================
+ API Key Service
+ ==================================================
+ */
+
+service APIKeyService {
+  rpc CreateAPIKey(CreateAPIKeyRequest)
+  returns (CreateAPIKeyResponse);
+
+  rpc ListAPIKeys(ListAPIKeysRequest)
+  returns (ListAPIKeysResponse);
+
+  rpc GetAPIKey(GetAPIKeyRequest)
+  returns (GetAPIKeyResponse);
+
+  rpc UpdateAPIKey(UpdateAPIKeyRequest)
+  returns (UpdateAPIKeyResponse);
+
+  rpc RevokeAPIKey(RevokeAPIKeyRequest)
+  returns (RevokeAPIKeyResponse);
+
+  rpc RotateAPIKey(RotateAPIKeyRequest)
+  returns (RotateAPIKeyResponse);
+
+  rpc ValidateAPIKey(ValidateAPIKeyRequest)
+  returns (ValidateAPIKeyResponse);
+
+  rpc ListAPIKeyAuditLogs(ListAPIKeyAuditLogsRequest)
+  returns (ListAPIKeyAuditLogsResponse);
+}
+
+/*
+ ==================================================
+ Enums
+ ==================================================
+ */
+
+// enum APIKeyEnvironment {
+//   DEV  = 0;
+//   LIVE = 1;
+// }
+
+// enum APIKeyStatus {
+//   UNSPECIFIED = 0;
+//   ACTIVE      = 1;
+//   REVOKED     = 2;
+//   EXPIRED     = 3;
+//   DISABLED    = 4;
+// }
+
+/*
+ ==================================================
+ Models
+ ==================================================
+ */
+
+message APIKey {
+  string id = 1;
+
+  string organization_id = 2;
+  string project_id      = 3;
+
+  string name        = 4;
+  string description = 5;
+
+  string prefix = 6;
+
+  string environment = 7;
+  string status      = 8;
+
+  repeated string scopes = 9;
+
+  string created_by = 10;
+
+  google.protobuf.Timestamp last_used_at = 11;
+  string                    last_used_ip = 12;
+  string                    last_used_ua = 13;
+
+  google.protobuf.Timestamp expires_at = 14;
+
+  string                    revoked_by = 15;
+  google.protobuf.Timestamp revoked_at = 16;
+
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+/*
+ ==================================================
+ Create
+ ==================================================
+ */
+
+message CreateAPIKeyRequest {
+  string organization_id = 1;
+  string project_id      = 2;
+
+  string actor_id = 3;
+
+  string name        = 4;
+  string description = 5;
+
+  string environment = 6;
+
+  repeated string scopes = 7;
+
+  google.protobuf.Timestamp expires_at = 8;
+}
+
+message CreateAPIKeyResponse {
+  APIKey api_key = 1;
+
+  // shown once only
+  string secret = 2;
+}
+
+/*
+ ==================================================
+ List
+ ==================================================
+ */
+
+message ListAPIKeysRequest {
+  string organization_id = 1;
+  string project_id      = 2;
+
+  int32 page  = 3;
+  int32 limit = 4;
+
+  string search = 5;
+
+  string status = 6;
+}
+
+message ListAPIKeysResponse {
+  repeated APIKey api_keys = 1;
+
+  int64 total = 2;
+  int32 page  = 3;
+  int32 limit = 4;
+}
+
+/*
+ ==================================================
+ Get
+ ==================================================
+ */
+
+message GetAPIKeyRequest {
+  string id              = 1;
+  string organization_id = 2;
+  string project_id      = 3;
+}
+
+message GetAPIKeyResponse {
+  APIKey api_key = 1;
+}
+
+/*
+ ==================================================
+ Update
+ ==================================================
+ */
+
+message UpdateAPIKeyRequest {
+  string id = 1;
+
+  string organization_id = 2;
+  string project_id      = 3;
+
+  string actor_id = 4;
+
+  string name        = 5;
+  string description = 6;
+
+  repeated string scopes = 7;
+
+  google.protobuf.Timestamp expires_at = 8;
+}
+
+message UpdateAPIKeyResponse {
+  APIKey api_key = 1;
+}
+
+/*
+ ==================================================
+ Revoke
+ ==================================================
+ */
+
+message RevokeAPIKeyRequest {
+  string id = 1;
+
+  string organization_id = 2;
+  string project_id      = 3;
+
+  string actor_id = 4;
+
+  string reason = 5;
+}
+
+message RevokeAPIKeyResponse {
+  bool success = 1;
+}
+
+/*
+ ==================================================
+ Rotate
+ ==================================================
+ */
+
+message RotateAPIKeyRequest {
+  string id = 1;
+
+  string organization_id = 2;
+  string project_id      = 3;
+
+  string actor_id = 4;
+}
+
+message RotateAPIKeyResponse {
+  APIKey api_key = 1;
+
+  // new secret shown once
+  string secret = 2;
+}
+
+/*
+ ==================================================
+ Validate (Internal Use)
+ ==================================================
+ */
+
+message ValidateAPIKeyRequest {
+  string secret = 1;
+}
+
+message ValidateAPIKeyResponse {
+  bool valid = 1;
+
+  APIKey api_key = 2;
+
+  repeated string scopes = 3;
+}
+
+/*
+ ==================================================
+ Audit Logs
+ ==================================================
+ */
+
+message APIKeyAuditLog {
+  uint64 id = 1;
+
+  string api_key_id = 2;
+  string project_id = 3;
+
+  string action = 4;
+
+  string actor_id = 5;
+
+  string ip         = 6;
+  string user_agent = 7;
+
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message ListAPIKeyAuditLogsRequest {
+  string id = 1;
+
+  string organization_id = 2;
+  string project_id      = 3;
+
+  int32 page  = 4;
+  int32 limit = 5;
+}
+
+message ListAPIKeyAuditLogsResponse {
+  repeated APIKeyAuditLog logs = 1;
+
+  int64 total = 2;
+  int32 page  = 3;
+  int32 limit = 4;
+}

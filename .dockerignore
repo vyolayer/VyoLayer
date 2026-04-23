@@ -1,0 +1,11 @@
+.git
+.gitignore
+.vscode
+node_modules
+bin
+tmp
+dist
+coverage
+*.log
+.env
+.codex

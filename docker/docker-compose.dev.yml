@@ -22,8 +22,173 @@ services:
     image: mailhog/mailhog
     container_name: vyolayer_mailhog
     ports:
-      - "1025:1025"   # SMTP
-      - "8025:8025"   # Web UI
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - vyolayer_network
+
+  account:
+    build:
+      context: ..
+      dockerfile: docker/account.Dockerfile
+    container_name: vyolayer_account
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-vyolayer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
+      DB_NAME: ${DB_NAME:-vyolayer_db}
+      DB_SSLMODE: disable
+      ACCOUNT_SERVICE_GRPC_PORT: 50051
+      APP_URL: http://gateway:8080
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USE_MOCK: ${MAIL_USE_MOCK:-false}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET:-access_token_secret}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-refresh_token_secret}
+      ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY:-15m}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY:-168h}
+    depends_on:
+      database:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+    expose:
+      - "50051"
+    networks:
+      - vyolayer_network
+
+  iam:
+    build:
+      context: ..
+      dockerfile: docker/iam.Dockerfile
+    container_name: vyolayer_iam
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-vyolayer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
+      DB_NAME: ${DB_NAME:-vyolayer_db}
+      DB_SSLMODE: disable
+      IAM_SERVICE_GRPC_PORT: 50052
+      APP_URL: http://gateway:8080
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USE_MOCK: ${MAIL_USE_MOCK:-false}
+      IAM_SERVICE_ACCESS_SECRET: ${IAM_SERVICE_ACCESS_SECRET:-i_am_access_secret}
+      IAM_SERVICE_REFRESH_SECRET: ${IAM_SERVICE_REFRESH_SECRET:-i_am_refresh_secret}
+      IAM_SERVICE_ACCESS_EXPIRY: ${IAM_SERVICE_ACCESS_EXPIRY:-15m}
+      IAM_SERVICE_REFRESH_EXPIRY: ${IAM_SERVICE_REFRESH_EXPIRY:-2h}
+      IAM_VERIFICATION_TOKEN_EXPIRY: ${IAM_VERIFICATION_TOKEN_EXPIRY:-24h}
+      IAM_PASSWORD_RESET_TOKEN_EXPIRY: ${IAM_PASSWORD_RESET_TOKEN_EXPIRY:-1h}
+    depends_on:
+      database:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+    expose:
+      - "50052"
+    networks:
+      - vyolayer_network
+
+  tenant:
+    build:
+      context: ..
+      dockerfile: docker/tenant.Dockerfile
+    container_name: vyolayer_tenant
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-vyolayer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
+      DB_NAME: ${DB_NAME:-vyolayer_db}
+      DB_SSLMODE: disable
+      TENANT_SERVICE_GRPC_PORT: 50053
+      APP_URL: http://gateway:8080
+    depends_on:
+      database:
+        condition: service_healthy
+    expose:
+      - "50053"
+    networks:
+      - vyolayer_network
+
+  console:
+    build:
+      context: ..
+      dockerfile: docker/console.Dockerfile
+    container_name: vyolayer_console
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-vyolayer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
+      DB_NAME: ${DB_NAME:-vyolayer_db}
+      DB_SSLMODE: disable
+      CONSOLE_SERVICE_GRPC_PORT: 50054
+      APP_URL: http://gateway:8080
+    depends_on:
+      database:
+        condition: service_healthy
+    expose:
+      - "50054"
+    networks:
+      - vyolayer_network
+
+  apikeys:
+    build:
+      context: ..
+      dockerfile: docker/apikeys.Dockerfile
+    container_name: vyolayer_apikeys
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-vyolayer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-vyolayer_password}
+      DB_NAME: ${DB_NAME:-vyolayer_db}
+      DB_SSLMODE: disable
+      CONSOLE_SERVICE_GRPC_PORT: 50055
+      APP_URL: http://gateway:8080
+    depends_on:
+      database:
+        condition: service_healthy
+    expose:
+      - "50055"
+    networks:
+      - vyolayer_network
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: docker/gateway.Dockerfile
+    container_name: vyolayer_gateway
+    environment:
+      HTTP_PORT: 8080
+      ACCOUNT_SERVICE_ADDR: account:50051
+      APP_SERVICE_ADDR: iam:50052
+      TENANT_SERVICE_ADDR: tenant:50053
+      CONSOLE_SERVICE_ADDR: console:50054
+      API_KEY_SERVICE_ADDR: apikeys:50055
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET:-access_token_secret}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-refresh_token_secret}
+      ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY:-15m}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY:-168h}
+      IAM_ACCESS_TOKEN_SECRET: ${IAM_SERVICE_ACCESS_SECRET:-i_am_access_secret}
+      IAM_ACCESS_TOKEN_EXPIRY: ${IAM_SERVICE_ACCESS_EXPIRY:-15m}
+      IAM_REFRESH_TOKEN_EXPIRY: ${IAM_SERVICE_REFRESH_EXPIRY:-2h}
+    depends_on:
+      account:
+        condition: service_started
+      iam:
+        condition: service_started
+      tenant:
+        condition: service_started
+      console:
+        condition: service_started
+      apikeys:
+        condition: service_started
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
     networks:
       - vyolayer_network
 
